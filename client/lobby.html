@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./js/lobby.js"></script>
+</head>
+<body>
+    <div class="lobby-container">
+        <h1>Welcome, <span id="username_login">Player</span></h1>
+        <p>Win Rate: <span id="win-rate">0%</span></p>
+        <p>Wins: <span id="wins">0</span></p>
+        <p>Losses: <span id="losses">0</span></p>
+
+        <button id="find-match" onclick="FindMatch()" style="display: none;">Find Match</button>
+        <button id="quit-match" onclick="QuitMatch()" style="display: none;">Leave Queue</button>
+        <button id="logout" onclick="Logout()">Logout</button>
+    </div>
+    <script>
+        GetMatchState()
+        setInterval(GetMatchState, 3000)
+    </script>
+</body>
+</html>

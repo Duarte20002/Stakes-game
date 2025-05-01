@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stakes</title>
+    <script src="./js/game.js"></script>
+    <style>
+        .map {
+            width: 500px;
+            height: 200px;
+            position: relative; /* Ensure absolute positioning inside */
+        }
+
+        .zone_red {
+            position: absolute;
+            text-align: center;
+            background-color: transparent;
+            color: black;
+            line-height: 50px;
+            font-weight: bold;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        .zone_red:hover {
+            background-color: PaleGoldenRod;
+        }
+    </style>
+</head>
+<body>
+    <div id="p1_gold"></div>
+    <div class="map">
+        <img src="./img/map.png" width="1175" >
+    </div>
+    <div id="selection" style="bottom: 0; position: absolute;">
+    </div>
+
+    <script>
+        const map = document.querySelector('.map');
+
+        const zones = [
+            { id: 1, top: 460, left: 160, value: 0 },
+            { id: 2, top: 350, left: 160, value: 0 },
+            { id: 3, top: 260, left: 150, value: 0 },
+            { id: 4, top: 250, left: 230, value: 0 },
+            { id: 5, top: 350, left: 290, value: 0 },
+            { id: 6, top: 430, left: 270, value: 0 },
+            { id: 7, top: 420, left: 340, value: 0 },
+            { id: 8, top: 485, left: 340, value: 0 },
+            { id: 9, top: 155, left: 175, value: 0,},
+            { id: 10, top: 140, left: 240, value: 0,},
+            { id: 11, top: 210, left: 290, value: 0,},
+            { id: 12, top: 290, left: 335, value: 0,},
+            { id: 13, top: 190, left: 360, value: 0,},
+            { id: 14, top: 280, left: 410, value: 0,},
+            { id: 15, top: 420, left: 410, value: 0,},
+            { id: 16, top: 365, left: 460, value: 0,},
+            { id: 17, top: 480, left: 475, value: 0,},
+            { id: 18, top: 425, left: 500, value: 0,},
+            { id: 19, top: 130, left: 400, value: 0,},
+            { id: 20, top: 205, left: 430, value: 0,},
+            { id: 21, top: 130, left: 475, value: 0,},
+            { id: 22, top: 210, left: 510, value: 0,},
+            { id: 23, top: 195, left: 565, value: 0,},
+            { id: 24, top: 265, left: 475, value: 0,},
+            { id: 25, top: 330, left: 515, value: 0,},
+            { id: 26, top: 270, left: 545, value: 0,},
+            { id: 27, top: 290, left: 600, value: 0,},
+            { id: 28, top: 260, left: 660, value: 0,},
+            { id: 29, top: 350, left: 610, value: 0,},
+            { id: 30, top: 470, left: 575, value: 0,},
+            { id: 31, top: 450, left: 630, value: 0,},
+            { id: 32, top: 430, left: 685, value: 0,},
+        ];
+
+        // Function to create red zones dynamically
+        function createZones() {
+            zones.forEach(zone => {
+                const div = document.createElement('div');
+                div.classList.add('zone_red');
+                div.id = `zone_red_${zone.id}`;
+                div.style.width = "50px";
+                div.style.height = "50px";
+                div.style.top = `${zone.top}px`;
+                div.style.left = `${zone.left}px`;
+                div.innerText = zone.value;
+                div.onclick = () => ClickArea(zone.id);
+                map.appendChild(div);
+            });
+        }
+
+        // Call the function to create zones
+        createZones();
+    </script>
+</body>
+</html>
