@@ -35,7 +35,7 @@ app.post("/register", (req, res) => {
     }
 
     connection.query(
-        "insert into games.player (plr_username, plr_password, plr_searching) values (?, ?, 'idle')",
+        "insert into Stakes_digtentape.player (plr_username, plr_password, plr_searching) values (?, ?, 'idle')",
         [username, password],
         (err) => {
             if (err) return res.send(err);
@@ -48,7 +48,7 @@ app.post("/login", (req, res) => {
     const { username_login, password_login } = req.body;
 
     connection.query(
-        "select * from games.player where plr_username = ? and plr_password = ?",
+        "select * from Stakes_digtentape.player where plr_username = ? and plr_password = ?",
         [username_login, password_login],
         (err, rows) => {
             if (err) return res.send(err);
@@ -72,7 +72,7 @@ app.get("/matchState", (req, res) => {
     }
 
     connection.query(
-        "select plr_searching from games.player where plr_id = ?",
+        "select plr_searching from Stakes_digtentape.player where plr_id = ?",
         [req.session.player_id],
         (err, rows) => {
             if (err) return res.send(err);
@@ -99,7 +99,7 @@ app.post("/findMatch", (req, res) => {
         console.log('initializing game for id ' + req.session.gameID)
     // Get players' info into the game
     connection.query(
-        "select plr1_id, plr2_id from games.game where game_id = ?",
+        "select plr1_id, plr2_id from Stakes_digtentape.game where game_id = ?",
         [req.session.gameID],
         (err, results) => {
             if (err) return res.send(err);
@@ -129,7 +129,7 @@ app.post("/findMatch", (req, res) => {
             });
 
     // Insert or update territory information
-            const sql = "insert into games.game_territory (game_id, ter_id, plr_own_id, troop_count) values ? on duplicate key update plr_own_id = values(plr_own_id), troop_count = values(troop_count)";
+            const sql = "insert into Stakes_digtentape.game_territory (game_id, ter_id, plr_own_id, troop_count) values ? on duplicate key update plr_own_id = values(plr_own_id), troop_count = values(troop_count)";
 
                 connection.query(sql, [territoryInserts], (err) => {
                     if (err) return res.send(err);
@@ -148,14 +148,14 @@ app.post("/findMatch", (req, res) => {
     }
 
     connection.query(
-        "select * from games.player where plr_searching = 'queueing' AND plr_id != ? LIMIT 1",
+        "select * from Stakes_digtentape.player where plr_searching = 'queueing' AND plr_id != ? LIMIT 1",
         [req.session.player_id],
         (err, rows) => {
             if (err) return res.send(err);
 
             if (rows.length === 0) {
                 connection.query(
-                    "update games.player set plr_searching = 'queueing' where plr_id = ?",
+                    "update Stakes_digtentape.player set plr_searching = 'queueing' where plr_id = ?",
                     [req.session.player_id],
                     (err) => {
                         if (err) return res.send(err);
@@ -165,12 +165,12 @@ app.post("/findMatch", (req, res) => {
             } else {
                 const opponent = rows[0];
                 connection.query(
-                    "insert into games.game (plr1_id, plr2_id, cur_turn_plr_id) values (?, ?, ?)",
+                    "insert into Stakes_digtentape.game (plr1_id, plr2_id, cur_turn_plr_id) values (?, ?, ?)",
                     [opponent.plr_id, req.session.player_id, opponent.plr_id],
                     (err, gameResult) => {
                         if (err) return res.send(err);
 
-                        const updateQuery = "update games.player set plr_searching = 'matched' where plr_id IN (?, ?)";
+                        const updateQuery = "update Stakes_digtentape.player set plr_searching = 'matched' where plr_id IN (?, ?)";
 
                         connection.query(updateQuery, [opponent.plr_id, req.session.player_id], (err) => {
                             if (err) return res.send(err);
@@ -196,7 +196,7 @@ app.post("/quitMatch", (req, res) => {
     }
 
     connection.query(
-        "update games.player set plr_searching = 'idle' where plr_id = ?",
+        "update Stakes_digtentape.player set plr_searching = 'idle' where plr_id = ?",
         [req.session.player_id],
         (err) => {
             if (err) return res.send(err);
@@ -224,7 +224,7 @@ app.get("/game", (req, res) => {
         return
     }
 
-    connection.query("select * from games.game_territory", //Where Game ID = ? AND playerid 
+    connection.query("select * from Stakes_digtentape.game_territory", //Where Game ID = ? AND playerid 
         [],
         function (err, rows, fields) {
             if (err){
@@ -241,7 +241,7 @@ app.get("/game", (req, res) => {
 app.post("/verifyAdjecencies", (req, res) => {
     const { ter_ID } = req.body;
 
-    const sql = "select adj_ter2_id from games.adjacency where adj_ter1_id = ?";    //Query to select the correspondent adjacent territory(ies) when taking into account the territory that the player innitially selects
+    const sql = "select adj_ter2_id from Stakes_digtentape.adjacency where adj_ter1_id = ?";    //Query to select the correspondent adjacent territory(ies) when taking into account the territory that the player innitially selects
 
     connection.query(sql, [ter_ID], (err, results) => {
         if (err) {
@@ -403,7 +403,7 @@ app.post("/logAttack", (req, res) => {
 
     function GetGameID() {
         connection.query(
-            "select game_id from games.game where plr1_id = ? or plr2_id = ?",             //Query to get the game_id where both the players are in
+            "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",             //Query to get the game_id where both the players are in
             [req.session.player_id, req.session.player_id],
             (err, rows) => {
                 if (err) return res.status(500).json({ message: "Database error", error: err });                       //Error scenario
@@ -420,6 +420,8 @@ app.post("/logAttack", (req, res) => {
     else
         GetTerritoryData();
 });
+
+
 
 
 app.listen(4000, () => {
