@@ -16,7 +16,7 @@ function initTerritories() {
         }
     };
 
-    xhr.open("POST", "/initTerritories", true);
+    xhr.open("POST", "/findMatch", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     // Send the data as a JSON string
     xhr.send();
