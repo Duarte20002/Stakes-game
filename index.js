@@ -384,18 +384,36 @@ app.post("/logAttack", (req, res) => {
                                                         [attackingPlayerId, troopsToMove, req.session.gameID, ter_to_id],
                                                         (err) => {
                                                             if (err) return res.status(500).json({ message: "Failed to transfer territory", error: err });
-
-                                                            return res.json({
-                                                                message: "Territory conquered",
-                                                                attackerRolls,
-                                                                defenderRolls,
-                                                                attackerLosses,
-                                                                defenderLosses,
-                                                                territoryCaptured: true,
-                                                                troopsMoved: troopsToMove
+                                                    
+                                                            // Grant random card to attacker
+                                                            connection.query("SELECT card_id FROM cards ORDER BY RAND() LIMIT 1", (err, cardResult) => {
+                                                                if (err) return res.status(500).json({ message: "Failed to fetch random card", error: err });
+                                                    
+                                                                const cardId = cardResult[0]?.card_id;
+                                                                if (!cardId) return res.status(500).json({ message: "No card found" });
+                                                    
+                                                                connection.query(
+                                                                    "INSERT INTO player_cards (plr_id, card_id, is_used) VALUES (?, ?, false)",
+                                                                    [attackingPlayerId, cardId],
+                                                                    (err) => {
+                                                                        if (err) return res.status(500).json({ message: "Failed to assign card", error: err });
+                                                    
+                                                                        return res.json({
+                                                                            message: "Territory conquered and card assigned",
+                                                                            attackerRolls,
+                                                                            defenderRolls,
+                                                                            attackerLosses,
+                                                                            defenderLosses,
+                                                                            territoryCaptured: true,
+                                                                            troopsMoved: troopsToMove,
+                                                                            cardAwarded: cardId
+                                                                        });
+                                                                    }
+                                                                );
                                                             });
                                                         }
                                                     );
+                                                    
                                                 }
                                             );
                                         } else {
