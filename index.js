@@ -217,26 +217,25 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/game", (req, res) => {
-    if (!req.session.username){
-        res.status(401).json({
-            "message": "Not logged in"
-        });
-        return
+    // Ensure the user is logged in and has a game ID assigned
+    if (!req.session.username || !req.session.gameID) {
+        return res.status(401).json({ message: "Not logged in or game ID missing" });
     }
 
-    connection.query("select * from Stakes_digtentape.game_territory", //Where Game ID = ? AND playerid 
-        [],
-        function (err, rows, fields) {
-            if (err){
-                res.json({
-                    "error": err
-                })
-                return
+    // Query only the territories for the current game
+    connection.query(
+        "SELECT * FROM Stakes_digtentape.game_territory WHERE game_id = ?",
+        [req.session.gameID],
+        (err, rows) => {
+            if (err) {
+                return res.status(500).json({ error: err });
             }
 
-            res.json(rows)
-        })
-}) 
+            res.json(rows);
+        }
+    );
+});
+
 
 app.post("/verifyAdjecencies", (req, res) => {
     const { ter_ID } = req.body;
