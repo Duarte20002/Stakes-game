@@ -188,6 +188,24 @@ app.post("/findMatch", (req, res) => {
             }
         }
     );
+    function GetGameID() {
+        connection.query(
+            "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",             //Query to get the game_id where both the players are in
+            [req.session.player_id, req.session.player_id],
+            (err, rows) => {
+                if (err) return res.status(500).json({ message: "Database error", error: err });                       //Error scenario
+                if (rows.length === 0) return res.status(404).json({ message: "No game found for this player" });      //If there is no game in which the players are in
+
+                req.session.gameID = rows[0].game_id;                                    //Make sure the game_id is alligned with the first game_id that shows up                                            // Make sure game_id is set before calling initialize
+                InitializeGame();
+            }
+        );
+    }
+
+    if (!req.session.gameID)
+        GetGameID();
+    else
+    InitializeGame();
 });
 
 app.post("/quitMatch", (req, res) => {
