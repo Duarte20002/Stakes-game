@@ -208,26 +208,10 @@ function AttackZone() {
                         <strong>Defender's roll:</strong> ${getDiceEmojis(sortedDefenderRolls)}<br>
                     `;
                 }
-        
-                // ✅ NEW: If a card was awarded, show it
-                if (data.territoryCaptured && data.cardAwarded) {
-                    const cardDiv = document.createElement("div");
-                    cardDiv.classList.add("card-awarded-popup");
-                    cardDiv.innerHTML = `
-                        🎴 <strong>You received a card:</strong> ${data.cardAwarded.card_name}<br>
-                        📝 <em>${data.cardAwarded.card_effect}</em>
-                    `;
-                    document.body.appendChild(cardDiv);
-        
-                    setTimeout(() => {
-                        cardDiv.remove();
-                    }, 5000); // auto-remove after 5 seconds
-                }
             } else {
                 console.error("Error logging attack:", xhr.statusText);
             }
         };
-        
         
         xhr.onerror = function () {
             console.error("Request failed:", xhr.statusText);
