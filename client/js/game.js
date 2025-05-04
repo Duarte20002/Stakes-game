@@ -1,26 +1,27 @@
 function initTerritories() {
     const xhr = new XMLHttpRequest();
 
-    // Set up the POST request to the "/initTerritories" route
-
-
-    // Handle the response when it comes back
+    // Set up the POST request to the "/findMatch" route
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) { // When request is complete
             if (xhr.status === 200) {
                 const data = JSON.parse(xhr.responseText);
                 console.log("Territories initialized:", data);
+
+                // Now use the territory data to update the visual representation on the map
+                updateTerritories(data); // This function should update the map with the initialized territories
             } else {
                 console.error("Error initializing territories:", xhr.statusText);
             }
         }
     };
 
-    xhr.open("POST", "/findMatch", true);
+    xhr.open("POST", "/findMatch", true);  // Use the /findMatch endpoint to initialize the game
     xhr.setRequestHeader("Content-Type", "application/json");
-    // Send the data as a JSON string
+    // Send the data as JSON if necessary (you may need to send additional data like player info)
     xhr.send();
 }
+
 
 function GameLoop(){
     var request = new XMLHttpRequest();
