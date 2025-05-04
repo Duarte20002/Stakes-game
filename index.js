@@ -386,14 +386,14 @@ app.post("/logAttack", (req, res) => {
                                                             if (err) return res.status(500).json({ message: "Failed to transfer territory", error: err });
                                                     
                                                             // Grant random card to attacker
-                                                            connection.query("SELECT card_id FROM cards ORDER BY RAND() LIMIT 1", (err, cardResult) => {
+                                                            connection.query("SELECT crd_id FROM cards ORDER BY RAND() LIMIT 1", (err, cardResult) => {
                                                                 if (err) return res.status(500).json({ message: "Failed to fetch random card", error: err });
                                                     
                                                                 const cardId = cardResult[0]?.card_id;
                                                                 if (!cardId) return res.status(500).json({ message: "No card found" });
                                                     
                                                                 connection.query(
-                                                                    "INSERT INTO player_cards (plr_id, card_id, is_used) VALUES (?, ?, false)",
+                                                                    "INSERT INTO player_cards (plr_id, crd_id, is_used) VALUES (?, ?, false)",
                                                                     [attackingPlayerId, cardId],
                                                                     (err) => {
                                                                         if (err) return res.status(500).json({ message: "Failed to assign card", error: err });
