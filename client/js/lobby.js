@@ -82,7 +82,6 @@ function GetMatchState() {
                 }
 
                 document.getElementById("username_login").innerText = data.username;
-                document.getElementById("win-rate").innerText = data.winrate;
 
             } else if (this.status == 401) {
                 window.location.href = "login.html";

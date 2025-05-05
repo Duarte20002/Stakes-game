@@ -188,6 +188,7 @@ app.post("/findMatch", (req, res) => {
             }
         }
     );
+    
     function GetGameID() {
         connection.query(
             "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",             //Query to get the game_id where both the players are in
