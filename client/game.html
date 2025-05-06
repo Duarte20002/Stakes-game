@@ -7,8 +7,8 @@
     <script src="./js/game.js"></script>
     <style>
         .map {
-            width: 500px;
-            height: 200px;
+            width: 1175px;
+            height: 600px;
             position: relative; /* Ensure absolute positioning inside */
         }
 
@@ -24,17 +24,38 @@
         }
 
         .zone_red:hover {
-            background-color: PaleGoldenRod;
+            background-color: palegoldenrod;
         }
+
+        #endTurnButton {
+    position: fixed;
+    bottom: 20px;
+    left: 1075px;
+    z-index: 10; /* Ensures it's above the map */
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+        #reinforceButton {
+    position: fixed;
+    bottom: 20px;
+    left: 538px;
+    z-index: 10; /* Ensures it's above the map */
+    padding: 10px 20px;
+    font-size: 16px;
+}
     </style>
 </head>
 <body>
     <div id="p1_gold"></div>
+    
     <div class="map">
         <img src="./img/map.png" width="1175" >
     </div>
     <div id="selection" style="bottom: 0; position: absolute;">
     </div>
+    
+    
 
     <script>
         const map = document.querySelector('.map');
@@ -89,9 +110,14 @@
                 map.appendChild(div);
             });
         }
-
         // Call the function to create zones
         createZones();
+
     </script>
+    <button id="reinforceButton" onclick="startReinforce()">Reinforce Territory</button>
+    
+    <button id="endTurnButton" onclick="endTurn()">End Turn</button>
+    <div id="cardReward" style="position: absolute; top: 20px; right: 20px; background: white; border: 2px solid black; padding: 10px; border-radius: 8px; font-family: sans-serif;">
+    </div>
 </body>
 </html>

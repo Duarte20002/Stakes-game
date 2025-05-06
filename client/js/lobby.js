@@ -15,7 +15,6 @@ function FindMatch() {
     request.open("POST", "/findMatch", true);
     request.send();
 }
-
 function QuitMatch() {
     var request = new XMLHttpRequest();
 
@@ -37,29 +36,17 @@ function QuitMatch() {
 }
 
 function Logout() {
-    const request = new XMLHttpRequest();
-    request.open("GET", "/logout", true);
-
-    request.onload = function () {
-        if (request.status >= 200 && request.status < 300) {
-            if (request.responseURL && request.responseURL !== window.location.href) {
+    fetch("/logout")
+        .then(response => {
+            if (response.redirected) {
                 sessionStorage.clear();
-                window.location.href = request.responseURL; // Redirects to index.html
+                window.location.href = response.url; // Redirects to index.html
             } else {
                 console.error("Logout failed.");
             }
-        } else {
-            console.error("Logout failed with status:", request.status);
-        }
-    };
-
-    request.onerror = function () {
-        console.error("Logout error: Request failed.");
-    };
-
-    request.send();
+        })
+        .catch(error => console.error("Logout error:", error));
 }
-
 
 function GetMatchState() {
     var request = new XMLHttpRequest();
@@ -81,6 +68,7 @@ function GetMatchState() {
                 }
 
                 document.getElementById("username_login").innerText = data.username;
+                document.getElementById("win-rate").innerText = data.winrate;
 
             } else if (this.status == 401) {
                 window.location.href = "login.html";
@@ -91,8 +79,34 @@ function GetMatchState() {
     };
 
     request.open("GET", "/matchState", true);
-    request.send(); 
+    request.send();
 }
+
+app.post('/startgame', async (req, res) => {
+    const { plr1_id, plr2_id } = req.body;
+
+    try {
+        // 1. Create game entry
+        const [gameResult] = await db.promise().execute(
+            `insert into game (plr1_id, plr2_id, cur_turn_plr_id)
+             values (?, ?, ?)`,
+            [plr1_id, plr2_id, plr1_id]
+        );
+        const game_id = gameResult.insertId;
+
+        // 2. Assign territories
+        await db.promise().execute(
+            `insert into game_territory (game_id, territory_id, owner_id, troop_count)
+             values (?, 9, ?, 5), (?, 32, ?, 5)`,
+            [game_id, plr1_id, game_id, plr2_id]
+        );
+
+        res.json({ success: true, game_id });
+    } catch (err) {
+        console.error("Error initializing game:", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 
 
 GetMatchState();
