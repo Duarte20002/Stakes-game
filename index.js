@@ -316,7 +316,7 @@ app.post("/logAttack", (req, res) => {
     
     function GetTerritoryData() {
         connection.query(
-            "SELECT * FROM game_territory WHERE game_id = ? AND (ter_id = ? OR ter_id = ?)",
+            "select * FROM game_territory where game_id = ? AND (ter_id = ? OR ter_id = ?)",
             [req.session.gameID, ter_from_id, ter_to_id],
             function (err, rows) {
                 if (err) return res.status(500).json({ error: err });
@@ -368,7 +368,7 @@ app.post("/logAttack", (req, res) => {
                 let newDefenderTroops = ter_to_troop_count - defenderLosses;
 
                 connection.query(
-                    "INSERT INTO dice_rolls (game_id, ter_from_id, ter_to_id, plr_att_id, plr_def_id, att_die, def_die, att_troops, def_troops) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "insert INTO dice_rolls (game_id, ter_from_id, ter_to_id, plr_att_id, plr_def_id, att_die, def_die, att_troops, def_troops) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [
                         req.session.gameID,
                         ter_from_id,
@@ -384,13 +384,13 @@ app.post("/logAttack", (req, res) => {
                         if (err) return res.status(500).json({ message: "Error logging dice rolls", error: err });
 
                         connection.query(
-                            "UPDATE game_territory SET troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                            "update game_territory SET troop_count = ? where game_id = ? AND ter_id = ?",
                             [newAttackerTroops, req.session.gameID, ter_from_id],
                             (err) => {
                                 if (err) return res.status(500).json({ message: "Failed to update attacker troops", error: err });
 
                                 connection.query(
-                                    "UPDATE game_territory SET troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                                    "update game_territory SET troop_count = ? where game_id = ? AND ter_id = ?",
                                     [Math.max(0, newDefenderTroops), req.session.gameID, ter_to_id],
                                     (err) => {
                                         if (err) return res.status(500).json({ message: "Failed to update defender troops", error: err });
@@ -402,13 +402,13 @@ app.post("/logAttack", (req, res) => {
                                             req.session.justConquered = true;
 
                                             connection.query(
-                                                "UPDATE game_territory SET troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                                                "update game_territory SET troop_count = ? where game_id = ? AND ter_id = ?",
                                                 [newAttackerFinal, req.session.gameID, ter_from_id],
                                                 (err) => {
                                                     if (err) return res.status(500).json({ message: "Failed to update attacker after conquest", error: err });
 
                                                     connection.query(
-                                                        "UPDATE game_territory SET plr_own_id = ?, troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                                                        "update game_territory SET plr_own_id = ?, troop_count = ? where game_id = ? AND ter_id = ?",
                                                         [attackingPlayerId, troopsToMove, req.session.gameID, ter_to_id],
                                                         (err) => {
                                                             if (err) return res.status(500).json({ message: "Failed to transfer territory", error: err });
@@ -430,7 +430,7 @@ app.post("/logAttack", (req, res) => {
                                             );
                                         } else {
                                             return res.json({
-                                                message: "Attack resolved",
+                                                message: "Attack finished",
                                                 attackerRolls,
                                                 defenderRolls,
                                                 attackerLosses,
