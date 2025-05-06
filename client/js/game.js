@@ -46,7 +46,7 @@ function GameLoop(){
                     }else if (player1ID == territory.plr_own_id){
                         terrorityElement.style.color = "blue"
                     }else {
-                        terrorityElement.style.color = "DeepPink"
+                        terrorityElement.style.color = "DarkRed"
                     }
                 }
             });
