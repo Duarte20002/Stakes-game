@@ -1,8 +1,10 @@
+let reinforceMode = false;
+let alreadyReinforced = false;
+let selectedCard = null;
+
+
 function initTerritories() {
     const xhr = new XMLHttpRequest();
-
-    // Set up the POST request to the "/initTerritories" route
-
 
     // Handle the response when it comes back
     xhr.onreadystatechange = function () {
@@ -18,7 +20,6 @@ function initTerritories() {
 
     xhr.open("POST", "/findMatch", true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    // Send the data as a JSON string
     xhr.send();
 }
 
@@ -45,7 +46,7 @@ function GameLoop(){
                     }else if (player1ID == territory.plr_own_id){
                         terrorityElement.style.color = "blue"
                     }else {
-                        terrorityElement.style.color = "darkred"
+                        terrorityElement.style.color = "DeepPink"
                     }
                 }
             });
@@ -114,6 +115,12 @@ let defendingZone;
 function ClickArea(area_number) {
     const selectionDiv = document.getElementById("selection");
 
+    
+    if (reinforceMode) {
+        reinforceTerritory(area_number);
+        return;
+    }
+
     if (selectedZone === undefined) {
         selectedZone = area_number;
         selectionDiv.innerHTML = "Attacking from Area " + selectedZone;
@@ -172,61 +179,140 @@ function ClickArea(area_number) {
         verifyAdjacencies();
     }
 
+  
+
     console.log("Clicked on area " + area_number);
 }
 
-function AttackZone() {
-    if (selectedZone && defendingZone) {
-        const troopCountInput = document.getElementById("attackTroopCount");
-        const selectedTroopCount = parseInt(troopCountInput?.value || "1", 10);
+function reinforceTerritory(area_number) {
+    const troopsToAdd = prompt("How many troops do you want to add?", "1");
 
-        const xhr = new XMLHttpRequest();
-
-
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const data = JSON.parse(xhr.responseText);
-                console.log("Attack logged:", data);
-        
-                // Make sure the dice are properly received
-                if (!data.attackerRolls || !data.defenderRolls) {
-                    console.error("Dice rolls are undefined:", data);
-                    return;
-                }
-        
-                // Sort the numbers from largest to smallest
-                const sortedAttackerRolls = data.attackerRolls.sort((a, b) => b - a);
-                const sortedDefenderRolls = data.defenderRolls.sort((a, b) => b - a);
-        
-                // Display dice roll results on the screen with emojis
-                const selectionDiv = document.getElementById("selection");
-                if (selectionDiv) {
-                    selectionDiv.innerHTML = `
-                        Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
-                        <strong>Dice Roll Results:</strong><br>
-                        <strong>Attacker's roll:</strong> ${getDiceEmojis(sortedAttackerRolls)}<br>
-                        <strong>Defender's roll:</strong> ${getDiceEmojis(sortedDefenderRolls)}<br>
-                    `;
-                }
-            } else {
-                console.error("Error logging attack:", xhr.statusText);
-            }
-        };
-        
-        xhr.onerror = function () {
-            console.error("Request failed:", xhr.statusText);
-        };
-
-        const requestData = {
-            ter_from_id: selectedZone,
-            ter_to_id: defendingZone,
-            att_troop_count: selectedTroopCount
-        };
-
-        xhr.open("POST", "/logAttack", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(requestData));
+    if (troopsToAdd === null) {
+        reinforceMode = false;
+        return;
     }
+
+    const number = parseInt(troopsToAdd);
+
+    if (isNaN(number) || number <= 0) {
+        alert("Invalid number of troops.");
+        return;
+    }
+
+    // Send reinforcement to the server
+    const request = new XMLHttpRequest();
+    request.open("POST", "/reinforce", true);
+    request.setRequestHeader("Content-Type", "application/json");
+
+    request.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            const response = JSON.parse(this.responseText);
+            alert(response.message);
+
+            if (response.success) {
+                alreadyReinforced = true;
+                reinforceMode = false;
+            }
+        }
+    };
+
+    const dataToSend = {
+        territory_id: area_number,
+        troops: number
+    };
+
+    request.send(JSON.stringify(dataToSend));
+}
+
+function AttackZone() {
+    if (!selectedZone || !defendingZone) return;
+    const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
+    const troopCountInput = document.getElementById("attackTroopCount");
+    const selectedTroopCount = parseInt(troopCountInput?.value || "1", 10);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            const data = JSON.parse(xhr.responseText);
+            console.log("Attack logged:", data);
+
+            if (!data.attackerRolls || !data.defenderRolls) {
+                console.error("Dice rolls are undefined:", data);
+                return;
+            }
+
+            const sortedAttackerRolls = data.attackerRolls.sort((a, b) => b - a);
+            const sortedDefenderRolls = data.defenderRolls.sort((a, b) => b - a);
+
+            const selectionDiv = document.getElementById("selection");
+            if (selectionDiv) {
+                selectionDiv.innerHTML = `
+                    Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
+                    <strong>Dice Roll Results:</strong><br>
+                    <strong>Attacker's roll:</strong> ${getDiceEmojis(sortedAttackerRolls)}<br>
+                    <strong>Defender's roll:</strong> ${getDiceEmojis(sortedDefenderRolls)}<br>
+                `;
+            }
+
+            // ✅ If a territory was captured, give the player a card
+            if (data.territoryCaptured === true) {
+                giveCardToPlayer(currentPlayerId);
+            }
+
+        } else {
+            console.error("Error logging attack:", xhr.statusText);
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error("Request failed:", xhr.statusText);
+    };
+
+    const requestData = {
+        ter_from_id: selectedZone,
+        ter_to_id: defendingZone,
+        att_troop_count: selectedTroopCount
+    };
+
+    alreadyReinforced = false;
+
+    xhr.open("POST", "/logAttack", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(requestData));
+}
+
+function giveCardToPlayer(player_id, game_id) {
+    const xhrCard = new XMLHttpRequest();
+    xhrCard.open("POST", "/giveCard", true);
+    xhrCard.setRequestHeader("Content-Type", "application/json");
+
+    xhrCard.onreadystatechange = function () {
+        if (xhrCard.readyState === 4) {
+            if (xhrCard.status === 200) {
+                const response = JSON.parse(xhrCard.responseText);
+                const card = response.card;
+
+                console.log("🎴 Player received a card:", card);
+
+                // ✅ Display card info in the game UI
+                const cardRewardBox = document.getElementById("cardReward");
+            if (cardRewardBox && card) {
+            cardRewardBox.innerHTML = `
+            <strong>🎴 New Card:</strong><br>
+            Type: <em>${card.eff_typ}</em><br>
+            Value: <em>${card.eff_val}</em>
+    `;
+}
+
+            } else {
+                console.error("Card request failed:", xhrCard.statusText);
+            }
+        }
+    };
+
+    xhrCard.send(JSON.stringify({ player_id, game_id }));
+    checkHasCard();
 }
 
 // Utilizing dice emojis intead of numbers ;)
@@ -235,7 +321,117 @@ function getDiceEmojis(rolls) {
     return rolls.map(roll => diceEmojis[roll] || "❓").join(" ");
 }
 
+function checkHasCard() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/hasCard", true);
 
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            const btn = document.getElementById("reinforceButton");
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                btn.style.display = response.hasCard ? "block" : "none";
+            } else {
+                btn.style.display = "none";
+            }
+        }
+    };
+
+    xhr.send();
+}
+
+function startReinforce() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/useCard", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                reinforceMode = true;
+                alert("Card used! Select a territory to reinforce.");
+
+                document.getElementById("reinforceButton").style.display = "none";
+
+                const cardDisplay = document.getElementById("cardReward");
+                if (cardDisplay) {
+                    cardDisplay.innerHTML = "";
+                }
+            } else {
+                alert("No card available or already used.");
+            }
+        }
+    };
+
+    xhr.send();
+}
+
+function endTurn() {
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            console.log(xhr.responseText)
+            if (xhr.status === 200) {
+                alert("Turn ended successfully.");
+            } else {
+                alert("Failed to end turn.");
+            }
+        }
+    };
+
+    xhr.open("POST", "/endTurn", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+}
+
+function checkTurnOwnership() {
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            const endTurnBtn = document.getElementById("endTurnButton");
+
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                endTurnBtn.style.display = response.isMyTurn ? "block" : "none";
+            } else {
+                endTurnBtn.style.display = "none";
+            }
+        }
+    };
+
+    xhr.open("GET", "/isMyTurn", true);
+    xhr.send();
+}
+
+function checkVictoryStatus() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/checkVictory", true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.gameOver) {
+                    if (response.isWinner) {
+                        window.location.href = "/winner.html";
+                    } else {
+                        window.location.href = "/loser.html";
+                    }
+                }
+            }
+        }
+    };
+
+    xhr.send();
+}
+
+
+setInterval(checkHasCard, 1000);
+setInterval(checkTurnOwnership, 1000);
+setInterval(checkVictoryStatus, 2000);
 
 // Start the loop
 GameLoop();
