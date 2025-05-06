@@ -6,7 +6,6 @@ function FindMatch() {
             if (this.status == 200) {
                 var data = JSON.parse(this.responseText);
                 console.log("Match search response:", data);
-                // You can update UI or messages here if you like
             } else {
                 console.error("Error finding match:", this.responseText);
             }
