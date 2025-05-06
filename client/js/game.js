@@ -408,12 +408,13 @@ function checkTurnOwnership() {
 
 function checkVictoryStatus() {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/checkVictory", true);
+
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
+                console.log(response)
                 if (response.gameOver) {
                     if (response.isWinner) {
                         window.location.href = "/winner.html";
@@ -425,6 +426,7 @@ function checkVictoryStatus() {
         }
     };
 
+    xhr.open("GET", "/checkVictory", true);
     xhr.send();
 }
 

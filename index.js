@@ -283,6 +283,7 @@ app.post("/logAttack", (req, res) => {
     let ter_from_troop_count, ter_to_troop_count;
 
     function CheckForVictory(attackingPlayerId) {
+        console.log("Checking victory")
         connection.query(
             "SELECT COUNT(*) AS territoryCount FROM Stakes_digtentape.game_territory WHERE game_id = ? AND plr_own_id = ?",
             [req.session.gameID, attackingPlayerId],
@@ -290,15 +291,16 @@ app.post("/logAttack", (req, res) => {
                 if (err) return console.error("Error checking victory:", err);
     
                 const territoryCount = results[0].territoryCount;
-    
+                console.log("TerritoryCount: " + territoryCount)
                 if (territoryCount === 32) {
-                    req.session.winner = attackingPlayerId;
-                    req.session.gameOver = true;
+                    // req.session.winner = attackingPlayerId;
+                    // req.session.gameOver = true;
     
+                    console.log("[Winner] win_plr_id=" + attackingPlayerId + " |win_con=conquer_all |game_id=" + req.session.gameID)
                     // ✅ Persist winner info to the database
                     connection.query(
                         "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = ? WHERE game_id = ?",
-                        [attackingPlayerId, "all_territories", req.session.gameID],
+                        [attackingPlayerId, "conquer_all", req.session.gameID],
                         (updateErr) => {
                             if (updateErr) {
                                 console.error("Failed to update winner in database:", updateErr);
@@ -312,7 +314,6 @@ app.post("/logAttack", (req, res) => {
         );
     }
     
-
     function GetTerritoryData() {
         connection.query(
             "SELECT * FROM game_territory WHERE game_id = ? AND (ter_id = ? OR ter_id = ?)",
@@ -749,12 +750,17 @@ app.get("/checkVictory", (req, res) => {
         return res.status(401).json({ message: "Not logged in or no game." });
     }
 
-    if (!req.session.gameOver) {
-        return res.json({ gameOver: false });
-    }
+    connection.query("SELECT win_plr_id FROM Stakes_digtentape.game WHERE game_id = ?", [req.session.gameID],
+        function (err, rows, fields) {
+            if (err) return res.status(500).json({ error: err });
+            if (rows.length === 0) return res.status(404).json({message: "Game not found."});
 
-    const isWinner = req.session.player_id === req.session.winner;
-    return res.json({ gameOver: true, isWinner });
+            if (!rows[0].win_plr_id) return res.json({ gameOver: false });
+            if (rows[0].win_plr_id === req.session.player_id)
+                return res.json({ gameOver: true, isWinner: true })
+            else
+                return res.json({ gameOver: true, isWinner: false })
+        })
 });
 
 
