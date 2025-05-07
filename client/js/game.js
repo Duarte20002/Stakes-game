@@ -42,11 +42,11 @@ function GameLoop(){
                 if (territory.plr_own_id){
                     if (!player1ID){
                         player1ID = territory.plr_own_id
-                        terrorityElement.style.color = "blue"
-                    }else if (player1ID == territory.plr_own_id){
-                        terrorityElement.style.color = "blue"
-                    }else {
                         terrorityElement.style.color = "DarkRed"
+                    }else if (player1ID == territory.plr_own_id){
+                        terrorityElement.style.color = "DarkRed"
+                    }else {
+                        terrorityElement.style.color = "blue"
                     }
                 }
             });
