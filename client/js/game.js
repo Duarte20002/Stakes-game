@@ -1,6 +1,8 @@
 let reinforceMode = false;
 let alreadyReinforced = false;
 let selectedCard = null;
+let isMyTurn = false;
+
 
 
 function initTerritories() {
@@ -28,8 +30,8 @@ function GameLoop(){
 
     request.onreadystatechange = function () {
         if (this.readyState == 4) {
+            console.log(this.responseText)
             var data = JSON.parse(this.responseText);
-            // console.log(data)
 
             var player1ID = undefined
             var player2ID = undefined
@@ -113,23 +115,30 @@ let selectedZone;
 let defendingZone;
 
 function ClickArea(area_number) {
+
+    if (!isMyTurn) {
+        alert("It's not your turn!");
+        return;
+    }
+    
     const selectionDiv = document.getElementById("selection");
 
-    
     if (reinforceMode) {
         reinforceTerritory(area_number);
         return;
     }
 
+    // Initial click to select where you want to move/attack from
     if (selectedZone === undefined) {
         selectedZone = area_number;
-        selectionDiv.innerHTML = "Attacking from Area " + selectedZone;
+        selectionDiv.innerHTML = "Selected Area " + selectedZone;
         const zone = document.getElementById("zone_red_" + selectedZone);
         if (zone) zone.style.backgroundColor = "palegoldenrod";
         verifyAdjacencies();
         return;
     }
 
+    // Same zone selected, the zone is "forgotten"
     if (selectedZone === area_number) {
         const zone = document.getElementById("zone_red_" + selectedZone);
         if (zone) zone.style.backgroundColor = "";
@@ -140,30 +149,74 @@ function ClickArea(area_number) {
         return;
     }
 
+    // If zone not "forgotten", thhen select next zone you wanna move/attack to
     if (selectedZone !== undefined && defendingZone === undefined) {
-        if (!highlightedAdjacents.includes(area_number)) {
-            selectionDiv.innerHTML = "You can only attack connected territories.";
+        defendingZone = area_number;
+
+        // Verify if the zone is adjacent
+        if (!highlightedAdjacents.includes(defendingZone)) {
+            selectionDiv.innerHTML = "You can only interact with connected territories.";
+            defendingZone = undefined;
             return;
         }
 
-        defendingZone = area_number;
-        const defZone = document.getElementById("zone_red_" + defendingZone);
-        if (defZone) defZone.style.backgroundColor = "blue";
+        const fromZone = document.getElementById("zone_red_" + selectedZone);
+        const toZone = document.getElementById("zone_red_" + defendingZone);
 
-        // Dropdown that gives the player the option to select with how many troops he wants to attack
-        selectionDiv.innerHTML = `
-            Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
+        const fromOwner = fromZone?.style.color;
+        const toOwner = toZone?.style.color;
+
+        // Same owner? Allow troop movement
+        if (fromOwner === toOwner && fromOwner !== "") {
+            const move = prompt("How many troops do you want to move? (Leave at least 1 behind)");
+
+            const num = parseInt(move);
+            if (isNaN(num) || num <= 0) {
+                alert("Invalid number.");
+            } else {
+                const payload = {
+                    from_id: selectedZone,
+                    to_id: defendingZone,
+                    troops: num
+                };
+
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/moveTroops", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        const response = JSON.parse(xhr.responseText);
+                        alert(response.message);
+                    }
+                };
+                xhr.send(JSON.stringify(payload));
+            }
+
+            // Reset selection
+            fromZone.style.backgroundColor = "";
+            toZone.style.backgroundColor = "";
+            selectedZone = undefined;
+            defendingZone = undefined;
+            selectionDiv.innerHTML = "";
+            ClearAdjacents();
+            return;
+        }
+
+        // Different owner? Proceed to attack
+        if (toZone) toZone.style.backgroundColor = "blue";
+        selectionDiv.innerHTML =
+            `Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
             Select number of attacking troops (max 3, must leave 1 behind):<br>
             <select id="attackTroopCount">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
             </select>
-            <button onclick='AttackZone()'>Attack</button>
-        `;
+            <button onclick='AttackZone()'>Attack</button>`;
         return;
     }
 
+    // Third click (switching selected zone)
     if (selectedZone !== area_number && defendingZone !== undefined) {
         const oldAttacker = document.getElementById("zone_red_" + selectedZone);
         const oldDefender = document.getElementById("zone_red_" + defendingZone);
@@ -174,17 +227,21 @@ function ClickArea(area_number) {
         defendingZone = undefined;
         const newZone = document.getElementById("zone_red_" + selectedZone);
         if (newZone) newZone.style.backgroundColor = "red";
-        selectionDiv.innerHTML = "Attacking from Area " + selectedZone;
+        selectionDiv.innerHTML = "Selected Area " + selectedZone;
         ClearAdjacents();
         verifyAdjacencies();
     }
 
-  
-
     console.log("Clicked on area " + area_number);
 }
 
+
 function reinforceTerritory(area_number) {
+    if (!isMyTurn) {
+        alert("It's not your turn!");
+        return;
+    }
+
     const troopsToAdd = prompt("How many troops do you want to add?", "1");
 
     if (troopsToAdd === null) {
@@ -225,11 +282,18 @@ function reinforceTerritory(area_number) {
 }
 
 function AttackZone() {
+
+    if (!isMyTurn) {
+        alert("It's not your turn!");
+        return;
+    }
+
     if (!selectedZone || !defendingZone) return;
     const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
     const troopCountInput = document.getElementById("attackTroopCount");
     const selectedTroopCount = parseInt(troopCountInput?.value || "1", 10);
 
+ 
     const xhr = new XMLHttpRequest();
 
     xhr.onload = function () {
@@ -247,12 +311,11 @@ function AttackZone() {
 
             const selectionDiv = document.getElementById("selection");
             if (selectionDiv) {
-                selectionDiv.innerHTML = `
-                    Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
+                selectionDiv.innerHTML = 
+                    `Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
                     <strong>Dice Roll Results:</strong><br>
                     <strong>Attacker's roll:</strong> ${getDiceEmojis(sortedAttackerRolls)}<br>
-                    <strong>Defender's roll:</strong> ${getDiceEmojis(sortedDefenderRolls)}<br>
-                `;
+                    <strong>Defender's roll:</strong> ${getDiceEmojis(sortedDefenderRolls)}<br>`;
             }
 
             // ✅ If a territory was captured, give the player a card
@@ -298,11 +361,10 @@ function giveCardToPlayer(player_id, game_id) {
                 // ✅ Display card info in the game UI
                 const cardRewardBox = document.getElementById("cardReward");
             if (cardRewardBox && card) {
-            cardRewardBox.innerHTML = `
-            <strong>🎴 New Card:</strong><br>
+            cardRewardBox.innerHTML = 
+            `<strong>🎴 New Card:</strong><br>
             Type: <em>${card.eff_typ}</em><br>
-            Value: <em>${card.eff_val}</em>
-    `;
+            Value: <em>${card.eff_val}</em>`;
 }
 
             } else {
@@ -341,6 +403,11 @@ function checkHasCard() {
 }
 
 function startReinforce() {
+    if (!isMyTurn) {
+        alert("❌ You can't use a card during the opponent's turn.");
+        return;
+    }
+
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/useCard", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -366,6 +433,7 @@ function startReinforce() {
 
     xhr.send();
 }
+
 
 function endTurn() {
     const xhr = new XMLHttpRequest();
@@ -395,8 +463,10 @@ function checkTurnOwnership() {
 
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                endTurnBtn.style.display = response.isMyTurn ? "block" : "none";
+                isMyTurn = response.isMyTurn;
+                endTurnBtn.style.display = isMyTurn ? "block" : "none";
             } else {
+                isMyTurn = false;
                 endTurnBtn.style.display = "none";
             }
         }

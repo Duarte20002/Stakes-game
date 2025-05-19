@@ -321,24 +321,26 @@ app.post("/logAttack", (req, res) => {
             function (err, rows) {
                 if (err) return res.status(500).json({ error: err });
                 if (rows.length < 2) return res.status(404).json({ message: "Territory data not found" });
-
-                if (ter_from_id == rows[0].ter_id) {
-                    ter_from_troop_count = rows[0].troop_count;
-                    ter_to_troop_count = rows[1].troop_count;
-                } else {
-                    ter_from_troop_count = rows[1].troop_count;
-                    ter_to_troop_count = rows[0].troop_count;
+    
+                const from = rows.find(r => r.ter_id === ter_from_id);
+    
+                if (from.plr_own_id !== req.session.player_id) {
+                    return res.status(403).json({ message: "You do not own this territory!" });
                 }
-
+    
+                const to = rows.find(r => r.ter_id === ter_to_id);
+                ter_from_troop_count = from.troop_count;
+                ter_to_troop_count = to.troop_count;
+    
                 if (att_troop_count < 1 || att_troop_count > 3 || att_troop_count >= ter_from_troop_count) {
                     return res.status(400).json({ message: "Invalid attacking troop count" });
                 }
-
+    
                 InsertInfo();
             }
         );
     }
-
+    
     function InsertInfo() {
         connection.query(
             "SELECT plr_own_id FROM game_territory WHERE game_id = ? AND ter_id = ?",
@@ -762,6 +764,113 @@ app.get("/checkVictory", (req, res) => {
                 return res.json({ gameOver: true, isWinner: false })
         })
 });
+
+app.post("/moveTroops", (req, res) => {
+    const { from_id, to_id, troops } = req.body;
+
+    if (!req.session.player_id || !req.session.gameID) {
+        return res.status(401).json({ message: "Not logged in or in game" });
+    }
+
+    if (!from_id || !to_id || !troops || troops <= 0) {
+        return res.status(400).json({ message: "Invalid parameters" });
+    }
+
+    // Step 1: Check ownership and troop counts
+    connection.query(
+        "select * from Stakes_digtentape.game_territory where game_id = ? and ter_id IN (?, ?) and plr_own_id = ?",
+        [req.session.gameID, from_id, to_id, req.session.player_id],
+        (err, results) => {
+            if (err) return res.status(500).json({ message: "DB error", err });
+            if (results.length < 2) {
+                return res.status(403).json({ message: "You must own both territories." });
+            }
+
+            const fromTerritory = results.find(row => row.ter_id === from_id);
+            const toTerritory = results.find(row => row.ter_id === to_id);
+
+            if (fromTerritory.troop_count <= troops) {
+                return res.status(400).json({ message: "You must leave at least 1 troop behind." });
+            }
+
+            // Step 2: update both territories
+            const update1 = "update Stakes_digtentape.game_territory SET troop_count = troop_count - ? where game_id = ? and ter_id = ?";
+            const update2 = "update Stakes_digtentape.game_territory SET troop_count = troop_count + ? where game_id = ? and ter_id = ?";
+
+            connection.query(update1, [troops, req.session.gameID, from_id], (err1) => {
+                if (err1) return res.status(500).json({ message: "Failed to subtract troops", err1 });
+
+                connection.query(update2, [troops, req.session.gameID, to_id], (err2) => {
+                    if (err2) return res.status(500).json({ message: "Failed to add troops", err2 });
+
+                    return res.json({ success: true, message: "Moved ${troops} troops successfully." });
+                });
+            });
+        }
+    );
+});
+
+app.post("/resetGame", (req, res) => {
+    if (!req.session || !req.session.player_id || !req.session.gameID) {
+        return res.status(400).json({ message: "Missing session or game info" });
+    }
+
+    const gameID = req.session.gameID;
+    const playerID = req.session.player_id;
+
+    // Step 1: Set the player to idle
+    connection.query(
+        "UPDATE Stakes_digtentape.player SET plr_searching = 'idle' WHERE plr_id = ?",
+        [playerID],
+        (err) => {
+            if (err) return res.status(500).json({ message: "Failed to set player to idle", error: err });
+
+            // Step 2: Check if both players are idle
+            connection.query(
+                "SELECT plr1_id, plr2_id FROM Stakes_digtentape.game WHERE game_id = ?",
+                [gameID],
+                (err, rows) => {
+                    if (err || rows.length === 0) return res.status(500).json({ message: "Failed to fetch game players", error: err });
+
+                    const { plr1_id, plr2_id } = rows[0];
+
+                    connection.query(
+                        "SELECT plr_id, plr_searching FROM Stakes_digtentape.player WHERE plr_id IN (?, ?)",
+                        [plr1_id, plr2_id],
+                        (err, players) => {
+                            if (err) return res.status(500).json({ message: "Failed to fetch player states", error: err });
+
+                            const bothIdle = players.every(p => p.plr_searching === 'idle');
+
+                            if (!bothIdle) {
+                                req.session.gameID = null;
+                                return res.json({ message: "You left the game. Waiting for other player." });
+                            }
+
+                            // Step 3: Delete related data if both are idle
+                            const deleteCards = "DELETE FROM Stakes_digtentape.player_cards WHERE game_id = ?";
+                            const deleteTerritories = "DELETE FROM Stakes_digtentape.game_territory WHERE game_id = ?";
+                            const deleteRolls = "DELETE FROM Stakes_digtentape.dice_rolls WHERE game_id = ?";
+                            const deleteGame = "DELETE FROM Stakes_digtentape.game WHERE game_id = ?";
+
+                            connection.query(deleteCards, [gameID], () => {
+                                connection.query(deleteTerritories, [gameID], () => {
+                                    connection.query(deleteRolls, [gameID], () => {
+                                        connection.query(deleteGame, [gameID], () => {
+                                            req.session.gameID = null;
+                                            res.json({ message: "Game ended and data deleted." });
+                                        });
+                                    });
+                                });
+                            });
+                        }
+                    );
+                }
+            );
+        }
+    );
+});
+
 
 
 app.listen(4000, () => {

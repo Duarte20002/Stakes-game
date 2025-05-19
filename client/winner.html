@@ -4,6 +4,32 @@
 <body style="text-align: center; font-family: sans-serif;">
     <h1 style="color: green;">🎉 Congratulations!</h1>
     <h2>You won the game!</h2>
-    <a href="/logout">Back to Main Menu</a>
+    <button onclick="resetGame()">Back to Main Menu</button>
+
+    <script>
+        function resetGame() {
+            fetch('/resetGame', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.message.includes("waiting")) {
+                    alert("✅ You left the game.\n⏳ Waiting for the other player to leave before the game is fully deleted.");
+                    window.location.href = "/lobby.html"; // stay logged in
+                } else {
+                    alert("✅ Game deleted. Returning to menu.");
+                    window.location.href = "/lobby.html";
+                }
+            })
+            .catch(error => {
+                console.error("Failed to reset game:", error);
+                window.location.href = "/lobby.html";
+            });
+        }
+        </script>
+        
+
 </body>
 </html>
