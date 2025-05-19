@@ -1,0 +1,94 @@
+{
+    "id": "065e5fd1-4dc7-45da-bd91-c784ccc10fa8",
+    "sceneType": "PREFAB",
+    "settings": {
+        "preloadMethodName": "",
+        "preloadPackFiles": [],
+        "createMethodName": "",
+        "borderWidth": 1280,
+        "borderHeight": 720
+    },
+    "displayList": [
+        {
+            "type": "Sprite",
+            "id": "fac79d17-70f4-455b-9c70-1c287051aa58",
+            "label": "idleeagle_spritesheet",
+            "texture": {
+                "key": "eagle-spritesheet",
+                "frame": 0
+            },
+            "x": 366,
+            "y": 266,
+            "scaleX": 3,
+            "scaleY": 3,
+            "ArcadeComponent.active": true,
+            "allowGravity": false,
+            "body.drag.x": 100,
+            "body.drag.y": 100,
+            "body.width": 40,
+            "body.height": 41,
+            "animationPlayMethod": 1,
+            "animationKey": "idleeagle-spritesheet",
+            "list": [
+                {
+                    "prefabId": "fcdb3276-25af-4100-9ad5-56c3c1949a3e",
+                    "id": "000ab807-e0d8-455c-bcb1-43ce4829f454",
+                    "unlock": [
+                        "speed"
+                    ],
+                    "label": "movementScript",
+                    "speed": 100
+                }
+            ]
+        }
+    ],
+    "plainObjects": [
+        {
+            "id": "0739a4b9-b717-43b6-bcfb-ca31977821f4",
+            "type": "Keyboard.Key",
+            "label": "upKey",
+            "scope": "PUBLIC",
+            "keyCode": "UP"
+        },
+        {
+            "id": "c7d0c760-d635-4841-a44a-8b2b2e8bc327",
+            "type": "Keyboard.Key",
+            "label": "downKey",
+            "scope": "PUBLIC",
+            "keyCode": "DOWN"
+        },
+        {
+            "id": "e3127a28-cff8-46a3-b71c-eb2cc0592dc2",
+            "type": "Keyboard.Key",
+            "label": "leftKey",
+            "scope": "PUBLIC",
+            "keyCode": "LEFT"
+        },
+        {
+            "id": "f5aafb89-e5df-47fe-ad7a-23b07c9eead0",
+            "type": "Keyboard.Key",
+            "label": "rightKey",
+            "scope": "PUBLIC",
+            "keyCode": "RIGHT"
+        },
+        {
+            "id": "5b76ced0-7d4c-4b52-9583-84d33686c349",
+            "type": "Keyboard.Key",
+            "label": "backspaceKey",
+            "scope": "PUBLIC",
+            "keyCode": "BACKSPACE"
+        },
+        {
+            "id": "6d7ae7dd-80e4-47e9-87db-c61e1a868089",
+            "type": "Keyboard.Key",
+            "label": "spaceKey",
+            "scope": "PUBLIC"
+        }
+    ],
+    "meta": {
+        "app": "Phaser Editor 2D - Scene Editor",
+        "url": "https://phasereditor2d.com",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    }
+}

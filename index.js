@@ -96,7 +96,7 @@ app.post("/findMatch", (req, res) => {
     }
 
     function InitializeGame() {
-        console.log('initializing game for id ' + req.session.gameID)
+        console.log("initializing game for id " + req.session.gameID)
     // Get players' info into the game
     connection.query(
         "select plr1_id, plr2_id from Stakes_digtentape.game where game_id = ?",
@@ -110,7 +110,7 @@ app.post("/findMatch", (req, res) => {
     // Assign the ownership of the territories
             const allTerritoryIds = Array.from({ length: 32 }, (_, i) => i + 1);
 
-            const territoryInserts = allTerritoryIds.map(ter_id => {
+            const territoryinserts = allTerritoryIds.map(ter_id => {
                 if (ter_id === 9) return [req.session.gameID, ter_id, plr1_id, 4];
                 if (ter_id === 32) return [req.session.gameID, ter_id, plr2_id, 4];
 
@@ -128,10 +128,10 @@ app.post("/findMatch", (req, res) => {
                 return [req.session.gameID, ter_id, null, neutralTroops];
             });
 
-    // Insert or update territory information
+    // insert or update territory information
             const sql = "insert into Stakes_digtentape.game_territory (game_id, ter_id, plr_own_id, troop_count) values ? on duplicate key update plr_own_id = values(plr_own_id), troop_count = values(troop_count)";
 
-                connection.query(sql, [territoryInserts], (err) => {
+                connection.query(sql, [territoryinserts], (err) => {
                     if (err) return res.send(err);
 
                     res.json({
@@ -149,7 +149,7 @@ app.post("/findMatch", (req, res) => {
     }
 
     connection.query(
-        "select * from Stakes_digtentape.player where plr_searching = 'queueing' AND plr_id != ? LIMIT 1",
+        "select * from Stakes_digtentape.player where plr_searching = 'queueing' and plr_id != ? limit 1",
         [req.session.player_id],
         (err, rows) => {
             if (err) return res.send(err);
@@ -243,7 +243,7 @@ app.get("/game", (req, res) => {
         return
     }
 
-    connection.query("select * from Stakes_digtentape.game_territory", //Where Game ID = ? AND playerid 
+    connection.query("select * from Stakes_digtentape.game_territory", //where Game ID = ? and playerid 
         [],
         function (err, rows, fields) {
             if (err){
@@ -285,7 +285,7 @@ app.post("/logAttack", (req, res) => {
     function CheckForVictory(attackingPlayerId) {
         console.log("Checking victory")
         connection.query(
-            "SELECT COUNT(*) AS territoryCount FROM Stakes_digtentape.game_territory WHERE game_id = ? AND plr_own_id = ?",
+            "select COUNT(*) AS territoryCount from Stakes_digtentape.game_territory where game_id = ? and plr_own_id = ?",
             [req.session.gameID, attackingPlayerId],
             (err, results) => {
                 if (err) return console.error("Error checking victory:", err);
@@ -293,13 +293,11 @@ app.post("/logAttack", (req, res) => {
                 const territoryCount = results[0].territoryCount;
                 console.log("TerritoryCount: " + territoryCount)
                 if (territoryCount === 32) {
-                    // req.session.winner = attackingPlayerId;
-                    // req.session.gameOver = true;
     
                     console.log("[Winner] win_plr_id=" + attackingPlayerId + " |win_con=conquer_all |game_id=" + req.session.gameID)
-                    // ✅ Persist winner info to the database
+
                     connection.query(
-                        "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = ? WHERE game_id = ?",
+                        "update Stakes_digtentape.game SET win_plr_id = ?, win_con = ? where game_id = ?",
                         [attackingPlayerId, "conquer_all", req.session.gameID],
                         (updateErr) => {
                             if (updateErr) {
@@ -316,7 +314,7 @@ app.post("/logAttack", (req, res) => {
     
     function GetTerritoryData() {
         connection.query(
-            "select * FROM game_territory where game_id = ? AND (ter_id = ? OR ter_id = ?)",
+            "select * from game_territory where game_id = ? and (ter_id = ? or ter_id = ?)",
             [req.session.gameID, ter_from_id, ter_to_id],
             function (err, rows) {
                 if (err) return res.status(500).json({ error: err });
@@ -343,7 +341,7 @@ app.post("/logAttack", (req, res) => {
     
     function InsertInfo() {
         connection.query(
-            "SELECT plr_own_id FROM game_territory WHERE game_id = ? AND ter_id = ?",
+            "select plr_own_id from game_territory where game_id = ? and ter_id = ?",
             [req.session.gameID, ter_to_id],
             (err, result) => {
                 if (err) return res.status(500).json({ message: "Error obtaining defender ID", error: err });
@@ -370,7 +368,7 @@ app.post("/logAttack", (req, res) => {
                 let newDefenderTroops = ter_to_troop_count - defenderLosses;
 
                 connection.query(
-                    "insert INTO dice_rolls (game_id, ter_from_id, ter_to_id, plr_att_id, plr_def_id, att_die, def_die, att_troops, def_troops) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "insert into dice_rolls (game_id, ter_from_id, ter_to_id, plr_att_id, plr_def_id, att_die, def_die, att_troops, def_troops) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [
                         req.session.gameID,
                         ter_from_id,
@@ -386,13 +384,13 @@ app.post("/logAttack", (req, res) => {
                         if (err) return res.status(500).json({ message: "Error logging dice rolls", error: err });
 
                         connection.query(
-                            "update game_territory SET troop_count = ? where game_id = ? AND ter_id = ?",
+                            "update game_territory SET troop_count = ? where game_id = ? and ter_id = ?",
                             [newAttackerTroops, req.session.gameID, ter_from_id],
                             (err) => {
                                 if (err) return res.status(500).json({ message: "Failed to update attacker troops", error: err });
 
                                 connection.query(
-                                    "update game_territory SET troop_count = ? where game_id = ? AND ter_id = ?",
+                                    "update game_territory SET troop_count = ? where game_id = ? and ter_id = ?",
                                     [Math.max(0, newDefenderTroops), req.session.gameID, ter_to_id],
                                     (err) => {
                                         if (err) return res.status(500).json({ message: "Failed to update defender troops", error: err });
@@ -404,13 +402,13 @@ app.post("/logAttack", (req, res) => {
                                             req.session.justConquered = true;
 
                                             connection.query(
-                                                "update game_territory SET troop_count = ? where game_id = ? AND ter_id = ?",
+                                                "update game_territory SET troop_count = ? where game_id = ? and ter_id = ?",
                                                 [newAttackerFinal, req.session.gameID, ter_from_id],
                                                 (err) => {
                                                     if (err) return res.status(500).json({ message: "Failed to update attacker after conquest", error: err });
 
                                                     connection.query(
-                                                        "update game_territory SET plr_own_id = ?, troop_count = ? where game_id = ? AND ter_id = ?",
+                                                        "update game_territory SET plr_own_id = ?, troop_count = ? where game_id = ? and ter_id = ?",
                                                         [attackingPlayerId, troopsToMove, req.session.gameID, ter_to_id],
                                                         (err) => {
                                                             if (err) return res.status(500).json({ message: "Failed to transfer territory", error: err });
@@ -452,7 +450,7 @@ app.post("/logAttack", (req, res) => {
 
     function GetGameID() {
         connection.query(
-            "SELECT game_id FROM Stakes_digtentape.game WHERE plr1_id = ? OR plr2_id = ?",
+            "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",
             [req.session.player_id, req.session.player_id],
             (err, rows) => {
                 if (err) return res.status(500).json({ message: "Database error", error: err });
@@ -470,6 +468,52 @@ app.post("/logAttack", (req, res) => {
         GetTerritoryData();
 });
 
+app.post("/moveTroops", (req, res) => {
+    const { from_id, to_id, troops } = req.body;
+
+    if (!req.session.player_id || !req.session.gameID) {
+        return res.status(401).json({ message: "Not logged in or in game" });
+    }
+
+    if (!from_id || !to_id || !troops || troops <= 0) {
+        return res.status(400).json({ message: "Invalid parameters" });
+    }
+
+    // Step 1: Check ownership and troop counts
+    connection.query(
+        "select * from Stakes_digtentape.game_territory where game_id = ? and ter_id IN (?, ?) and plr_own_id = ?",
+        [req.session.gameID, from_id, to_id, req.session.player_id],
+        (err, results) => {
+            if (err) return res.status(500).json({ message: "DB error", err });
+            if (results.length < 2) {
+                return res.status(403).json({ message: "You must own both territories." });
+            }
+
+            const fromTerritory = results.find(row => row.ter_id === from_id);
+            const toTerritory = results.find(row => row.ter_id === to_id);
+
+            if (fromTerritory.troop_count <= troops) {
+                return res.status(400).json({ message: "You must leave at least 1 troop behind." });
+            }
+
+            // Step 2: update both territories
+            const update1 = "update Stakes_digtentape.game_territory SET troop_count = troop_count - ? where game_id = ? and ter_id = ?";
+            const update2 = "update Stakes_digtentape.game_territory SET troop_count = troop_count + ? where game_id = ? and ter_id = ?";
+
+            connection.query(update1, [troops, req.session.gameID, from_id], (err1) => {
+                if (err1) return res.status(500).json({ message: "Failed to subtract troops", err1 });
+
+                connection.query(update2, [troops, req.session.gameID, to_id], (err2) => {
+                    if (err2) return res.status(500).json({ message: "Failed to add troops", err2 });
+
+                    return res.json({ success: true, message: "Moved ${troops} troops successfully." });
+                });
+            });
+        }
+    );
+});
+
+
 app.post("/reinforce", (req, res) => {
     if (!req.session.username) {
         return res.status(401).json({ success: false, message: "Not logged in." });
@@ -483,7 +527,7 @@ app.post("/reinforce", (req, res) => {
 
     // Make sure the player owns the territory
     connection.query(
-        "SELECT * FROM Stakes_digtentape.game_territory WHERE ter_id = ? AND plr_own_id = ?",
+        "select * from Stakes_digtentape.game_territory where ter_id = ? and plr_own_id = ?",
         [territory_id, req.session.player_id],
         (err, rows) => {
             if (err) return res.status(500).json({ success: false, message: "Database error." });
@@ -492,14 +536,14 @@ app.post("/reinforce", (req, res) => {
                 return res.status(403).json({ success: false, message: "You do not own this territory." });
             }
 
-            // Update troop count
+            // update troop count
             connection.query(
-                "UPDATE Stakes_digtentape.game_territory SET troop_count = troop_count + ? WHERE ter_id = ?",
+                "update Stakes_digtentape.game_territory SET troop_count = troop_count + ? where ter_id = ?",
                 [troops, territory_id],
                 (err) => {
                     if (err) return res.status(500).json({ success: false, message: "Failed to reinforce." });
 
-                    return res.json({ success: true, message: `Successfully reinforced with ${troops} troops!` });
+                    return res.json({ success: true, message: "Successfully reinforced with ${troops} troops!" });
                 }
             );
         }
@@ -509,7 +553,7 @@ app.post("/reinforce", (req, res) => {
 
 app.post("/giveCard", (req, res) => {
 
-    connection.query("SELECT crd_id FROM cards WHERE crd_id BETWEEN 9 AND 11 ORDER BY RAND() LIMIT 1", (err, results) => {
+    connection.query("select crd_id from cards where crd_id between 9 and 11 order by Rand() limit 1", (err, results) => {
         if (err) {
             console.error("Error selecting card:", err);
             return res.status(500).send("Database error");
@@ -520,7 +564,7 @@ app.post("/giveCard", (req, res) => {
         const card_id = results[0].crd_id;
 
         connection.query(
-            "INSERT INTO player_cards (plr_id, crd_id, game_id, is_used) VALUES (?, ?, ?, 0)",
+            "insert into player_cards (plr_id, crd_id, game_id, is_used) values (?, ?, ?, 0)",
             [req.session.player_id, card_id, req.session.gameID],
             (insertErr) => {
                 if (insertErr) {
@@ -528,7 +572,7 @@ app.post("/giveCard", (req, res) => {
                     return res.status(500).send("Failed to assign card");
                 }
                 connection.query(
-                    "SELECT * FROM cards WHERE crd_id = ?",
+                    "select * from cards where crd_id = ?",
                     [card_id],
                     (fetchErr, cardResults) => {
                         if (fetchErr || cardResults.length === 0) {
@@ -556,7 +600,7 @@ app.post("/endTurn", (req, res) => {
     function EndTurn(){
         // Get the current game to determine whose turn it is
         connection.query(
-            "SELECT plr1_id, plr2_id, cur_turn_plr_id FROM Stakes_digtentape.game WHERE game_id = ?",
+            "select plr1_id, plr2_id, cur_turn_plr_id from Stakes_digtentape.game where game_id = ?",
             [req.session.gameID],
             (err, results) => {
                 if (err || results.length === 0) {
@@ -567,7 +611,7 @@ app.post("/endTurn", (req, res) => {
                 const nextTurn = cur_turn_plr_id === plr1_id ? plr2_id : plr1_id;
 
                 connection.query(
-                    "UPDATE Stakes_digtentape.game SET cur_turn_plr_id = ? WHERE game_id = ?",
+                    "update Stakes_digtentape.game SET cur_turn_plr_id = ? where game_id = ?",
                     [nextTurn, req.session.gameID],
                     (updateErr) => {
                         if (updateErr) return res.status(500).json({ message: "Failed to end turn." });
@@ -620,7 +664,7 @@ app.get("/isMyTurn", (req, res) => {
 
     function CheckTurn() {
         connection.query(
-            "SELECT cur_turn_plr_id FROM Stakes_digtentape.game WHERE game_id = ?",
+            "select cur_turn_plr_id from Stakes_digtentape.game where game_id = ?",
             [req.session.gameID],
             (err, results) => {
                 if (err || results.length === 0) {
@@ -635,7 +679,7 @@ app.get("/isMyTurn", (req, res) => {
 
     function GetGameID() {
         connection.query(
-            "SELECT game_id FROM Stakes_digtentape.game WHERE plr1_id = ? OR plr2_id = ?",
+            "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",
             [req.session.player_id, req.session.player_id],
             (err, rows) => {
                 if (err) return res.status(500).json({ message: "Database error", error: err });
@@ -659,11 +703,7 @@ app.get("/hasCard", (req, res) => {
     }
 
     function CheckForCard() {
-        const query = `
-            SELECT * FROM Stakes_digtentape.player_cards 
-            WHERE plr_id = ? AND game_id = ? AND is_used = 0
-            LIMIT 1
-        `;
+        const query = "select * from Stakes_digtentape.player_cards where plr_id = ? and game_id = ? and is_used = 0 limit 1";
 
         connection.query(query, [req.session.player_id, req.session.gameID], (err, results) => {
             if (err) return res.status(500).json({ error: "Database error" });
@@ -680,7 +720,7 @@ app.get("/hasCard", (req, res) => {
 
     function GetGameID() {
         connection.query(
-            "SELECT game_id FROM Stakes_digtentape.game WHERE plr1_id = ? OR plr2_id = ?",
+            "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",
             [req.session.player_id, req.session.player_id],
             (err, rows) => {
                 if (err) return res.status(500).json({ error: "Database error", err });
@@ -708,11 +748,7 @@ app.post("/useCard", (req, res) => {
             return res.status(400).json({ message: "No card to use." });
         }
 
-        const query = `
-            UPDATE Stakes_digtentape.player_cards 
-            SET is_used = 1 
-            WHERE plr_id = ? AND game_id = ? AND crd_id = ? AND is_used = 0
-        `;
+        const query = "update Stakes_digtentape.player_cards SET is_used = 1 where plr_id = ? and game_id = ? and crd_id = ? and is_used = 0";
 
         connection.query(
             query,
@@ -728,7 +764,7 @@ app.post("/useCard", (req, res) => {
 
     function GetGameID() {
         connection.query(
-            "SELECT game_id FROM Stakes_digtentape.game WHERE plr1_id = ? OR plr2_id = ?",
+            "select game_id from Stakes_digtentape.game where plr1_id = ? or plr2_id = ?",
             [req.session.player_id, req.session.player_id],
             (err, rows) => {
                 if (err) return res.status(500).json({ error: "Database error", err });
@@ -752,7 +788,7 @@ app.get("/checkVictory", (req, res) => {
         return res.status(401).json({ message: "Not logged in or no game." });
     }
 
-    connection.query("SELECT win_plr_id FROM Stakes_digtentape.game WHERE game_id = ?", [req.session.gameID],
+    connection.query("select win_plr_id from Stakes_digtentape.game where game_id = ?", [req.session.gameID],
         function (err, rows, fields) {
             if (err) return res.status(500).json({ error: err });
             if (rows.length === 0) return res.status(404).json({message: "Game not found."});

@@ -1,0 +1,39 @@
+{
+    "id": "1004e2b4-b859-4841-aa20-518b2d79e0e5",
+    "sceneType": "PREFAB",
+    "settings": {
+        "preloadMethodName": "",
+        "preloadPackFiles": [],
+        "createMethodName": "",
+        "borderWidth": 1280,
+        "borderHeight": 720
+    },
+    "displayList": [
+        {
+            "type": "Sprite",
+            "id": "9d371ce0-e6fa-42ad-aff1-c58fa0895f22",
+            "label": "starstarts_spritesheet",
+            "texture": {
+                "key": "starts-spritesheet",
+                "frame": 0
+            },
+            "x": 532,
+            "y": 213,
+            "ArcadeComponent.active": true,
+            "allowGravity": false,
+            "body.drag.x": 20,
+            "body.drag.y": 20,
+            "body.width": 128,
+            "body.height": 128,
+            "animationPlayMethod": 1,
+            "animationKey": "Starstarts-spritesheet"
+        }
+    ],
+    "plainObjects": [],
+    "meta": {
+        "app": "Phaser Editor 2D - Scene Editor",
+        "url": "https://phasereditor2d.com",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    }
+}

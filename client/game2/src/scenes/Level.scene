@@ -1,0 +1,93 @@
+{
+    "id": "01aefa93-6044-4159-8358-7e91310aa05f",
+    "sceneType": "SCENE",
+    "settings": {
+        "preloadPackFiles": [],
+        "createMethodName": "editorCreate",
+        "sceneKey": "Level",
+        "borderWidth": 1280,
+        "borderHeight": 720
+    },
+    "displayList": [
+        {
+            "type": "Image",
+            "id": "3572d422-63c9-4942-92fc-4a2645e34a47",
+            "label": "map_Game_final",
+            "texture": {
+                "key": "Map_Game_final"
+            },
+            "x": 662,
+            "y": 361,
+            "scaleX": 0.7060555249789695,
+            "scaleY": 0.6970694749223262
+        },
+        {
+            "type": "Image",
+            "id": "287e8245-3e1c-4fba-99f8-dfd9c6eec475",
+            "label": "card_Deck_2",
+            "texture": {
+                "key": "Card Deck 2"
+            },
+            "x": 1187,
+            "y": 123,
+            "scaleX": 0.2713583157513023,
+            "scaleY": 0.30462737163115067
+        },
+        {
+            "type": "Image",
+            "id": "f68e6b46-d82d-48ce-8090-3e50da3f8c1d",
+            "label": "angel_Piece_2",
+            "texture": {
+                "key": "Angel Piece 2"
+            },
+            "x": 149,
+            "y": 161,
+            "scaleX": 0.7,
+            "scaleY": 0.7
+        },
+        {
+            "type": "Image",
+            "id": "bf74b422-d68f-4652-bdc5-6bccdb77448c",
+            "label": "demon_Piece",
+            "texture": {
+                "key": "Demon Piece"
+            },
+            "x": 995,
+            "y": 478,
+            "scaleX": 0.7,
+            "scaleY": 0.7
+        }
+    ],
+    "plainObjects": [
+        {
+            "id": "1bddbb52-390e-4cd1-b1a2-7e1478565722",
+            "type": "Keyboard.Key",
+            "label": "enterKey",
+            "scope": "PUBLIC",
+            "keyCode": "ENTER"
+        },
+        {
+            "id": "ab23e189-795a-44e0-b54d-8ee08818a825",
+            "type": "Collider",
+            "label": "collider",
+            "scope": "PUBLIC",
+            "object1": "dino_Prefab",
+            "object2": "stars",
+            "collideCallback": "this.pickstar",
+            "callbackContext": "this"
+        }
+    ],
+    "meta": {
+        "app": "Phaser Editor 2D - Scene Editor",
+        "url": "https://phasereditor2d.com",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    },
+    "lists": [
+        {
+            "id": "f454d896-e7b0-477c-afb5-8093174cf6e1",
+            "label": "stars",
+            "scope": "PUBLIC"
+        }
+    ]
+}

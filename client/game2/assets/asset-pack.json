@@ -1,0 +1,99 @@
+{
+    "section1": {
+        "files": [
+            {
+                "url": "src/scenes/Angel Piece 2.png",
+                "type": "image",
+                "key": "Angel Piece 2"
+            },
+            {
+                "url": "src/scenes/Card Deck 2.png",
+                "type": "image",
+                "key": "Card Deck 2"
+            },
+            {
+                "url": "assets/dementia.png",
+                "type": "image",
+                "key": "dementia"
+            },
+            {
+                "url": "src/scenes/Demon Piece.png",
+                "type": "image",
+                "key": "Demon Piece"
+            },
+            {
+                "url": "assets/dino.png",
+                "key": "dino",
+                "type": "image"
+            },
+            {
+                "url": "src/Prefabs/Dino_Prefab.js",
+                "type": "script",
+                "key": "Dino_Prefab"
+            },
+            {
+                "url": "src/animations/Eagle.json",
+                "type": "animation",
+                "key": "Eagle"
+            },
+            {
+                "url": "assets/eagle-spritesheet.png",
+                "frameConfig": {
+                    "frameWidth": 40,
+                    "frameHeight": 41,
+                    "startFrame": 0,
+                    "endFrame": -1,
+                    "spacing": 0,
+                    "margin": 0
+                },
+                "type": "spritesheet",
+                "key": "eagle-spritesheet"
+            },
+            {
+                "url": "src/scenes/map.png",
+                "type": "image",
+                "key": "map"
+            },
+            {
+                "url": "src/scenes/Map_Game_final.png",
+                "type": "image",
+                "key": "Map_Game_final"
+            },
+            {
+                "url": "src/scripts/MovementScript.js",
+                "type": "script",
+                "key": "MovementScript"
+            },
+            {
+                "url": "src/animations/Star.json",
+                "type": "animation",
+                "key": "Star"
+            },
+            {
+                "url": "src/Prefabs/Star_Prefab.js",
+                "type": "script",
+                "key": "Star_Prefab"
+            },
+            {
+                "url": "src/animations/starts-spritesheet.png",
+                "frameConfig": {
+                    "frameWidth": 128,
+                    "frameHeight": 128,
+                    "startFrame": 0,
+                    "endFrame": 13,
+                    "spacing": 0,
+                    "margin": 0
+                },
+                "type": "spritesheet",
+                "key": "starts-spritesheet"
+            }
+        ]
+    },
+    "meta": {
+        "app": "Phaser Editor 2D - Asset Pack Editor",
+        "contentType": "phasereditor2d.pack.core.AssetContentType",
+        "url": "https://phasereditor2d.com",
+        "version": 2,
+        "showAllFilesInBlocks": false
+    }
+}

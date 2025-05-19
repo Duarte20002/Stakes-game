@@ -15,6 +15,7 @@ function FindMatch() {
     request.open("POST", "/findMatch", true);
     request.send();
 }
+
 function QuitMatch() {
     var request = new XMLHttpRequest();
 
@@ -88,16 +89,14 @@ app.post('/startgame', async (req, res) => {
     try {
         // 1. Create game entry
         const [gameResult] = await db.promise().execute(
-            `insert into game (plr1_id, plr2_id, cur_turn_plr_id)
-             values (?, ?, ?)`,
+            "insert into game (plr1_id, plr2_id, cur_turn_plr_id) values (?, ?, ?)",
             [plr1_id, plr2_id, plr1_id]
         );
         const game_id = gameResult.insertId;
 
         // 2. Assign territories
         await db.promise().execute(
-            `insert into game_territory (game_id, territory_id, owner_id, troop_count)
-             values (?, 9, ?, 5), (?, 32, ?, 5)`,
+            "insert into game_territory (game_id, territory_id, owner_id, troop_count) values (?, 9, ?, 5), (?, 32, ?, 5)",
             [game_id, plr1_id, game_id, plr2_id]
         );
 
