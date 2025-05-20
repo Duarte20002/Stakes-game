@@ -553,7 +553,7 @@ app.post("/reinforce", (req, res) => {
 
 app.post("/giveCard", (req, res) => {
 
-    connection.query("select crd_id from cards where crd_id between 9 and 11 order by Rand() limit 1", (err, results) => {
+    connection.query("select crd_id from cards where crd_id between 1 and 10 order by Rand() limit 1", (err, results) => {
         if (err) {
             console.error("Error selecting card:", err);
             return res.status(500).send("Database error");
