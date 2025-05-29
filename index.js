@@ -330,7 +330,7 @@ app.post("/logAttack", (req, res) => {
 
         // Only check if a player owns all 32 territories
         connection.query(
-            "SELECT COUNT(*) AS territoryCount FROM Stakes_digtentape.game_territory WHERE game_id = ? AND plr_own_id = ?",
+            "select COUNT(*) AS territoryCount from Stakes_digtentape.game_territory where game_id = ? and plr_own_id = ?",
             [req.session.gameID, attackingPlayerId],
             (err, results) => {
                 if (err) return console.error("Error checking territory conquest victory:", err);
@@ -340,7 +340,7 @@ app.post("/logAttack", (req, res) => {
                     console.log(`[Winner] win_plr_id=${attackingPlayerId} | win_con=conquer_all | game_id=${req.session.gameID}`);
 
                     connection.query(
-                        "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = ? WHERE game_id = ?",
+                        "update Stakes_digtentape.game SET win_plr_id = ?, win_con = ? where game_id = ?",
                         [attackingPlayerId, "conquer_all", req.session.gameID],
                         (updateErr) => {
                             if (updateErr) console.error("Failed to update winner in DB:", updateErr);
@@ -354,7 +354,7 @@ app.post("/logAttack", (req, res) => {
 
     function GetTerritoryData() {
         connection.query(
-            "SELECT * FROM game_territory WHERE game_id = ? AND (ter_id = ? OR ter_id = ?)",
+            "select * from game_territory where game_id = ? and (ter_id = ? or ter_id = ?)",
             [req.session.gameID, ter_from_id, ter_to_id],
             function (err, rows) {
                 if (err) return res.status(500).json({ error: err });
@@ -374,14 +374,14 @@ app.post("/logAttack", (req, res) => {
                     return res.status(400).json({ message: "Invalid attacking troop count" });
                 }
 
-                InsertInfo();
+                insertInfo();
             }
         );
     }
 
-    function InsertInfo() {
+    function insertInfo() {
         connection.query(
-            "SELECT plr_own_id FROM game_territory WHERE game_id = ? AND ter_id = ?",
+            "select plr_own_id from game_territory where game_id = ? and ter_id = ?",
             [req.session.gameID, ter_to_id],
             (err, result) => {
                 if (err) return res.status(500).json({ message: "Error obtaining defender ID", error: err });
@@ -408,7 +408,7 @@ app.post("/logAttack", (req, res) => {
                 let newDefenderTroops = ter_to_troop_count - defenderLosses;
 
                 connection.query(
-                    "INSERT INTO dice_rolls (game_id, ter_from_id, ter_to_id, plr_att_id, plr_def_id, att_die, def_die, att_troops, def_troops) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "insert into dice_rolls (game_id, ter_from_id, ter_to_id, plr_att_id, plr_def_id, att_die, def_die, att_troops, def_troops) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [
                         req.session.gameID,
                         ter_from_id,
@@ -424,13 +424,13 @@ app.post("/logAttack", (req, res) => {
                         if (err) return res.status(500).json({ message: "Error logging dice rolls", error: err });
 
                         connection.query(
-                            "UPDATE game_territory SET troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                            "update game_territory SET troop_count = ? where game_id = ? and ter_id = ?",
                             [newAttackerTroops, req.session.gameID, ter_from_id],
                             (err) => {
                                 if (err) return res.status(500).json({ message: "Failed to update attacker troops", error: err });
 
                                 connection.query(
-                                    "UPDATE game_territory SET troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                                    "update game_territory SET troop_count = ? where game_id = ? and ter_id = ?",
                                     [Math.max(0, newDefenderTroops), req.session.gameID, ter_to_id],
                                     (err) => {
                                         if (err) return res.status(500).json({ message: "Failed to update defender troops", error: err });
@@ -442,13 +442,13 @@ app.post("/logAttack", (req, res) => {
                                             req.session.justConquered = true;
 
                                             connection.query(
-                                                "UPDATE game_territory SET troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                                                "update game_territory SET troop_count = ? where game_id = ? and ter_id = ?",
                                                 [newAttackerFinal, req.session.gameID, ter_from_id],
                                                 (err) => {
                                                     if (err) return res.status(500).json({ message: "Failed to update attacker after conquest", error: err });
 
                                                     connection.query(
-                                                        "UPDATE game_territory SET plr_own_id = ?, troop_count = ? WHERE game_id = ? AND ter_id = ?",
+                                                        "update game_territory SET plr_own_id = ?, troop_count = ? where game_id = ? and ter_id = ?",
                                                         [attackingPlayerId, troopsToMove, req.session.gameID, ter_to_id],
                                                         (err) => {
                                                             if (err) return res.status(500).json({ message: "Failed to transfer territory", error: err });
@@ -506,8 +506,6 @@ app.post("/logAttack", (req, res) => {
     if (!req.session.gameID) GetGameID();
     else GetTerritoryData();
 });
-
-
 
 app.post("/moveTroops", (req, res) => {
     const { from_id, to_id, troops } = req.body;

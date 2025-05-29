@@ -1288,6 +1288,16 @@
             "label": "enterKey",
             "scope": "PUBLIC",
             "keyCode": "ENTER"
+        },
+        {
+            "id": "ab23e189-795a-44e0-b54d-8ee08818a825",
+            "type": "Collider",
+            "label": "collider",
+            "scope": "PUBLIC",
+            "object1": "dino_Prefab",
+            "object2": "stars",
+            "collideCallback": "this.pickstar",
+            "callbackContext": "this"
         }
     ],
     "meta": {
