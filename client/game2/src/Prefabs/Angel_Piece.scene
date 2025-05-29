@@ -1,0 +1,77 @@
+{
+    "id": "072ef8e9-671c-4793-8aa0-c87833149530",
+    "sceneType": "PREFAB",
+    "settings": {
+        "preloadMethodName": "",
+        "preloadPackFiles": [],
+        "createMethodName": "",
+        "borderWidth": 1280,
+        "borderHeight": 720
+    },
+    "displayList": [
+        {
+            "type": "Container",
+            "id": "c148dd34-2d4c-4b24-af68-9fc37a176433",
+            "label": "container_1",
+            "x": 415,
+            "y": 129,
+            "scaleX": 1.1,
+            "scaleY": 1.1,
+            "list": [
+                {
+                    "type": "Image",
+                    "id": "d1e70703-49af-4c21-8397-29176609416f",
+                    "label": "number_Piece_Angel__1_",
+                    "scope": "NESTED_PREFAB",
+                    "texture": {
+                        "key": "Number_Piece_Angel (1)"
+                    },
+                    "x": 9,
+                    "y": 12,
+                    "scaleX": 0.75,
+                    "scaleY": 0.75
+                },
+                {
+                    "type": "Image",
+                    "id": "e56745c3-5439-493e-81a2-a9c67b19a69a",
+                    "label": "angel_Piece",
+                    "scope": "NESTED_PREFAB",
+                    "texture": {
+                        "key": "Angel Piece"
+                    },
+                    "x": 9.5,
+                    "y": 5,
+                    "scaleX": 0.43,
+                    "scaleY": 0.43,
+                    "originX": 0.5074080087620843,
+                    "originY": 0.49552723999270276
+                },
+                {
+                    "type": "Text",
+                    "id": "4d6007d0-3110-468f-ae9e-4524a7423fcc",
+                    "label": "troop_count",
+                    "scope": "NESTED_PREFAB",
+                    "x": 9,
+                    "y": 35,
+                    "scaleX": 0.3,
+                    "scaleY": 0.3,
+                    "originX": 0.5028175536264277,
+                    "originY": 0.5028175536264297,
+                    "text": "99",
+                    "fixedWidth": 80,
+                    "fixedHeight": 45,
+                    "align": "center",
+                    "fontSize": "50px",
+                    "fontStyle": "bold"
+                }
+            ]
+        }
+    ],
+    "plainObjects": [],
+    "meta": {
+        "app": "Phaser Editor 2D - Scene Editor",
+        "url": "https://phasereditor2d.com",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    }
+}

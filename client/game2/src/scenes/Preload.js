@@ -61,7 +61,7 @@ class Preload extends Phaser.Scene {
 		this.editorPreload();
 
 		if (this.checklogin())
-		this.load.on(Phaser.Loader.Events.COMPLETE, () => this.scene.start("Level"));
+			this.load.on(Phaser.Loader.Events.COMPLETE, () => this.scene.start("Level"));
 		else
 			{
 				console.log("You're Logged IN!")
@@ -70,7 +70,7 @@ class Preload extends Phaser.Scene {
 	}
 
 	checklogin() {
-		return false
+		return true
 	}
 
 	/* END-USER-CODE */
