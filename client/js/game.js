@@ -2,6 +2,7 @@ let reinforceMode = false;
 let alreadyReinforced = false;
 let selectedCard = null;
 let isMyTurn = false;
+let handCards = []
 
 
 
@@ -30,13 +31,13 @@ function GameLoop(){
 
     request.onreadystatechange = function () {
         if (this.readyState == 4) {
-            console.log(this.responseText)
             var data = JSON.parse(this.responseText);
+            console.log(data)
 
             var player1ID = undefined
             var player2ID = undefined
 
-            data.forEach(territory => {
+            data.territories.forEach(territory => {
                 var territoryID = "zone_red_" + territory.ter_id
                 var terrorityElement = document.getElementById(territoryID)
                terrorityElement.innerHTML = territory.troop_count
@@ -52,6 +53,15 @@ function GameLoop(){
                     }
                 }
             });
+
+            const cardRewardBox = document.getElementById("cardReward");
+            handCards = data.cards
+            data.cards.forEach(card => {
+                cardRewardBox.innerHTML = 
+                `<strong>🎴 New Card:</strong><br>
+                Type: <em>${card.eff_typ}</em><br>
+                Value: <em>${card.eff_val}</em>`;
+            })
         }
     };
 
@@ -243,43 +253,51 @@ function reinforceTerritory(area_number) {
     }
 
     const troopsToAdd = prompt("How many troops do you want to add?", "1");
-
     if (troopsToAdd === null) {
         reinforceMode = false;
         return;
     }
 
     const number = parseInt(troopsToAdd);
-
     if (isNaN(number) || number <= 0) {
         alert("Invalid number of troops.");
         return;
     }
 
-    // Send reinforcement to the server
     const request = new XMLHttpRequest();
-    request.open("POST", "/reinforce", true);
-    request.setRequestHeader("Content-Type", "application/json");
-
-    request.onreadystatechange = function () {
-        if (this.readyState === 4) {
-            const response = JSON.parse(this.responseText);
-            alert(response.message);
-
-            if (response.success) {
-                alreadyReinforced = true;
-                reinforceMode = false;
-            }
-        }
-    };
-
     const dataToSend = {
         territory_id: area_number,
         troops: number
     };
 
+    if (selectedCard) {
+        request.open("POST", "/reinforce", true);
+        dataToSend.card = selectedCard;
+        selectedCard = undefined;
+    } else {
+        request.open("POST", "/applyBonusTroops", true);
+    }
+
+    request.setRequestHeader("Content-Type", "application/json");
+    request.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            const response = JSON.parse(this.responseText);
+            console.log(response);
+
+            if (response.success) {
+                document.getElementById("bonusAlert").style.display = "none";
+                alreadyReinforced = true;
+                reinforceMode = false;
+                GameLoop(); // Refresh the map
+            } else {
+                alert(response.message);
+            }
+        }
+    };
+
     request.send(JSON.stringify(dataToSend));
 }
+
 
 function AttackZone() {
 
@@ -360,12 +378,12 @@ function giveCardToPlayer(player_id, game_id) {
 
                 // ✅ Display card info in the game UI
                 const cardRewardBox = document.getElementById("cardReward");
-            if (cardRewardBox && card) {
-            cardRewardBox.innerHTML = 
-            `<strong>🎴 New Card:</strong><br>
-            Type: <em>${card.eff_typ}</em><br>
-            Value: <em>${card.eff_val}</em>`;
-}
+                if (cardRewardBox && card) {
+                    cardRewardBox.innerHTML = 
+                    `<strong>🎴 New Card:</strong><br>
+                    Type: <em>${card.eff_typ}</em><br>
+                    Value: <em>${card.eff_val}</em>`;
+                }
 
             } else {
                 console.error("Card request failed:", xhrCard.statusText);
@@ -408,32 +426,45 @@ function startReinforce() {
         return;
     }
 
+    selectedCard = handCards[0]
+
+    reinforceMode = true;
+    alert("Card used! Select a territory to reinforce.");
+
+    document.getElementById("reinforceButton").style.display = "none";
+
+    const cardDisplay = document.getElementById("cardReward");
+    if (cardDisplay) {
+        cardDisplay.innerHTML = "";
+    }
+}
+
+function getBonusTroops() {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/useCard", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.open("GET", "/getBonusTroops", true);
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            const response = JSON.parse(xhr.responseText);
-            if (response.success) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const { bonus } = JSON.parse(xhr.responseText);
+            const bonusDiv = document.getElementById("bonusAlert");
+
+            if (bonus > 0) {
                 reinforceMode = true;
-                alert("Card used! Select a territory to reinforce.");
-
-                document.getElementById("reinforceButton").style.display = "none";
-
-                const cardDisplay = document.getElementById("cardReward");
-                if (cardDisplay) {
-                    cardDisplay.innerHTML = "";
+                if (bonusDiv) {
+                    bonusDiv.innerText = `You have ${bonus} bonus troops! Click a territory to reinforce.`;
+                    bonusDiv.style.display = "block"
+                    console.log(`You have ${bonus} bonus troops! Click a territory to reinforce.`)
                 }
             } else {
-                alert("No card available or already used.");
+                if (bonusDiv) {
+                    bonusDiv.style.display = "none";
+                }
             }
         }
     };
 
     xhr.send();
 }
-
 
 function endTurn() {
     const xhr = new XMLHttpRequest();
@@ -448,6 +479,16 @@ function endTurn() {
             }
         }
     };
+
+    const checkBonus = new XMLHttpRequest();
+    checkBonus.open("GET", "/getBonusTroops", false); // sync request
+    checkBonus.send();
+    
+    const bonus = JSON.parse(checkBonus.responseText).bonus;
+    if (bonus > 0) {
+        alert(`You still have ${bonus} troops to place!`);
+        return;
+    }
 
     xhr.open("POST", "/endTurn", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -464,6 +505,9 @@ function checkTurnOwnership() {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 isMyTurn = response.isMyTurn;
+                if (isMyTurn) {
+                    getBonusTroops();
+                }
                 endTurnBtn.style.display = isMyTurn ? "block" : "none";
             } else {
                 isMyTurn = false;
@@ -479,14 +523,16 @@ function checkTurnOwnership() {
 function checkVictoryStatus() {
     const xhr = new XMLHttpRequest();
 
-
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                console.log(response)
+                console.log(response);
+
                 if (response.gameOver) {
-                    if (response.isWinner) {
+                    if (response.isDraw) {
+                        window.location.href = "/draw.html";
+                    } else if (response.isWinner) {
                         window.location.href = "/winner.html";
                     } else {
                         window.location.href = "/loser.html";
@@ -499,6 +545,7 @@ function checkVictoryStatus() {
     xhr.open("GET", "/checkVictory", true);
     xhr.send();
 }
+
 
 
 setInterval(checkHasCard, 1000);

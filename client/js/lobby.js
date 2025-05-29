@@ -1,4 +1,7 @@
 function FindMatch() {
+
+    sessionStorage.clear();
+
     var request = new XMLHttpRequest();
 
     request.onreadystatechange = function () {
