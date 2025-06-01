@@ -15,8 +15,6 @@
             "label": "container_1",
             "x": 415,
             "y": 129,
-            "scaleX": 1.1,
-            "scaleY": 1.1,
             "list": [
                 {
                     "type": "Image",
@@ -41,8 +39,8 @@
                     },
                     "x": 9.5,
                     "y": 5,
-                    "scaleX": 0.43,
-                    "scaleY": 0.43,
+                    "scaleX": 0.45,
+                    "scaleY": 0.45,
                     "originX": 0.5074080087620843,
                     "originY": 0.49552723999270276
                 },

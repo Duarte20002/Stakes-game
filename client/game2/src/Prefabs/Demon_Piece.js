@@ -15,7 +15,7 @@ class Demon_Piece extends Phaser.GameObjects.Container {
 		this.add(number_Piece_Demon);
 
 		// demon_Piece_1
-		const demon_Piece_1 = scene.add.image(-3, 25, "Demon Piece_1");
+		const demon_Piece_1 = scene.add.image(-2, 24, "Demon Piece_1");
 		demon_Piece_1.scaleX = 0.45;
 		demon_Piece_1.scaleY = 0.45;
 		this.add(demon_Piece_1);

@@ -8,9 +8,6 @@ class Angel_Piece extends Phaser.GameObjects.Container {
 	constructor(scene, x, y) {
 		super(scene, x ?? 415, y ?? 129);
 
-		this.scaleX = 1.1;
-		this.scaleY = 1.1;
-
 		// number_Piece_Angel__1_
 		const number_Piece_Angel__1_ = scene.add.image(9, 12, "Number_Piece_Angel (1)");
 		number_Piece_Angel__1_.scaleX = 0.75;
@@ -19,8 +16,8 @@ class Angel_Piece extends Phaser.GameObjects.Container {
 
 		// angel_Piece
 		const angel_Piece = scene.add.image(9.5, 5, "Angel Piece");
-		angel_Piece.scaleX = 0.43;
-		angel_Piece.scaleY = 0.43;
+		angel_Piece.scaleX = 0.45;
+		angel_Piece.scaleY = 0.45;
 		angel_Piece.setOrigin(0.5074080087620843, 0.49552723999270276);
 		this.add(angel_Piece);
 

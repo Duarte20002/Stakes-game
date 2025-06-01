@@ -1205,6 +1205,7 @@
             "scope": "PUBLIC",
             "x": 530,
             "y": 319,
+            "visible": false,
             "list": [
                 {
                     "type": "Image",
@@ -1230,7 +1231,7 @@
                         "key": "Plus"
                     },
                     "x": 222,
-                    "y": 40,
+                    "y": 17,
                     "scaleX": 0.6,
                     "scaleY": 0.6
                 },
@@ -1243,18 +1244,18 @@
                     "texture": {
                         "key": "Minus"
                     },
-                    "x": -75,
-                    "y": 40,
+                    "x": -77,
+                    "y": 16,
                     "scaleX": 0.6,
                     "scaleY": 0.6
                 },
                 {
                     "type": "Text",
                     "id": "d1da360e-87d1-436e-9eb0-6aec5c110c58",
-                    "label": "text_2",
+                    "label": "troopCountValue",
                     "scope": "PUBLIC",
                     "x": 13,
-                    "y": 17,
+                    "y": -7,
                     "scaleX": 0.2,
                     "scaleY": 0.2,
                     "text": "99",
@@ -1274,9 +1275,129 @@
                         "key": "Close Window"
                     },
                     "x": 287,
-                    "y": -110,
+                    "y": -133,
                     "scaleX": 0.6,
                     "scaleY": 0.6
+                },
+                {
+                    "type": "Image",
+                    "id": "c9263c8f-37bb-40fe-a3f3-3e819ed81fcb",
+                    "label": "attack_Button",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "RECTANGLE",
+                    "hitArea.width": 288,
+                    "hitArea.height": 65,
+                    "texture": {
+                        "key": "Attack_Button"
+                    },
+                    "x": 74,
+                    "y": 100,
+                    "scaleX": 0.5,
+                    "scaleY": 0.5
+                },
+                {
+                    "type": "Image",
+                    "id": "1f260030-4661-4a12-a382-c253e894964f",
+                    "label": "move_Button",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "RECTANGLE",
+                    "hitArea.width": 288,
+                    "hitArea.height": 65,
+                    "texture": {
+                        "key": "Move_Button"
+                    },
+                    "x": 74,
+                    "y": 100,
+                    "scaleX": 0.5,
+                    "scaleY": 0.5
+                },
+                {
+                    "type": "Image",
+                    "id": "fbbfd88e-8201-402b-841d-eecad3750309",
+                    "label": "reinforce_Button",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Reinforce_Button"
+                    },
+                    "x": 74,
+                    "y": 100,
+                    "scaleX": 0.5,
+                    "scaleY": 0.5
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "id": "98751e59-de32-4eff-b80e-a7c526c9ca90",
+            "label": "dice",
+            "scope": "PUBLIC",
+            "visible": false,
+            "list": [
+                {
+                    "type": "Image",
+                    "id": "91163746-9fbd-4343-87c0-4c1a546ef90e",
+                    "label": "attacker_1",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Attacker 1"
+                    },
+                    "x": 47,
+                    "y": 617,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "ef9091d3-f5fd-42cf-8c1e-709c2e39c93d",
+                    "label": "attacker_2",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Attacker 1"
+                    },
+                    "x": 107,
+                    "y": 617,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "dc018702-39bf-4647-bd0d-2e05c742c33e",
+                    "label": "attacker_3",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Attacker 1"
+                    },
+                    "x": 167,
+                    "y": 617,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "3e99ee19-3d9a-49c9-83ff-11326bf3c048",
+                    "label": "defender_1",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Defender 1"
+                    },
+                    "x": 47,
+                    "y": 677,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "1d48239e-c219-4bba-bc98-50b8e5232471",
+                    "label": "defender_2",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Defender 1"
+                    },
+                    "x": 107,
+                    "y": 677,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
                 }
             ]
         }
@@ -1288,16 +1409,6 @@
             "label": "enterKey",
             "scope": "PUBLIC",
             "keyCode": "ENTER"
-        },
-        {
-            "id": "ab23e189-795a-44e0-b54d-8ee08818a825",
-            "type": "Collider",
-            "label": "collider",
-            "scope": "PUBLIC",
-            "object1": "dino_Prefab",
-            "object2": "stars",
-            "collideCallback": "this.pickstar",
-            "callbackContext": "this"
         }
     ],
     "meta": {

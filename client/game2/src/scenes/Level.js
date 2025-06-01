@@ -2,9 +2,16 @@ let reinforceMode = false;
 let alreadyReinforced = false;
 let selectedCard = null;
 let isMyTurn = false;
-let highlightedAdjacents = [];
+let highlightedAdjacents = []; //Array of the adjacent territories to be highlighted
 let selectedZone;
 let defendingZone;
+let selectedTroopCount;
+var tropsInSelected=1;
+let isMovementMode = false;
+let attackerDiceImages = []; //Array of the attacker's dice's images
+let defenderDiceImages = []; //Array of the defender's dice's images
+let playerCards = []; //Array of the cards
+let cardSlots = [this.card01, this.card02, this.card03, this.card04];
 
 /* START OF COMPILED CODE */
 
@@ -492,6 +499,7 @@ class Level extends Phaser.Scene {
 
 		// window
 		const window = this.add.container(530, 319);
+		window.visible = false;
 
 		// window_1
 		const window_1 = this.add.image(80, -5, "Window");
@@ -501,33 +509,88 @@ class Level extends Phaser.Scene {
 		window.add(window_1);
 
 		// plus
-		const plus = this.add.image(222, 40, "Plus");
+		const plus = this.add.image(222, 17, "Plus");
 		plus.setInteractive(this.input.makePixelPerfect());
 		plus.scaleX = 0.6;
 		plus.scaleY = 0.6;
 		window.add(plus);
 
 		// minus
-		const minus = this.add.image(-75, 40, "Minus");
+		const minus = this.add.image(-77, 16, "Minus");
 		minus.setInteractive(this.input.makePixelPerfect());
 		minus.scaleX = 0.6;
 		minus.scaleY = 0.6;
 		window.add(minus);
 
-		// text_2
-		const text_2 = this.add.text(13, 17, "", {});
-		text_2.scaleX = 0.2;
-		text_2.scaleY = 0.2;
-		text_2.text = "99";
-		text_2.setStyle({ "align": "center", "fixedWidth":599,"fixedHeight":234,"fontSize": "250px", "fontStyle": "bold" });
-		window.add(text_2);
+		// troopCountValue
+		const troopCountValue = this.add.text(13, -7, "", {});
+		troopCountValue.scaleX = 0.2;
+		troopCountValue.scaleY = 0.2;
+		troopCountValue.text = "99";
+		troopCountValue.setStyle({ "align": "center", "fixedWidth":599,"fixedHeight":234,"fontSize": "250px", "fontStyle": "bold" });
+		window.add(troopCountValue);
 
 		// close_Window
-		const close_Window = this.add.image(287, -110, "Close Window");
+		const close_Window = this.add.image(287, -133, "Close Window");
 		close_Window.setInteractive(this.input.makePixelPerfect());
 		close_Window.scaleX = 0.6;
 		close_Window.scaleY = 0.6;
 		window.add(close_Window);
+
+		// attack_Button
+		const attack_Button = this.add.image(74, 100, "Attack_Button");
+		attack_Button.setInteractive(new Phaser.Geom.Rectangle(0, 0, 288, 65), Phaser.Geom.Rectangle.Contains);
+		attack_Button.scaleX = 0.5;
+		attack_Button.scaleY = 0.5;
+		window.add(attack_Button);
+
+		// move_Button
+		const move_Button = this.add.image(74, 100, "Move_Button");
+		move_Button.setInteractive(new Phaser.Geom.Rectangle(0, 0, 288, 65), Phaser.Geom.Rectangle.Contains);
+		move_Button.scaleX = 0.5;
+		move_Button.scaleY = 0.5;
+		window.add(move_Button);
+
+		// reinforce_Button
+		const reinforce_Button = this.add.image(74, 100, "Reinforce_Button");
+		reinforce_Button.setInteractive(this.input.makePixelPerfect());
+		reinforce_Button.scaleX = 0.5;
+		reinforce_Button.scaleY = 0.5;
+		window.add(reinforce_Button);
+
+		// dice
+		const dice = this.add.container(0, 0);
+		dice.visible = false;
+
+		// attacker_1
+		const attacker_1 = this.add.image(47, 617, "Attacker 1");
+		attacker_1.scaleX = 0.7;
+		attacker_1.scaleY = 0.7;
+		dice.add(attacker_1);
+
+		// attacker_2
+		const attacker_2 = this.add.image(107, 617, "Attacker 1");
+		attacker_2.scaleX = 0.7;
+		attacker_2.scaleY = 0.7;
+		dice.add(attacker_2);
+
+		// attacker_3
+		const attacker_3 = this.add.image(167, 617, "Attacker 1");
+		attacker_3.scaleX = 0.7;
+		attacker_3.scaleY = 0.7;
+		dice.add(attacker_3);
+
+		// defender_1
+		const defender_1 = this.add.image(47, 677, "Defender 1");
+		defender_1.scaleX = 0.7;
+		defender_1.scaleY = 0.7;
+		dice.add(defender_1);
+
+		// defender_2
+		const defender_2 = this.add.image(107, 677, "Defender 1");
+		defender_2.scaleX = 0.7;
+		defender_2.scaleY = 0.7;
+		dice.add(defender_2);
 
 		// lists
 		const stars = [];
@@ -637,9 +700,18 @@ class Level extends Phaser.Scene {
 		this.window_1 = window_1;
 		this.plus = plus;
 		this.minus = minus;
-		this.text_2 = text_2;
+		this.troopCountValue = troopCountValue;
 		this.close_Window = close_Window;
+		this.attack_Button = attack_Button;
+		this.move_Button = move_Button;
+		this.reinforce_Button = reinforce_Button;
 		this.window = window;
+		this.attacker_1 = attacker_1;
+		this.attacker_2 = attacker_2;
+		this.attacker_3 = attacker_3;
+		this.defender_1 = defender_1;
+		this.defender_2 = defender_2;
+		this.dice = dice;
 		this.enterKey = enterKey;
 		this.stars = stars;
 
@@ -857,11 +929,29 @@ class Level extends Phaser.Scene {
 	/** @type {Phaser.GameObjects.Image} */
 	minus;
 	/** @type {Phaser.GameObjects.Text} */
-	text_2;
+	troopCountValue;
 	/** @type {Phaser.GameObjects.Image} */
 	close_Window;
+	/** @type {Phaser.GameObjects.Image} */
+	attack_Button;
+	/** @type {Phaser.GameObjects.Image} */
+	move_Button;
+	/** @type {Phaser.GameObjects.Image} */
+	reinforce_Button;
 	/** @type {Phaser.GameObjects.Container} */
 	window;
+	/** @type {Phaser.GameObjects.Image} */
+	attacker_1;
+	/** @type {Phaser.GameObjects.Image} */
+	attacker_2;
+	/** @type {Phaser.GameObjects.Image} */
+	attacker_3;
+	/** @type {Phaser.GameObjects.Image} */
+	defender_1;
+	/** @type {Phaser.GameObjects.Image} */
+	defender_2;
+	/** @type {Phaser.GameObjects.Container} */
+	dice;
 	/** @type {Phaser.Input.Keyboard.Key} */
 	enterKey;
 	/** @type {Array<any>} */
@@ -1388,6 +1478,7 @@ class Level extends Phaser.Scene {
 
 		this.card01.setInteractive()
 			.on('pointerdown', () => {
+				this.selectCard(0)
 				console.log("First card selected");
 			})
 			.on('pointerover', () => {
@@ -1399,6 +1490,7 @@ class Level extends Phaser.Scene {
 
 		this.card02.setInteractive()
 			.on('pointerdown', () => {
+				this.selectCard(1)
 				console.log("Second card selected");
 			})
 			.on('pointerover', () => {
@@ -1410,6 +1502,7 @@ class Level extends Phaser.Scene {
 
 		this.card03.setInteractive()
 			.on('pointerdown', () => {
+				this.selectCard(2)
 				console.log("Third card selected");
 			})
 			.on('pointerover', () => {
@@ -1421,6 +1514,7 @@ class Level extends Phaser.Scene {
 
 		this.card04.setInteractive()
 			.on('pointerdown', () => {
+				this.selectCard(3)
 				console.log("Forth card selected");
 			})
 			.on('pointerover', () => {
@@ -1432,6 +1526,15 @@ class Level extends Phaser.Scene {
 
 		this.plus.setInteractive()
 			.on('pointerdown', () => {
+				let maxTroops = isMovementMode
+				? tropsInSelected - 1               // Troops allowed to move
+				: Math.min(tropsInSelected - 1, 3); // Troops allowed to attack
+
+				if (this.selectedTroopCount < maxTroops) {
+				this.selectedTroopCount++;
+				this.troopCountValue.setText(this.selectedTroopCount);
+}
+
 				console.log("Added troops");
 			})
 			.on('pointerover', () => {
@@ -1443,7 +1546,12 @@ class Level extends Phaser.Scene {
 
 		this.minus.setInteractive()
 			.on('pointerdown', () => {
-				console.log("Subtracted troops");
+				if(this.selectedTroopCount>1){
+					this.selectedTroopCount--;
+					this.troopCountValue.setText(this.selectedTroopCount);			
+					console.log("Subtracted troops");
+				}
+
 			})
 			.on('pointerover', () => {
         		this.minus.setScale(0.63);
@@ -1455,7 +1563,7 @@ class Level extends Phaser.Scene {
 		this.pass_Turn.setInteractive()
 			.on('pointerdown', () => {
 				console.log("Pased the turn");
-				this.endTurn()
+				this.EndTurn()
 			})
 			.on('pointerover', () => {
         		this.pass_Turn.setScale(0.33);
@@ -1476,39 +1584,99 @@ class Level extends Phaser.Scene {
         		this.close_Window.setScale(0.6);
     		});
 
+		this.move_Button.setInteractive()
+			.on('pointerdown', () => {
+				console.log("Moved Troops!")
+				this.MoveTroops()
+			})
+			.on('pointerover', () => {
+        		this.move_Button.setScale(0.55);
+    		})
+    		.on('pointerout', () => {
+        		this.move_Button.setScale(0.5);
+    		});
+
+		this.attack_Button.setInteractive()
+			.on('pointerdown', () => {
+				console.log("Attacked territory")
+				this.AttackZone()
+			})
+			.on('pointerover', () => {
+        		this.attack_Button.setScale(0.55);
+    		})
+    		.on('pointerout', () => {
+        		this.attack_Button.setScale(0.5);
+    		});
+
+		this.reinforce_Button.setInteractive()
+			.on('pointerdown', () => {
+				console.log("Reinforced territory")
+			})
+			.on('pointerover', () => {
+        		this.reinforce_Button.setScale(0.55);
+    		})
+    		.on('pointerout', () => {
+        		this.reinforce_Button.setScale(0.5);
+    		});
+
+		this.move_Button.visible = isMovementMode;
+		this.attack_Button.visible = !isMovementMode;
+		this.reinforce_Button.setVisible(false);
+		this.card01.setVisible(false);
+		this.card02.setVisible(false);
+		this.card03.setVisible(false);
+		this.card04.setVisible(false);
+
 		this.GameLoop();
 			setInterval(() => {
 				this.GameLoop()
 			}, 3000);
 
-		this.checkTurnOwnership();
+		this.CheckTurnOwnership();
 			setInterval(() => {
-				this.checkTurnOwnership()
+				this.CheckTurnOwnership()
+			}, 3000);
+
+		this.CheckHasCard();
+			setInterval(() => {
+				this.CheckTurnOwnership()
 			}, 3000);
 	}
 
 	GameLoop(){
 		var request = new XMLHttpRequest();
-		const scene = this
+		const scene = this;
 
+		request.open("GET", "/game", true);
 		request.onreadystatechange = () => {
-			if (this.readyState == 4) {
-				var data = JSON.parse(this.responseText);
-				console.log(data)
+
+			if (request.readyState == 4) {
+
+				var data = JSON.parse(request.responseText);
+				scene.territories = data.territories;
+				playerCards = data.cards; // <- this line is critical
+				// console.log("Loaded cards:", playerCards);
 
 
 				var player1ID = undefined
 				var player2ID = undefined
 
-				data.forEach(territory => {
+				data.territories.forEach(territory => {
 					var zone = scene.zones.list[(territory.ter_id - 1)].list[1]
 					var zoneText = zone.list[2]
 					var zoneIcon = zone.list[1]
 					var zoneBase = zone.list[0]
+
+
+						if (territory.ter_ID === selectedZone && selectedZone!=undefined){
+							tropsInSelected = territory.troop_count;
+							// console.log("Clicked on area "+selectedZone+" with troops " + tropsInSelected);
+						}
+
+
 					zoneText.text = territory.troop_count
 					if (territory.plr_own_id){
 						zoneText.setColor("#ffffff")
-
 
 						if (!player1ID){
 							player1ID = territory.plr_own_id
@@ -1523,16 +1691,27 @@ class Level extends Phaser.Scene {
 						}
 					}
 				});
+
+				scene.AddCardToHand(data.cards);
+
 			}
 		};
 
-		request.open("GET", "/game", true);
 		request.send();
+
 	}
 
- 	ClickArea(area_number) {
 
-		const scene = this
+ 	ClickArea(area_number) {
+	const scene = this;
+
+		if (reinforceMode && selectedCard) {
+			console.log("Zone clicked for reinforcement:", area_number);
+			console.log("Selected card before sending:", selectedCard);
+			this.sendReinforceRequest(area_number, selectedCard);
+			reinforceMode = false;
+			return;
+		}
 
 		if (!isMyTurn) {
 			alert("It's not your turn!");
@@ -1540,39 +1719,46 @@ class Level extends Phaser.Scene {
 		}
 
 		if (reinforceMode) {
-			reinforceTerritory(area_number);
+			ReinforceTerritory(area_number);
 			return;
 		}
 
+		// First click – selecting source territory
 		if (selectedZone === undefined) {
 			selectedZone = area_number;
-			const zone = scene.zones.list[(selectedZone) - 1].list[0]
-			console.log(zone)
-			if (zone) 
-			{					
-				zone.setTint(0x000000)
-				console.log("Setting tint for zone " + selectedZone)
-			}				
-			this.verifyAdjacencies();
+			const zone = scene.zones.list[(selectedZone) - 1].list[0];
+			if (zone) {
+				zone.setTint(0x000000);
+			}
+
+			// Update troop count for this selected zone
+			const territory = scene.territories?.find(t => t.ter_id === selectedZone);
+			tropsInSelected = territory ? territory.troop_count : 1;
+
+			this.VerifyAdjacencies();
 			return;
 		}
 
-		// Same zone selected, the zone is "forgotten"
-			if (selectedZone === area_number) {
-				const zone = scene.zones.list[(selectedZone) - 1].list[0]
-				if (zone) 
-					zone.clearTint()
-				selectedZone = undefined;
-				defendingZone = undefined;
-				this.ClearAdjacents();
-				return;
-			}
+		// Second click on same zone = cancel selection
+		if (selectedZone === area_number) {
+			const zone = scene.zones.list[(selectedZone) - 1].list[0];
+			if (zone) zone.clearTint();
+			selectedZone = undefined;
+			defendingZone = undefined;
+			this.ClearAdjacents();
 
-		// If zone not "forgotten", thhen select next zone you wanna move/attack to
+			// Hide buttons
+			scene.move_Button.visible = false;
+			scene.attack_Button.visible = false;
+
+			return;
+		}
+
+		// Second click – attempting to select target for move or attack
 		if (selectedZone !== undefined && defendingZone === undefined) {
 			defendingZone = area_number;
 
-			// Verify if the zone is adjacent
+			// Verify adjacency
 			if (!highlightedAdjacents.includes(defendingZone)) {
 				defendingZone = undefined;
 				return;
@@ -1581,76 +1767,67 @@ class Level extends Phaser.Scene {
 			const fromZone = scene.zones.list[(selectedZone) - 1].list[0];
 			const toZone = scene.zones.list[(defendingZone) - 1].list[0];
 
-			// Same owner then allow troop movement
-			if (fromZone === toZone && fromZone !== "") {
-				const move = prompt("How many troops do you want to move? (Leave at least 1 behind)"); //Eventually place the window here
-				scene.window.visible = true
+			// Determine troop count for selectedZone
+			const territory = scene.territories?.find(t => t.ter_id === selectedZone);
+			tropsInSelected = territory ? territory.troop_count : 1;
 
-				const num = parseInt(move);
-				if (isNaN(num) || num <= 0) {
-					alert("Invalid number.");
-				} else {
-					const payload = {
-						from_id: selectedZone,
-						to_id: defendingZone,
-						troops: num
-					};
+			// Troop movement between owner territories
+			const selectedOwner = scene.territories?.find(t => t.ter_id === selectedZone)?.plr_own_id;
+			const targetOwner = scene.territories?.find(t => t.ter_id === defendingZone)?.plr_own_id;
 
-					const xhr = new XMLHttpRequest();
-					xhr.open("POST", "/moveTroops", true);
-					xhr.setRequestHeader("Content-Type", "application/json");
-					xhr.onreadystatechange = () => {
-						if (xhr.readyState === 4) {
-							const response = JSON.parse(xhr.responseText);
-							alert(response.message);
-						}
-					};
-					xhr.send(JSON.stringify(payload));
-				}
+			console.log("selectedOwner:", selectedOwner, "| targetOwner:", targetOwner);
 
-				// Reset selection
-				fromZone.style.backgroundColor = "";
-				toZone.style.backgroundColor = "";
-				selectedZone = undefined;
-				defendingZone = undefined;
-				selectionDiv.innerHTML = "";
-				ClearAdjacents();
+			if (selectedOwner && selectedOwner === targetOwner) {
+				isMovementMode = true;
+
+				// Set button visibility
+				scene.move_Button.visible = true;
+				scene.attack_Button.visible = false;
+
+				scene.selectedTroopCount = 1;
+				scene.troopCountValue.setText(scene.selectedTroopCount);
+				scene.window.visible = true;
+
+				console.log("Moving troops from ", selectedZone, " to ", defendingZone, " max: ", tropsInSelected - 1);
 				return;
 			}
 
-			// Different owner? Proceed to attack
-			scene.window.visible = true
-			// selectionDiv.innerHTML =
-			// 	`Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
-			// 	Select number of attacking troops (max 3, must leave 1 behind):<br>
-			// 	<select id="attackTroopCount">
-			// 		<option value="1">1</option>
-			// 		<option value="2">2</option>
-			// 		<option value="3">3</option>
-			// 	</select>
-			// 	<button onclick='AttackZone()'>Attack</button>`;
+			// Attack other territories
+			isMovementMode = false;
+
+			// Set button visibility
+			scene.move_Button.visible = false;
+			scene.attack_Button.visible = true;
+
+			scene.selectedTroopCount = 1;
+			scene.troopCountValue.setText(scene.selectedTroopCount);
+			scene.window.visible = true;
+
+			console.log("Attacking from ", selectedZone, " to ", defendingZone, " available troops: ", tropsInSelected);
 			return;
 		}
 
-		// Third click (switching selected zone)
+		// Third click – switching source selection
 		if (selectedZone !== area_number && defendingZone !== undefined) {
 			const oldAttacker = scene.zones.list[(selectedZone) - 1].list[0];
 			const oldDefender = scene.zones.list[(defendingZone) - 1].list[0];
-			if (oldAttacker) oldAttacker.style.backgroundColor = "";
-			if (oldDefender) oldDefender.style.backgroundColor = "";
+			if (oldAttacker) oldAttacker.clearTint();
+			if (oldDefender) oldDefender.clearTint();
 
 			selectedZone = area_number;
 			defendingZone = undefined;
 			const newZone = scene.zones.list[(selectedZone) - 1].list[0];
-			// if (newZone) newZone.style.backgroundColor = "red";
-			ClearAdjacents();
-			verifyAdjacencies();
+			if (newZone) newZone.setTint(0x000000);
+
+			this.ClearAdjacents();
+			this.VerifyAdjacencies();
 		}
 
 		console.log("Clicked on area " + area_number);
 	}
 
-	verifyAdjacencies() {						//Check adjacencies between the territories via ter_id
+
+	VerifyAdjacencies() {						//Check adjacencies between the territories via ter_id
 		const dataToSend = {
 			ter_ID: selectedZone
 		};
@@ -1662,13 +1839,9 @@ class Level extends Phaser.Scene {
 		request.onreadystatechange = () => {
 			if (request.readyState === 4) {
 				const data = JSON.parse(request.response);
-				console.log(data)
 				// Get the data from EVERY row instead of only the first.
 				const adjacent = data.map(row => row.adj_ter2_id);
-				console.log(data)
-				console.log(adjacent)
 				this.Coloradjacent(adjacent);
-				// console.log("Adjacencies: " + adj_ter2_id);
 			}
 		};
 
@@ -1676,6 +1849,7 @@ class Level extends Phaser.Scene {
 		request.setRequestHeader("Content-Type", "application/json");
 		request.send(JSON.stringify(dataToSend));
 	}
+
 
 	Coloradjacent(arrayAdjacent) {         //Function to color the adjacent territories when clicking on an area
 		highlightedAdjacents = arrayAdjacent;
@@ -1689,6 +1863,7 @@ class Level extends Phaser.Scene {
 		});
 	}
 
+
 	ClearAdjacents() {                     //Function to clear selection of adjacent when clicking outside of areas.
 		const scene = this
 
@@ -1701,7 +1876,8 @@ class Level extends Phaser.Scene {
 		highlightedAdjacents = [];
 	}
 
-	reinforceTerritory(area_number) {
+
+	ReinforceTerritory(area_number) {
 		if (!isMyTurn) {
 			alert("It's not your turn!");
 			return;
@@ -1746,128 +1922,282 @@ class Level extends Phaser.Scene {
 		request.send(JSON.stringify(dataToSend));
 	}
 
-	AttackZone() {
+	selectCard(cardIndex) {
+		
+		if (alreadyReinforced || !isMyTurn) return;
 
+		const card = playerCards[cardIndex];
+		if (!card || parseInt(card.is_used) === 1) {
+			console.log("Invalid or used card clicked.");
+			return;
+		}
+
+		selectedCard = card;
+		reinforceMode = true;
+		console.log("Selected card:", selectedCard);
+	}
+
+
+	sendReinforceRequest(territory_id, card) {
+		console.log("Sending reinforce request to zone", territory_id, "with card", card);
+
+		const xhr = new XMLHttpRequest();
+		xhr.open("POST", "/reinforce", true);
+		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+		xhr.onreadystatechange = () => {
+			if (xhr.readyState === 4) {
+				console.log("XHR Response:", xhr.status, xhr.responseText);
+				const res = JSON.parse(xhr.responseText);
+				if (res.success) {
+					console.log("Reinforcement successful!", res);
+					alreadyReinforced = true;
+					selectedCard = null;
+				} else {
+					console.error("Reinforcement failed:", res.message);
+				}
+			}
+		};
+
+		const body = {
+			territory_id,
+			troops: 1,
+			card: { crd_id: card.crd_id }
+		};
+
+		xhr.send(JSON.stringify(body));
+	}
+
+
+
+
+	AttackZone() {
 		if (!isMyTurn) {
 			alert("It's not your turn!");
 			return;
 		}
 
-		if (!selectedZone || !defendingZone) return;
-		const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
-		const troopCountInput = document.getElementById("attackTroopCount");
-		const selectedTroopCount = parseInt(troopCountInput?.value || "1", 10);
+		if (!selectedZone || !defendingZone) {
+			console.warn("Attack failed – zones not selected");
+			return;
+		}
 
+		const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
 
 		const xhr = new XMLHttpRequest();
 
 		xhr.onload = () => {
 			if (xhr.status >= 200 && xhr.status < 300) {
 				const data = JSON.parse(xhr.responseText);
-				console.log("Attack logged:", data);
+				console.log("Attack response:", data);
 
 				if (!data.attackerRolls || !data.defenderRolls) {
-					console.error("Dice rolls are undefined:", data);
+					console.error("Missing dice rolls in response:", data);
 					return;
 				}
 
-				const sortedAttackerRolls = data.attackerRolls.sort((a, b) => b - a);
-				const sortedDefenderRolls = data.defenderRolls.sort((a, b) => b - a);
+				const attackerRolls = data.attackerRolls.sort((a, b) => b - a);
+				const defenderRolls = data.defenderRolls.sort((a, b) => b - a);
 
-				const selectionDiv = document.getElementById("selection");
-				if (selectionDiv) {
-					selectionDiv.innerHTML = 
-						`Attacking from Area ${selectedZone} to Area ${defendingZone}<br>
-						<strong>Dice Roll Results:</strong><br>
-						<strong>Attacker's roll:</strong> ${getDiceEmojis(sortedAttackerRolls)}<br>
-						<strong>Defender's roll:</strong> ${getDiceEmojis(sortedDefenderRolls)}<br>`;
+				// Show dice images
+				this.dice.visible = true;
+				this.time.delayedCall(4000, () => {
+					this.dice.visible = false;
+				});
+
+				// Update the attacker's dice
+				[this.attacker_1, this.attacker_2, this.attacker_3].forEach((image, i) => {
+					if (attackerRolls[i]) {
+						image.setTexture(`Attacker ${attackerRolls[i]}`);
+						image.setVisible(true);
+					} else {
+						image.setVisible(false); // hide unused dice
+					}
+				});
+
+				// Update the defender's dice
+				[this.defender_1, this.defender_2].forEach((image, i) => {
+					if (defenderRolls[i]) {
+						image.setTexture(`Defender ${defenderRolls[i]}`);
+						image.setVisible(true);
+					} else {
+						image.setVisible(false); // hide unused dice
+					}
+				});
+
+				// Handle card reward if territory is conquered
+				if (data.territoryCaptured) {
+					this.GiveCardToPlayer(currentPlayerId);
 				}
 
-				// ✅ If a territory was captured, give the player a card
-				if (data.territoryCaptured === true) {
-					giveCardToPlayer(currentPlayerId);
-				}
+				// Clean all of the things from the map
+				const scene = this;
+				scene.window.visible = false;
+				const zone1 = scene.zones.list[selectedZone - 1].list[0];
+				const zone2 = scene.zones.list[defendingZone - 1].list[0];
+				zone1?.clearTint();
+				zone2?.clearTint();
+				scene.ClearAdjacents();
+				scene.window.visible = false;
 
+				selectedZone = undefined;
+				defendingZone = undefined;
 			} else {
-				console.error("Error logging attack:", xhr.statusText);
+				console.error("Attack failed:", xhr.statusText);
 			}
 		};
 
 		xhr.onerror = () => {
-			console.error("Request failed:", xhr.statusText);
+			console.error("Request error during attack.");
 		};
 
 		const requestData = {
-			ter_from_id: selectedZone,
-			ter_to_id: defendingZone,
-			att_troop_count: selectedTroopCount
+			ter_from_id: parseInt(selectedZone, 10),
+			ter_to_id: parseInt(defendingZone, 10),
+			att_troop_count: parseInt(this.selectedTroopCount, 10)
 		};
 
-		alreadyReinforced = false;
+		this.CheckVictoryStatus();
 
 		xhr.open("POST", "/logAttack", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
+		console.log("Sending attack data:", requestData);
 		xhr.send(JSON.stringify(requestData));
 	}
 
-	giveCardToPlayer(player_id, game_id) {
+
+	MoveTroops() {
+		if (!isMyTurn) {
+			alert("It's not your turn!");
+			return;
+		}
+
+		if (!selectedZone || !defendingZone) {
+			console.warn("Troop move failed – zones not selected");
+			return;
+		}
+
+		const xhr = new XMLHttpRequest();
+
+		xhr.onload = () => {
+			if (xhr.status >= 200 && xhr.status < 300) {
+				const response = JSON.parse(xhr.responseText);
+				console.log("Move successful:", response);
+
+				// Close the window and clean selection
+				this.window.visible = false;
+				this.ClearAdjacents();
+				const fromZone = this.zones.list[selectedZone - 1].list[0];
+				const toZone = this.zones.list[defendingZone - 1].list[0];
+				fromZone?.clearTint();
+				toZone?.clearTint();
+				selectedZone = undefined;
+				defendingZone = undefined;
+			} else {
+				console.error("Move error:", xhr.responseText);
+				alert("Failed to move troops.");
+			}
+		};
+
+		xhr.onerror = () => {
+			console.error("Network error during move.");
+			alert("Network error.");
+		};
+
+		const payload = {
+			from_id: parseInt(selectedZone, 10),
+			to_id: parseInt(defendingZone, 10),
+			troops: parseInt(this.selectedTroopCount, 10)
+		};
+
+		xhr.open("POST", "/moveTroops", true);
+		xhr.setRequestHeader("Content-Type", "application/json");
+		console.log("Sending troop move:", payload);
+		xhr.send(JSON.stringify(payload));
+	}
+
+
+	GiveCardToPlayer(player_id, game_id) {
 		const xhrCard = new XMLHttpRequest();
-		xhrCard.open("POST", "/giveCard", true);
-		xhrCard.setRequestHeader("Content-Type", "application/json");
+
 
 		xhrCard.onreadystatechange = () => {
 			if (xhrCard.readyState === 4) {
 				if (xhrCard.status === 200) {
 					const response = JSON.parse(xhrCard.responseText);
 					const card = response.card;
+					const value = card.eff_val; // One of the three cards: +2, +4, or +6
 
-					console.log("🎴 Player received a card:", card);
+					const texture = `Card +${value}`; // e.g., "Card +4"
 
-					// ✅ Display card info in the game UI
-					const cardRewardBox = document.getElementById("cardReward");
-				if (cardRewardBox && card) {
-				cardRewardBox.innerHTML = 
-				`<strong>🎴 New Card:</strong><br>
-				Type: <em>${card.eff_typ}</em><br>
-				Value: <em>${card.eff_val}</em>`;
-	}
-
-				} else {
-					console.error("Card request failed:", xhrCard.statusText);
+					// Place the card on the first slot of the card holders
+					const slots = [this.card01, this.card02, this.card03, this.card04];
+					for (let i = 0; i < slots.length; i++) {
+						if (!slots[i].visible) {
+							slots[i].setTexture(texture);
+							slots[i].setVisible(true);
+							console.log(`Assigned card +${value} to slot ${i + 1}`);
+							break;
+						}
+					}
 				}
 			}
 		};
 
+		xhrCard.open("POST", "/giveCard", true);
+		xhrCard.setRequestHeader("Content-Type", "application/json");
 		xhrCard.send(JSON.stringify({ player_id, game_id }));
-		checkHasCard();
+		this.CheckHasCard();
 	}
 
-// Utilizing dice emojis intead of numbers ;)
-	getDiceEmojis(rolls) {
-		const diceEmojis = ["🎲", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-		return rolls.map(roll => diceEmojis[roll] || "❓").join(" ");
+
+	AddCardToHand(cards) {
+
+		const textureMap = {
+			2: "Card +2",
+			4: "Card +4",
+			6: "Card +6"
+		};
+
+		const cardSlots = [this.card01, this.card02, this.card03, this.card04];
+
+		for (let i = 0; i < cardSlots.length; i++) {
+			const cardData = cards[i];  // card object from server or undefined if no card here
+			const slot = cardSlots[i];
+
+			if (!cardData) {
+				slot.setVisible(false);  // Hide slot if no card
+			} else {
+				const textureKey = textureMap[cardData.eff_val];
+				if (textureKey) {
+					slot.setTexture(textureKey);
+					slot.setVisible(true);
+				} else {
+					console.warn("No texture for card eff_val:", cardData.eff_val);
+					slot.setVisible(false);
+				}
+			}
+		}
 	}
 
-	checkHasCard() {
+
+	CheckHasCard() {
 		const xhr = new XMLHttpRequest();
 		xhr.open("GET", "/hasCard", true);
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
-				const btn = document.getElementById("reinforceButton");
 				if (xhr.status === 200) {
 					const response = JSON.parse(xhr.responseText);
-					btn.style.display = response.hasCard ? "block" : "none";
-				} else {
-					btn.style.display = "none";
 				}
-			}
-		};
+			};
 
-		xhr.send();
+			xhr.send();
+		}
 	}
 
-	startReinforce() {
+
+	StartReinforce() {
 		if (!isMyTurn) {
 			alert("❌ You can't use a card during the opponent's turn.");
 			return;
@@ -1901,7 +2231,7 @@ class Level extends Phaser.Scene {
 	}
 
 
-	endTurn() {
+	EndTurn() {
 		const xhr = new XMLHttpRequest();
 		const scene = this
 
@@ -1922,7 +2252,8 @@ class Level extends Phaser.Scene {
 		xhr.send();
 	}
 
-	checkTurnOwnership() {
+
+	CheckTurnOwnership() {
 		const xhr = new XMLHttpRequest();
 		const scene = this
 
@@ -1932,6 +2263,7 @@ class Level extends Phaser.Scene {
 				console.log(data)	
 				scene.isMyTurn = data.isMyTurn;
 				isMyTurn = data.isMyTurn;
+				scene.pass_Turn.visible = data.isMyTurn;
 			}
 		};
 
@@ -1939,8 +2271,10 @@ class Level extends Phaser.Scene {
 		xhr.send();
 	}
 
-	checkVictoryStatus() {
+
+	CheckVictoryStatus() {
 		const xhr = new XMLHttpRequest();
+		xhr.open("GET", "/checkVictory", true);
 
 
 		xhr.onreadystatechange = () => {
@@ -1950,8 +2284,10 @@ class Level extends Phaser.Scene {
 					console.log(response)
 					if (response.gameOver) {
 						if (response.isWinner) {
+							console.log("Redirecting to winner.html");
 							window.location.href = "/winner.html";
 						} else {
+							console.log("Redirecting to loser.html");
 							window.location.href = "/loser.html";
 						}
 					}
@@ -1959,10 +2295,12 @@ class Level extends Phaser.Scene {
 			}
 		};
 
-		xhr.open("GET", "/checkVictory", true);
+		
 		xhr.send();
+
 	}
 
+	
 	/* END-USER-CODE */
 }
 

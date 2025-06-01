@@ -12,6 +12,41 @@
                 "key": "Angel_Piece"
             },
             {
+                "url": "assets/Attack_Button.png",
+                "type": "image",
+                "key": "Attack_Button"
+            },
+            {
+                "url": "assets/Attacker 1.png",
+                "type": "image",
+                "key": "Attacker 1"
+            },
+            {
+                "url": "assets/Attacker 2.png",
+                "type": "image",
+                "key": "Attacker 2"
+            },
+            {
+                "url": "assets/Attacker 3.png",
+                "type": "image",
+                "key": "Attacker 3"
+            },
+            {
+                "url": "assets/Attacker 4.png",
+                "type": "image",
+                "key": "Attacker 4"
+            },
+            {
+                "url": "assets/Attacker 5.png",
+                "type": "image",
+                "key": "Attacker 5"
+            },
+            {
+                "url": "assets/Attacker 6.png",
+                "type": "image",
+                "key": "Attacker 6"
+            },
+            {
                 "url": "assets/Card +2.png",
                 "type": "image",
                 "key": "Card +2"
@@ -30,6 +65,36 @@
                 "url": "assets/Close Window.png",
                 "type": "image",
                 "key": "Close Window"
+            },
+            {
+                "url": "assets/Defender 1.png",
+                "type": "image",
+                "key": "Defender 1"
+            },
+            {
+                "url": "assets/Defender 2.png",
+                "type": "image",
+                "key": "Defender 2"
+            },
+            {
+                "url": "assets/Defender 3.png",
+                "type": "image",
+                "key": "Defender 3"
+            },
+            {
+                "url": "assets/Defender 4.png",
+                "type": "image",
+                "key": "Defender 4"
+            },
+            {
+                "url": "assets/Defender 5.png",
+                "type": "image",
+                "key": "Defender 5"
+            },
+            {
+                "url": "assets/Defender 6.png",
+                "type": "image",
+                "key": "Defender 6"
             },
             {
                 "url": "assets/Demon Piece.png",
@@ -80,6 +145,11 @@
                 "key": "Minus"
             },
             {
+                "url": "assets/Move_Button.png",
+                "type": "image",
+                "key": "Move_Button"
+            },
+            {
                 "url": "src/scripts/MovementScript.js",
                 "type": "script",
                 "key": "MovementScript"
@@ -118,6 +188,11 @@
                 "url": "assets/Plus.png",
                 "type": "image",
                 "key": "Plus"
+            },
+            {
+                "url": "assets/Reinforce_Button.png",
+                "type": "image",
+                "key": "Reinforce_Button"
             },
             {
                 "url": "src/animations/Star.json",
