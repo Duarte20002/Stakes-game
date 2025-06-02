@@ -1478,7 +1478,7 @@ class Level extends Phaser.Scene {
 
 		this.card01.setInteractive()
 			.on('pointerdown', () => {
-				this.selectCard(0)
+				this.SelectCard(0)
 				console.log("First card selected");
 			})
 			.on('pointerover', () => {
@@ -1490,7 +1490,7 @@ class Level extends Phaser.Scene {
 
 		this.card02.setInteractive()
 			.on('pointerdown', () => {
-				this.selectCard(1)
+				this.SelectCard(1)
 				console.log("Second card selected");
 			})
 			.on('pointerover', () => {
@@ -1502,7 +1502,7 @@ class Level extends Phaser.Scene {
 
 		this.card03.setInteractive()
 			.on('pointerdown', () => {
-				this.selectCard(2)
+				this.SelectCard(2)
 				console.log("Third card selected");
 			})
 			.on('pointerover', () => {
@@ -1514,7 +1514,7 @@ class Level extends Phaser.Scene {
 
 		this.card04.setInteractive()
 			.on('pointerdown', () => {
-				this.selectCard(3)
+				this.SelectCard(3)
 				console.log("Forth card selected");
 			})
 			.on('pointerover', () => {
@@ -1708,7 +1708,7 @@ class Level extends Phaser.Scene {
 		if (reinforceMode && selectedCard) {
 			console.log("Zone clicked for reinforcement:", area_number);
 			console.log("Selected card before sending:", selectedCard);
-			this.sendReinforceRequest(area_number, selectedCard);
+			this.SendReinforceRequest(area_number, selectedCard);
 			reinforceMode = false;
 			return;
 		}
@@ -1922,7 +1922,7 @@ class Level extends Phaser.Scene {
 		request.send(JSON.stringify(dataToSend));
 	}
 
-	selectCard(cardIndex) {
+	SelectCard(cardIndex) {
 		
 		if (alreadyReinforced || !isMyTurn) return;
 
@@ -1938,7 +1938,7 @@ class Level extends Phaser.Scene {
 	}
 
 
-	sendReinforceRequest(territory_id, card) {
+	SendReinforceRequest(territory_id, card) {
 		console.log("Sending reinforce request to zone", territory_id, "with card", card);
 
 		const xhr = new XMLHttpRequest();
