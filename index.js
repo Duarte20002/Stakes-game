@@ -900,7 +900,7 @@ app.post("/applyBonusTroops", (req, res) => {
 
                     res.json({
                         success: true,
-                        message: `✅ Successfully reinforced ${troops} troops to territory ${territory_id}.`,
+                        message: ` Successfully reinforced ${troops} troops to territory ${territory_id}.`,
                         remainingBonus: currentBonus - troops
                     });
                 }
@@ -991,49 +991,6 @@ app.get("/hasCard", (req, res) => {
         CheckForCard();
 });
 
-app.post("/useCard", (req, res) => {
-    if (!req.session.player_id) {
-        return res.status(401).json({ message: "Not logged in." });
-    }
-
-    function UseCard() {
-        if (!req.session.cardToUse) {
-            return res.status(400).json({ message: "No card to use." });
-        }
-
-        const query = "update Stakes_digtentape.player_cards set is_used = 1 where plr_id = ? and game_id = ? and crd_id = ? and is_used = 0";
-
-        connection.query(
-            query,
-            [req.session.player_id, req.session.gameID, req.session.cardToUse],
-            (err) => {
-                if (err) return res.status(500).json({ error: "Failed to mark card as used." });
-
-                req.session.cardToUse = null;
-                res.json({ success: true, message: "Card used successfully." });
-            }
-        );
-    }
-
-    function GetGameID() {
-        connection.query(
-            "select game_id from Stakes_digtentape.game where win_plr_id is null and (plr1_id = ? or plr2_id = ?)",
-            [req.session.player_id, req.session.player_id],
-            (err, rows) => {
-                if (err) return res.status(500).json({ error: "Database error", err });
-                if (rows.length === 0) return res.status(404).json({ message: "No game found." });
-
-                req.session.gameID = rows[0].game_id;
-                UseCard();
-            }
-        );
-    }
-
-    if (!req.session.gameID)
-        GetGameID();
-    else
-        UseCard();
-});
 
 app.get("/checkVictory", (req, res) => {
     if (!req.session.player_id || !req.session.gameID) {

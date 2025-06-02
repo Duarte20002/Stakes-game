@@ -18,14 +18,14 @@
             "list": [
                 {
                     "type": "Image",
-                    "id": "d1e70703-49af-4c21-8397-29176609416f",
-                    "label": "number_Piece_Angel__1_",
+                    "id": "ca361884-c1d8-454d-a4e4-83c34234996e",
+                    "label": "number_Piece_Angel__2_",
                     "scope": "NESTED_PREFAB",
                     "texture": {
-                        "key": "Number_Piece_Angel (1)"
+                        "key": "Number_Piece_Angel (2)"
                     },
-                    "x": 9,
-                    "y": 12,
+                    "x": -1,
+                    "y": 31,
                     "scaleX": 0.75,
                     "scaleY": 0.75
                 },
@@ -37,24 +37,20 @@
                     "texture": {
                         "key": "Angel Piece"
                     },
-                    "x": 9.5,
-                    "y": 5,
                     "scaleX": 0.45,
-                    "scaleY": 0.45,
-                    "originX": 0.5074080087620843,
-                    "originY": 0.49552723999270276
+                    "scaleY": 0.45
                 },
                 {
                     "type": "Text",
                     "id": "4d6007d0-3110-468f-ae9e-4524a7423fcc",
                     "label": "troop_count",
                     "scope": "NESTED_PREFAB",
-                    "x": 9,
-                    "y": 35,
+                    "x": -1,
+                    "y": 31,
                     "scaleX": 0.3,
                     "scaleY": 0.3,
-                    "originX": 0.5028175536264277,
-                    "originY": 0.5028175536264297,
+                    "originX": 0.5,
+                    "originY": 0.5,
                     "text": "99",
                     "fixedWidth": 80,
                     "fixedHeight": 45,

@@ -24,8 +24,8 @@
                     "texture": {
                         "key": "Number_Piece_Demon"
                     },
-                    "x": -3,
-                    "y": 54,
+                    "x": -1,
+                    "y": 31,
                     "scaleX": 0.75,
                     "scaleY": 0.75
                 },
@@ -37,8 +37,6 @@
                     "texture": {
                         "key": "Demon Piece_1"
                     },
-                    "x": -2,
-                    "y": 24,
                     "scaleX": 0.45,
                     "scaleY": 0.45
                 },
@@ -47,10 +45,12 @@
                     "id": "e5c5338a-d9f9-4940-ba5c-765f73ea5c8e",
                     "label": "text_1",
                     "scope": "NESTED_PREFAB",
-                    "x": -13,
-                    "y": 48,
+                    "x": -1,
+                    "y": 31,
                     "scaleX": 0.3,
                     "scaleY": 0.3,
+                    "originX": 0.5,
+                    "originY": 0.5,
                     "text": "99",
                     "fixedWidth": 65,
                     "fixedHeight": 45,

@@ -20,15 +20,15 @@
             "list": [
                 {
                     "type": "Image",
-                    "id": "93dc7368-e78e-4185-8485-dd35c3e845e4",
-                    "label": "number_Piece_Neutral",
-                    "scope": "NESTED_PREFAB",
+                    "id": "527aa865-683e-41be-8302-9abc8f130b5d",
+                    "label": "number_Piece_Neutral__1_",
                     "texture": {
-                        "key": "Number_Piece_Neutral"
+                        "key": "Number_Piece_Neutral (1)"
                     },
-                    "y": 9,
-                    "scaleX": 0.7,
-                    "scaleY": 0.7
+                    "x": -1,
+                    "y": 31,
+                    "scaleX": 0.75,
+                    "scaleY": 0.75
                 },
                 {
                     "type": "Image",
@@ -38,8 +38,6 @@
                     "texture": {
                         "key": "Neutral Piece (2)"
                     },
-                    "x": -1,
-                    "y": 2,
                     "scaleX": 0.45,
                     "scaleY": 0.45
                 },
@@ -48,10 +46,12 @@
                     "id": "f932640e-2b4f-485e-98b9-f021585d7754",
                     "label": "troop_count",
                     "scope": "NESTED_PREFAB",
-                    "x": -12,
-                    "y": 25,
+                    "x": -1,
+                    "y": 31,
                     "scaleX": 0.3,
                     "scaleY": 0.3,
+                    "originX": 0.5,
+                    "originY": 0.5,
                     "text": "99",
                     "fixedWidth": 82,
                     "fixedHeight": 49,
