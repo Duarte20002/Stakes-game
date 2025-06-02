@@ -2,24 +2,109 @@
     "section1": {
         "files": [
             {
-                "url": "src/scenes/Angel Piece 2.png",
+                "url": "assets/Angel Piece 2.png",
                 "type": "image",
-                "key": "Angel Piece 2"
+                "key": "Angel Piece"
             },
             {
-                "url": "src/scenes/Card Deck 2.png",
-                "type": "image",
-                "key": "Card Deck 2"
+                "url": "src/Prefabs/Angel_Piece.js",
+                "type": "script",
+                "key": "Angel_Piece"
             },
             {
-                "url": "assets/dementia.png",
+                "url": "assets/Attack_Button.png",
                 "type": "image",
-                "key": "dementia"
+                "key": "Attack_Button"
             },
             {
-                "url": "src/scenes/Demon Piece.png",
+                "url": "assets/Attacker 1.png",
                 "type": "image",
-                "key": "Demon Piece"
+                "key": "Attacker 1"
+            },
+            {
+                "url": "assets/Attacker 2.png",
+                "type": "image",
+                "key": "Attacker 2"
+            },
+            {
+                "url": "assets/Attacker 3.png",
+                "type": "image",
+                "key": "Attacker 3"
+            },
+            {
+                "url": "assets/Attacker 4.png",
+                "type": "image",
+                "key": "Attacker 4"
+            },
+            {
+                "url": "assets/Attacker 5.png",
+                "type": "image",
+                "key": "Attacker 5"
+            },
+            {
+                "url": "assets/Attacker 6.png",
+                "type": "image",
+                "key": "Attacker 6"
+            },
+            {
+                "url": "assets/Card +2.png",
+                "type": "image",
+                "key": "Card +2"
+            },
+            {
+                "url": "assets/Card +4.png",
+                "type": "image",
+                "key": "Card +4"
+            },
+            {
+                "url": "assets/Card +6.png",
+                "type": "image",
+                "key": "Card +6"
+            },
+            {
+                "url": "assets/Close Window.png",
+                "type": "image",
+                "key": "Close Window"
+            },
+            {
+                "url": "assets/Defender 1.png",
+                "type": "image",
+                "key": "Defender 1"
+            },
+            {
+                "url": "assets/Defender 2.png",
+                "type": "image",
+                "key": "Defender 2"
+            },
+            {
+                "url": "assets/Defender 3.png",
+                "type": "image",
+                "key": "Defender 3"
+            },
+            {
+                "url": "assets/Defender 4.png",
+                "type": "image",
+                "key": "Defender 4"
+            },
+            {
+                "url": "assets/Defender 5.png",
+                "type": "image",
+                "key": "Defender 5"
+            },
+            {
+                "url": "assets/Defender 6.png",
+                "type": "image",
+                "key": "Defender 6"
+            },
+            {
+                "url": "assets/Demon Piece.png",
+                "type": "image",
+                "key": "Demon Piece_1"
+            },
+            {
+                "url": "src/Prefabs/Demon_Piece.js",
+                "type": "script",
+                "key": "Demon_Piece"
             },
             {
                 "url": "assets/dino.png",
@@ -50,19 +135,64 @@
                 "key": "eagle-spritesheet"
             },
             {
-                "url": "src/scenes/map.png",
+                "url": "assets/Map_Game_final NEW.png",
                 "type": "image",
-                "key": "map"
+                "key": "Map_Game_final NEW"
             },
             {
-                "url": "src/scenes/Map_Game_final.png",
+                "url": "assets/Minus.png",
                 "type": "image",
-                "key": "Map_Game_final"
+                "key": "Minus"
+            },
+            {
+                "url": "assets/Move_Button.png",
+                "type": "image",
+                "key": "Move_Button"
             },
             {
                 "url": "src/scripts/MovementScript.js",
                 "type": "script",
                 "key": "MovementScript"
+            },
+            {
+                "url": "assets/Neutral Piece (2).png",
+                "type": "image",
+                "key": "Neutral Piece (2)"
+            },
+            {
+                "url": "src/Prefabs/Neutral_Piece.js",
+                "type": "script",
+                "key": "Neutral_Piece"
+            },
+            {
+                "url": "assets/Number_Piece_Angel (1).png",
+                "type": "image",
+                "key": "Number_Piece_Angel (1)"
+            },
+            {
+                "url": "assets/Number_Piece_Demon.png",
+                "type": "image",
+                "key": "Number_Piece_Demon"
+            },
+            {
+                "url": "assets/Number_Piece_Neutral.png",
+                "type": "image",
+                "key": "Number_Piece_Neutral"
+            },
+            {
+                "url": "assets/Pass Turn.png",
+                "type": "image",
+                "key": "Pass Turn"
+            },
+            {
+                "url": "assets/Plus.png",
+                "type": "image",
+                "key": "Plus"
+            },
+            {
+                "url": "assets/Reinforce_Button.png",
+                "type": "image",
+                "key": "Reinforce_Button"
             },
             {
                 "url": "src/animations/Star.json",
@@ -86,6 +216,181 @@
                 },
                 "type": "spritesheet",
                 "key": "starts-spritesheet"
+            },
+            {
+                "url": "assets/Window.png",
+                "type": "image",
+                "key": "Window"
+            },
+            {
+                "url": "assets/Zona 1.png",
+                "type": "image",
+                "key": "Zona 1"
+            },
+            {
+                "url": "assets/Zona 10.png",
+                "type": "image",
+                "key": "Zona 10"
+            },
+            {
+                "url": "assets/Zona 11.png",
+                "type": "image",
+                "key": "Zona 11"
+            },
+            {
+                "url": "assets/Zona 12.png",
+                "type": "image",
+                "key": "Zona 12"
+            },
+            {
+                "url": "assets/Zona 13.png",
+                "type": "image",
+                "key": "Zona 13"
+            },
+            {
+                "url": "assets/Zona 14.png",
+                "type": "image",
+                "key": "Zona 14"
+            },
+            {
+                "url": "assets/Zona 15.png",
+                "type": "image",
+                "key": "Zona 15"
+            },
+            {
+                "url": "assets/Zona 16.png",
+                "type": "image",
+                "key": "Zona 16"
+            },
+            {
+                "url": "assets/Zona 16 NEW.png",
+                "type": "image",
+                "key": "Zona 16 NEW"
+            },
+            {
+                "url": "assets/Zona 17.png",
+                "type": "image",
+                "key": "Zona 17"
+            },
+            {
+                "url": "assets/Zona 18.png",
+                "type": "image",
+                "key": "Zona 18"
+            },
+            {
+                "url": "assets/Zona 19.png",
+                "type": "image",
+                "key": "Zona 19"
+            },
+            {
+                "url": "assets/Zona 2.png",
+                "type": "image",
+                "key": "Zona 2"
+            },
+            {
+                "url": "assets/Zona 20.png",
+                "type": "image",
+                "key": "Zona 20"
+            },
+            {
+                "url": "assets/Zona 21.png",
+                "type": "image",
+                "key": "Zona 21"
+            },
+            {
+                "url": "assets/Zona 22.png",
+                "type": "image",
+                "key": "Zona 22"
+            },
+            {
+                "url": "assets/Zona 23.png",
+                "type": "image",
+                "key": "Zona 23"
+            },
+            {
+                "url": "assets/Zona 24.png",
+                "type": "image",
+                "key": "Zona 24"
+            },
+            {
+                "url": "assets/Zona 25.png",
+                "type": "image",
+                "key": "Zona 25"
+            },
+            {
+                "url": "assets/Zona 26.png",
+                "type": "image",
+                "key": "Zona 26"
+            },
+            {
+                "url": "assets/Zona 27.png",
+                "type": "image",
+                "key": "Zona 27"
+            },
+            {
+                "url": "assets/Zona 28.png",
+                "type": "image",
+                "key": "Zona 28"
+            },
+            {
+                "url": "assets/Zona 29.png",
+                "type": "image",
+                "key": "Zona 29"
+            },
+            {
+                "url": "assets/Zona 3.png",
+                "type": "image",
+                "key": "Zona 3"
+            },
+            {
+                "url": "assets/Zona 30.png",
+                "type": "image",
+                "key": "Zona 30"
+            },
+            {
+                "url": "assets/Zona 31.png",
+                "type": "image",
+                "key": "Zona 31"
+            },
+            {
+                "url": "assets/Zona 32.png",
+                "type": "image",
+                "key": "Zona 32"
+            },
+            {
+                "url": "assets/Zona 4.png",
+                "type": "image",
+                "key": "Zona 4"
+            },
+            {
+                "url": "assets/Zona 5.png",
+                "type": "image",
+                "key": "Zona 5"
+            },
+            {
+                "url": "assets/Zona 6.png",
+                "type": "image",
+                "key": "Zona 6"
+            },
+            {
+                "url": "assets/Zona 7.png",
+                "type": "image",
+                "key": "Zona 7"
+            },
+            {
+                "url": "assets/Zona 8.png",
+                "type": "image",
+                "key": "Zona 8"
+            },
+            {
+                "url": "assets/Zona 8 NEW.png",
+                "type": "image",
+                "key": "Zona 8 NEW"
+            },
+            {
+                "url": "assets/Zona 9.png",
+                "type": "image",
+                "key": "Zona 9"
             }
         ]
     },

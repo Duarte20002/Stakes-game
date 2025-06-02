@@ -11,51 +11,1395 @@
     "displayList": [
         {
             "type": "Image",
-            "id": "3572d422-63c9-4942-92fc-4a2645e34a47",
+            "id": "85837af1-a741-41ed-999d-2e25dc7ac202",
             "label": "map_Game_final",
             "texture": {
-                "key": "Map_Game_final"
+                "key": "Map_Game_final NEW"
             },
-            "x": 662,
-            "y": 361,
-            "scaleX": 0.7060555249789695,
-            "scaleY": 0.6970694749223262
+            "x": -9,
+            "y": -3,
+            "scaleX": 0.6766854815017886,
+            "scaleY": 0.6840681217120615,
+            "originX": 0.001494816372490019,
+            "originY": 0.008755607644634386
         },
         {
             "type": "Image",
-            "id": "287e8245-3e1c-4fba-99f8-dfd9c6eec475",
-            "label": "card_Deck_2",
+            "id": "31ecabd7-6898-4ced-bfcb-93dc56f2d8e4",
+            "label": "pass_Turn",
+            "scope": "PUBLIC",
+            "hitArea.shape": "PIXEL_PERFECT",
             "texture": {
-                "key": "Card Deck 2"
+                "key": "Pass Turn"
             },
-            "x": 1187,
-            "y": 123,
-            "scaleX": 0.2713583157513023,
-            "scaleY": 0.30462737163115067
+            "x": 1054,
+            "y": 666,
+            "scaleX": 0.3,
+            "scaleY": 0.3
         },
         {
-            "type": "Image",
-            "id": "f68e6b46-d82d-48ce-8090-3e50da3f8c1d",
-            "label": "angel_Piece_2",
-            "texture": {
-                "key": "Angel Piece 2"
-            },
-            "x": 149,
-            "y": 161,
-            "scaleX": 0.7,
-            "scaleY": 0.7
+            "type": "Container",
+            "id": "49c6c03d-26cd-43e5-8592-ee11248f5b4b",
+            "label": "zones",
+            "scope": "PUBLIC",
+            "list": [
+                {
+                    "type": "Container",
+                    "id": "a1e48586-cb8b-46b4-9efc-bcf7cd706ed1",
+                    "label": "zone_1",
+                    "scope": "PUBLIC",
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "f0c800c4-9733-43e6-b590-397e23616bc4",
+                            "label": "zona_1",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 1"
+                            },
+                            "x": 150,
+                            "y": 520
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "8b02188d-9e98-42bc-8f9d-63a2df6e60b4",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_1",
+                            "scope": "PUBLIC",
+                            "x": 135,
+                            "y": 510
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "6cb021b7-7711-4b5d-a963-e72bc9907bd5",
+                    "label": "zone_2",
+                    "scope": "PUBLIC",
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "19dffa52-e439-4bfc-a4c6-ff351665794a",
+                            "label": "zona_2",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 2"
+                            },
+                            "x": 134,
+                            "y": 425
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "6af2bae3-5800-4ad2-95a2-bd50b9f3e4b4",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_2",
+                            "scope": "PUBLIC",
+                            "x": 145,
+                            "y": 393
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "1c16414c-3365-477c-9d55-ae86500a9f72",
+                    "label": "zone_3",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "270f5804-ba05-4dda-824d-eee028f59180",
+                            "label": "zona_3",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 3"
+                            },
+                            "x": 159,
+                            "y": 1
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "ec567df6-8246-452c-8ac4-07b56682bc37",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_3",
+                            "scope": "PUBLIC",
+                            "x": 139,
+                            "y": -7
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "8e7bae6d-a0df-4834-b4fd-82a56a2d3fdc",
+                    "label": "zone_4",
+                    "scope": "PUBLIC",
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "0f2946e7-cdac-4097-8688-cc17e78f2abb",
+                            "label": "zona_4",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 4"
+                            },
+                            "x": 199,
+                            "y": 302
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "a8799481-b8d1-4a5a-8995-a319607d96e6",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_4",
+                            "scope": "PUBLIC",
+                            "x": 254,
+                            "y": 302
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "4751c92a-9262-4c07-9aa0-2ff3edc38849",
+                    "label": "zone_5",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "160ae66c-2736-4392-8724-1757a9da1f0f",
+                            "label": "zona_5",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 5"
+                            },
+                            "x": 379.55285835266113,
+                            "y": 81.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "f96b54d6-7fef-4abb-869d-a9ea981dff4e",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_5",
+                            "scope": "PUBLIC",
+                            "x": 373,
+                            "y": 88
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "4fca4e06-642f-4a74-ad5a-5a45984ab7d1",
+                    "label": "zone_6",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "c2edaa97-fec1-4eeb-a4e5-3753746a3692",
+                            "label": "zona_6",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 6"
+                            },
+                            "x": 352.55285835266113,
+                            "y": 203.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "2a42ac66-0d3d-4c61-be7b-30654db9d643",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_6",
+                            "scope": "PUBLIC",
+                            "x": 340,
+                            "y": 180
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "e7c4e635-8341-42f4-b638-e553cde0a27a",
+                    "label": "zone_7",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "7936e4e4-0403-414a-8e62-74a3d4ccdee7",
+                            "label": "zona_7",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 7"
+                            },
+                            "x": 460.55285835266113,
+                            "y": 178.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "73d898e8-bdd1-45fd-98f6-b0bb2fbb8536",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_7",
+                            "scope": "PUBLIC",
+                            "x": 448,
+                            "y": 156
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "de02e943-0871-4492-876b-984b6fb4d134",
+                    "label": "zone_8",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "152de2d8-d4c9-45e8-88fb-feaa54bfd9a2",
+                            "label": "zona_8",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 8 NEW"
+                            },
+                            "x": 455,
+                            "y": 295
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "464d6eb0-ed4c-4d0c-aec2-ffc851de90b1",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_8",
+                            "scope": "PUBLIC",
+                            "x": 449,
+                            "y": 262
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "df8b0d12-1e42-4f19-9164-6a23a0a50bc8",
+                    "label": "zone_9",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "1ec67a3d-59de-4f4a-bc7f-e5a1b5a16ced",
+                            "label": "zona_9",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 9"
+                            },
+                            "x": 202.55285835266113,
+                            "y": -105.8642578125
+                        },
+                        {
+                            "prefabId": "072ef8e9-671c-4793-8aa0-c87833149530",
+                            "id": "ba79e6ec-515e-44d0-9a7f-03d205b4c546",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "angel_Piece_1",
+                            "x": 173,
+                            "y": -161
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "c5e8fb09-4a4c-44b1-9091-ad6e2e11fe5c",
+                    "label": "zone_10",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "14418c75-1622-4c24-a537-732ec2017eae",
+                            "label": "zona_10",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 10"
+                            },
+                            "x": 296.55285835266113,
+                            "y": -136.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "8ecbd6f0-3023-4413-a9a7-39f78ad2c675",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_10",
+                            "scope": "PUBLIC",
+                            "x": 307,
+                            "y": -148
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "5db9d80c-849a-4b92-81f0-3ea5d5f377d4",
+                    "label": "zone_11",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "5e7bf6d7-3bd1-4a6d-a510-b00d0b4e255c",
+                            "label": "zona_11",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 11"
+                            },
+                            "x": 356.55285835266113,
+                            "y": -48.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "7a7cfe11-ae1a-4116-a81f-eda2904e8a2a",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_11",
+                            "scope": "PUBLIC",
+                            "x": 367,
+                            "y": -62
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "7b5a1693-a253-4956-b7f7-85a23a0fa39a",
+                    "label": "zone_12",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "f06704d4-8086-4c7d-aecd-1547bb2e960d",
+                            "label": "zona_12",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 13"
+                            },
+                            "x": 453.55285835266113,
+                            "y": 48.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "1511bc82-e57d-451f-9cce-f57b46e3f5db",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_12",
+                            "scope": "PUBLIC",
+                            "x": 459.55285835266113,
+                            "y": 47.1357421875
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "56caf0db-182e-47f5-8eb6-57881312635d",
+                    "label": "zone_13",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "3191a3e7-9056-4f70-b974-ebafb5f9cea8",
+                            "label": "zona_13",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 12"
+                            },
+                            "x": 481,
+                            "y": -83
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "08dcde03-5da6-4d43-bf76-7b945b1597c2",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_13",
+                            "scope": "PUBLIC",
+                            "x": 474,
+                            "y": -84
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "7bfaefa0-0c7f-4930-890d-e221eaf0bae1",
+                    "label": "zone_14",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 299.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "affc1f99-2488-415c-9422-7d6065040aed",
+                            "label": "zona_14",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 14"
+                            },
+                            "x": 552.5528583526611,
+                            "y": 39.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "4f7c8181-94e6-4810-bed3-a49b8147d66c",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_14",
+                            "scope": "PUBLIC",
+                            "x": 567,
+                            "y": 24
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "2a6d8f36-199b-4f24-865e-838ab0cacded",
+                    "label": "zone_15",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "d6a8db93-a7db-4d46-9de9-916148c985c6",
+                            "label": "zona_15",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 15"
+                            },
+                            "x": 541.5528583526611,
+                            "y": 167.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "f7c5f2aa-c6f4-4483-a414-bf6186893ea1",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_15",
+                            "scope": "PUBLIC",
+                            "x": 521,
+                            "y": 147
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "bc57d6a1-6f2a-4a13-92ad-f9f7658b3362",
+                    "label": "zone_16",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "08c2c19b-b9e3-42d3-8ea9-03f81693d6b8",
+                            "label": "zona_16",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 18"
+                            },
+                            "x": 632.5528583526611,
+                            "y": 128.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "e5f7b8f2-ed52-42bd-a5c9-6e939cb95b2d",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_16",
+                            "scope": "PUBLIC",
+                            "x": 630.5528583526611,
+                            "y": 120.1357421875
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "1f9db1ca-7c3b-4d36-a43f-70c38f811b23",
+                    "label": "zone_17",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "4ade2538-63c2-4783-93b5-e520e140664b",
+                            "label": "zona_17",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 16 NEW"
+                            },
+                            "x": 653,
+                            "y": 289
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "8f782bec-65ec-42b6-a152-b38ceb7ddadf",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_17",
+                            "scope": "PUBLIC",
+                            "x": 658,
+                            "y": 249
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "18fb634b-afb4-4ed8-a3e5-48ec7cf15081",
+                    "label": "zone_18",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "3c104648-1c8d-4aad-96b6-c1648b5d1957",
+                            "label": "zona_18",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 17"
+                            },
+                            "x": 709.5528583526611,
+                            "y": 203.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "b304ff3a-9e27-45e7-bd65-c6386017fb84",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_18",
+                            "scope": "PUBLIC",
+                            "x": 706,
+                            "y": 190
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "09a55f96-e173-4930-bf30-995a0291d81f",
+                    "label": "zone_19",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "cab639e2-1180-40e3-972c-2f6bba125064",
+                            "label": "zona_19",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 19"
+                            },
+                            "x": 543.5528583526611,
+                            "y": -119.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "cab0a59b-d485-4fb8-ba2b-c6a367b1a516",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_19",
+                            "scope": "PUBLIC",
+                            "x": 554,
+                            "y": -150
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "2f6b35d2-041e-494d-8c3d-3e78e339ade4",
+                    "label": "zone_20",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "3c807ee4-e422-4c3e-bbd9-8b03b1bf617d",
+                            "label": "zona_20",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 20"
+                            },
+                            "x": 581.5528583526611,
+                            "y": -55.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "4ec43932-30c7-48a1-8cf3-acd17c7f6faa",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_20",
+                            "scope": "PUBLIC",
+                            "x": 593,
+                            "y": -78
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "7fe1af60-2c01-49c1-8203-5fc9fba8a96c",
+                    "label": "zone_21",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "f1f061a0-449b-480c-8cf5-2e321605dd60",
+                            "label": "zona_21",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 21"
+                            },
+                            "x": 655.5528583526611,
+                            "y": -104.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "3af99c7d-00d1-4ca3-aee5-98a792a76794",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_21",
+                            "scope": "PUBLIC",
+                            "x": 666,
+                            "y": -134
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "42425c68-a1b9-4e45-b3ab-3336bb13fb90",
+                    "label": "zone_22",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "86278d34-e0de-4d00-a957-d636a6fb4463",
+                            "label": "zona_22",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 22"
+                            },
+                            "x": 758.5528583526611,
+                            "y": -60.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "4a367c38-d228-442d-b750-44c5433af2ef",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_22",
+                            "scope": "PUBLIC",
+                            "x": 775,
+                            "y": -108
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "1d603334-a756-45b3-978c-d63df3e43a86",
+                    "label": "zone_23",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "2ee553c9-7823-423f-a310-d187e3a8560f",
+                            "label": "zona_23",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 23"
+                            },
+                            "x": 710.5528583526611,
+                            "y": -46.8642578125
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "c0903f91-07aa-4d2c-95a8-c711410e66b7",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_23",
+                            "scope": "PUBLIC",
+                            "x": 708,
+                            "y": -77
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "e52c9cd6-19f2-42d2-8f2d-d90b61d95b6c",
+                    "label": "zone_24",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "5c2c9dbf-9428-4581-802d-9c55cb89380e",
+                            "label": "zona_24",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 24"
+                            },
+                            "x": 644.5528583526611,
+                            "y": 7.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "ae90236b-999d-4f92-81f6-7ea6a84315f5",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_24",
+                            "scope": "PUBLIC",
+                            "x": 657,
+                            "y": -14
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "3df52a79-31a2-46fb-9651-00ee0030ad98",
+                    "label": "zone_25",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "d9cad9c1-0cbf-4fef-b717-1e2d8713dcdd",
+                            "label": "zona_25",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 26"
+                            },
+                            "x": 702.5528583526611,
+                            "y": 89.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "ae7eef9e-1a4b-42f5-8ee2-01c3c3f312a7",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_25",
+                            "scope": "PUBLIC",
+                            "x": 709,
+                            "y": 69
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "7d3b996a-9bc0-47ea-ab7d-fa4f2224cae8",
+                    "label": "zone_26",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "0062295b-b8ab-485d-b086-71e43988f11f",
+                            "label": "zona_26",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 25"
+                            },
+                            "x": 767.5528583526611,
+                            "y": 9.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "3f64a449-c897-41b0-ba57-9cab95eb9693",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_26",
+                            "scope": "PUBLIC",
+                            "x": 765,
+                            "y": -10
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "46e46379-c62a-41de-8f93-67cad1597347",
+                    "label": "zone_27",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "53059aff-b047-4dc5-a066-f93a252a2d32",
+                            "label": "zona_27",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 27"
+                            },
+                            "x": 829.5528583526611,
+                            "y": 53.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "261c658a-24f2-47ef-a64c-4ca3d0039d3d",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_27",
+                            "scope": "PUBLIC",
+                            "x": 828,
+                            "y": 27
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "032f5fcb-6f20-4690-b76c-cb1d44811a05",
+                    "label": "zone_28",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "8f1578d3-70e5-4388-8169-04ca3c36d909",
+                            "label": "zona_28",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 28"
+                            },
+                            "x": 932.5528583526611,
+                            "y": 5.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "38bae781-9133-401a-b296-7fda8a03faff",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_28",
+                            "scope": "PUBLIC",
+                            "x": 941,
+                            "y": -16
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "46ef8479-2048-4a27-bc0b-6261a1afc74d",
+                    "label": "zone_29",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "617af00b-7514-4977-b803-8059ee2a74e5",
+                            "label": "zona_29",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 29"
+                            },
+                            "x": 868.5528583526611,
+                            "y": 115.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "22a98587-3f21-47c6-b5b9-c9a404b82c45",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_29",
+                            "scope": "PUBLIC",
+                            "x": 871,
+                            "y": 93
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "0ac7e9bb-98e8-4f6c-80ab-f55006dde381",
+                    "label": "zone_30",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "6609975d-ca48-40e1-9f43-46e12e90a8f5",
+                            "label": "zona_30",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 30"
+                            },
+                            "x": 806.5528583526611,
+                            "y": 243.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "d5e2d90a-dac9-4b30-a284-5f99fd9c7caf",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_30",
+                            "scope": "PUBLIC",
+                            "x": 822,
+                            "y": 221
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "2ca939a1-c2f6-425d-856d-2a4a7fdd37de",
+                    "label": "zone_31",
+                    "scope": "PUBLIC",
+                    "x": -26.552858352661133,
+                    "y": 300.8642578125,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "d3eeb24a-77d5-4312-bf48-b97506521efa",
+                            "label": "zona_31",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 31"
+                            },
+                            "x": 840.5528583526611,
+                            "y": 205.1357421875
+                        },
+                        {
+                            "prefabId": "603069ff-43cd-4efe-a670-59a4ac2db7c4",
+                            "id": "67f26f06-dc3b-4f8d-bb24-033898e7622a",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "neutral_Piece_31",
+                            "scope": "PUBLIC",
+                            "x": 871,
+                            "y": 176
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "id": "4c65950c-ae49-41de-9b12-ff7e24c61830",
+                    "label": "zone_32",
+                    "scope": "PUBLIC",
+                    "x": -226.97267150878906,
+                    "y": 698.1469116210938,
+                    "list": [
+                        {
+                            "type": "Image",
+                            "id": "9252a2fc-c4b7-48dc-8ea6-762a638a080c",
+                            "label": "zona_32",
+                            "scope": "PUBLIC",
+                            "hitArea.shape": "PIXEL_PERFECT",
+                            "texture": {
+                                "key": "Zona 32"
+                            },
+                            "x": 1161.972671508789,
+                            "y": -234.14691162109375
+                        },
+                        {
+                            "prefabId": "8cd40737-6f12-4c2a-aec3-e2987276e77e",
+                            "id": "33c637a3-2fa8-4ed3-9a34-d1548779e830",
+                            "unlock": [
+                                "x",
+                                "y"
+                            ],
+                            "label": "demon_Piece",
+                            "scope": "PUBLIC",
+                            "x": 1188,
+                            "y": -271
+                        }
+                    ]
+                }
+            ]
         },
         {
-            "type": "Image",
-            "id": "bf74b422-d68f-4652-bdc5-6bccdb77448c",
-            "label": "demon_Piece",
-            "texture": {
-                "key": "Demon Piece"
-            },
-            "x": 995,
-            "y": 478,
-            "scaleX": 0.7,
-            "scaleY": 0.7
+            "type": "Container",
+            "id": "5fcf820c-3590-4d7e-a223-10e72ce6ff55",
+            "label": "cards",
+            "scope": "PUBLIC",
+            "list": [
+                {
+                    "type": "Image",
+                    "id": "39c7c4fc-9e1c-40c6-b1a6-a6fea1e847e6",
+                    "label": "card01",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Card +2"
+                    },
+                    "x": 1153,
+                    "y": 23,
+                    "scaleX": 0.38,
+                    "scaleY": 0.38,
+                    "originX": 0.0009487163708776516,
+                    "originY": 0.00048748316692433127
+                },
+                {
+                    "type": "Image",
+                    "id": "bffdc4e1-ac0d-4674-887a-5400fc589038",
+                    "label": "card02",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Card +2"
+                    },
+                    "x": 1153,
+                    "y": 193,
+                    "scaleX": 0.38,
+                    "scaleY": 0.38,
+                    "originX": 0.0009487163708776516,
+                    "originY": 0.00048748316692433127
+                },
+                {
+                    "type": "Image",
+                    "id": "fc400efe-6a7d-4843-a06b-436860ca7173",
+                    "label": "card03",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Card +2"
+                    },
+                    "x": 1153,
+                    "y": 363,
+                    "scaleX": 0.38,
+                    "scaleY": 0.38,
+                    "originX": 0.0009487163708776516,
+                    "originY": 0.00048748316692433127
+                },
+                {
+                    "type": "Image",
+                    "id": "8d012d79-90fa-4710-8b8e-83fea4f64737",
+                    "label": "card04",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Card +2"
+                    },
+                    "x": 1153,
+                    "y": 533,
+                    "scaleX": 0.38,
+                    "scaleY": 0.38,
+                    "originX": 0.0009487163708776516,
+                    "originY": 0.00048748316692433127
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "id": "f61802ec-6c70-4a66-a24a-e3a02446ae28",
+            "label": "window",
+            "scope": "PUBLIC",
+            "x": 530,
+            "y": 319,
+            "visible": false,
+            "list": [
+                {
+                    "type": "Image",
+                    "id": "73b1f898-e58c-45e8-b3f4-7b2d0d763273",
+                    "label": "window_1",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Window"
+                    },
+                    "x": 80,
+                    "y": -5,
+                    "scaleX": 0.6,
+                    "scaleY": 0.6
+                },
+                {
+                    "type": "Image",
+                    "id": "210660e5-f538-4366-9717-0fc1956602a3",
+                    "label": "plus",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Plus"
+                    },
+                    "x": 222,
+                    "y": 17,
+                    "scaleX": 0.6,
+                    "scaleY": 0.6
+                },
+                {
+                    "type": "Image",
+                    "id": "a5496796-eedb-47c5-9175-4be68cc79b32",
+                    "label": "minus",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Minus"
+                    },
+                    "x": -77,
+                    "y": 16,
+                    "scaleX": 0.6,
+                    "scaleY": 0.6
+                },
+                {
+                    "type": "Text",
+                    "id": "d1da360e-87d1-436e-9eb0-6aec5c110c58",
+                    "label": "troopCountValue",
+                    "scope": "PUBLIC",
+                    "x": 13,
+                    "y": -7,
+                    "scaleX": 0.2,
+                    "scaleY": 0.2,
+                    "text": "99",
+                    "fixedWidth": 599,
+                    "fixedHeight": 234,
+                    "align": "center",
+                    "fontSize": "250px",
+                    "fontStyle": "bold"
+                },
+                {
+                    "type": "Image",
+                    "id": "a255168e-e219-4eaf-9853-630b1995d9e9",
+                    "label": "close_Window",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Close Window"
+                    },
+                    "x": 287,
+                    "y": -133,
+                    "scaleX": 0.6,
+                    "scaleY": 0.6
+                },
+                {
+                    "type": "Image",
+                    "id": "c9263c8f-37bb-40fe-a3f3-3e819ed81fcb",
+                    "label": "attack_Button",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "RECTANGLE",
+                    "hitArea.width": 288,
+                    "hitArea.height": 65,
+                    "texture": {
+                        "key": "Attack_Button"
+                    },
+                    "x": 74,
+                    "y": 100,
+                    "scaleX": 0.5,
+                    "scaleY": 0.5
+                },
+                {
+                    "type": "Image",
+                    "id": "1f260030-4661-4a12-a382-c253e894964f",
+                    "label": "move_Button",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "RECTANGLE",
+                    "hitArea.width": 288,
+                    "hitArea.height": 65,
+                    "texture": {
+                        "key": "Move_Button"
+                    },
+                    "x": 74,
+                    "y": 100,
+                    "scaleX": 0.5,
+                    "scaleY": 0.5
+                },
+                {
+                    "type": "Image",
+                    "id": "fbbfd88e-8201-402b-841d-eecad3750309",
+                    "label": "reinforce_Button",
+                    "scope": "PUBLIC",
+                    "hitArea.shape": "PIXEL_PERFECT",
+                    "texture": {
+                        "key": "Reinforce_Button"
+                    },
+                    "x": 74,
+                    "y": 100,
+                    "scaleX": 0.5,
+                    "scaleY": 0.5
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "id": "98751e59-de32-4eff-b80e-a7c526c9ca90",
+            "label": "dice",
+            "scope": "PUBLIC",
+            "visible": false,
+            "list": [
+                {
+                    "type": "Image",
+                    "id": "91163746-9fbd-4343-87c0-4c1a546ef90e",
+                    "label": "attacker_1",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Attacker 1"
+                    },
+                    "x": 47,
+                    "y": 617,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "ef9091d3-f5fd-42cf-8c1e-709c2e39c93d",
+                    "label": "attacker_2",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Attacker 1"
+                    },
+                    "x": 107,
+                    "y": 617,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "dc018702-39bf-4647-bd0d-2e05c742c33e",
+                    "label": "attacker_3",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Attacker 1"
+                    },
+                    "x": 167,
+                    "y": 617,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "3e99ee19-3d9a-49c9-83ff-11326bf3c048",
+                    "label": "defender_1",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Defender 1"
+                    },
+                    "x": 47,
+                    "y": 677,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                },
+                {
+                    "type": "Image",
+                    "id": "1d48239e-c219-4bba-bc98-50b8e5232471",
+                    "label": "defender_2",
+                    "scope": "PUBLIC",
+                    "texture": {
+                        "key": "Defender 1"
+                    },
+                    "x": 107,
+                    "y": 677,
+                    "scaleX": 0.7,
+                    "scaleY": 0.7
+                }
+            ]
         }
     ],
     "plainObjects": [
@@ -65,16 +1409,6 @@
             "label": "enterKey",
             "scope": "PUBLIC",
             "keyCode": "ENTER"
-        },
-        {
-            "id": "ab23e189-795a-44e0-b54d-8ee08818a825",
-            "type": "Collider",
-            "label": "collider",
-            "scope": "PUBLIC",
-            "object1": "dino_Prefab",
-            "object2": "stars",
-            "collideCallback": "this.pickstar",
-            "callbackContext": "this"
         }
     ],
     "meta": {

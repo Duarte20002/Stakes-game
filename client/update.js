@@ -21,7 +21,7 @@ function makeRequest(){
 
             if (this.status == 200){
                 // If status is 200, redirect to the game page since everything is OK and the user is logged in
-                window.location.href = "/game.html"
+                window.location.href = "/game2/"
             }else{
                 // If status is not 200, show the error message
                 document.getElementById("message").innerHTML = data.message
