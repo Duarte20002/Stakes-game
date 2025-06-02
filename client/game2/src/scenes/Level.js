@@ -1,13 +1,13 @@
-let reinforceMode = false;
-let alreadyReinforced = false;
-let selectedCard = null;
-let isMyTurn = false;
-let highlightedAdjacents = []; //Array of the adjacent territories to be highlighted
 let selectedZone;
 let defendingZone;
 let selectedTroopCount;
 var tropsInSelected=1;
-let isMovementMode = false;
+let reinforceMode = false;
+let alreadyReinforced = false;
+let selectedCard = null;
+let isMyTurn = false;
+let movementMode = false;
+let highlightedAdjacents = []; //Array of the adjacent territories to be highlighted
 let attackerDiceImages = []; //Array of the attacker's dice's images
 let defenderDiceImages = []; //Array of the defender's dice's images
 let playerCards = []; //Array of the cards
@@ -1526,7 +1526,7 @@ class Level extends Phaser.Scene {
 
 		this.plus.setInteractive()
 			.on('pointerdown', () => {
-				let maxTroops = isMovementMode
+				let maxTroops = movementMode
 				? tropsInSelected - 1               // Troops allowed to move
 				: Math.min(tropsInSelected - 1, 3); // Troops allowed to attack
 
@@ -1619,8 +1619,8 @@ class Level extends Phaser.Scene {
         		this.reinforce_Button.setScale(0.5);
     		});
 
-		this.move_Button.visible = isMovementMode;
-		this.attack_Button.visible = !isMovementMode;
+		this.move_Button.visible = movementMode;
+		this.attack_Button.visible = !movementMode;
 		this.reinforce_Button.setVisible(false);
 		this.card01.setVisible(false);
 		this.card02.setVisible(false);
@@ -1681,10 +1681,10 @@ class Level extends Phaser.Scene {
 						if (!player1ID){
 							player1ID = territory.plr_own_id
 							zoneIcon.setTexture("Angel Piece")
-							zoneBase.setTexture("Number_Piece_Angel (1)")
+							zoneBase.setTexture("Number_Piece_Angel (2)")
 						}else if (player1ID == territory.plr_own_id){
 							zoneIcon.setTexture("Angel Piece")
-							zoneBase.setTexture("Number_Piece_Angel (1)")
+							zoneBase.setTexture("Number_Piece_Angel (2)")
 						}else {
 							zoneIcon.setTexture("Demon Piece_1")
 							zoneBase.setTexture("Number_Piece_Demon")
@@ -1778,7 +1778,7 @@ class Level extends Phaser.Scene {
 			console.log("selectedOwner:", selectedOwner, "| targetOwner:", targetOwner);
 
 			if (selectedOwner && selectedOwner === targetOwner) {
-				isMovementMode = true;
+				movementMode = true;
 
 				// Set button visibility
 				scene.move_Button.visible = true;
@@ -1793,7 +1793,7 @@ class Level extends Phaser.Scene {
 			}
 
 			// Attack other territories
-			isMovementMode = false;
+			movementMode = false;
 
 			// Set button visibility
 			scene.move_Button.visible = false;
@@ -1942,8 +1942,7 @@ class Level extends Phaser.Scene {
 		console.log("Sending reinforce request to zone", territory_id, "with card", card);
 
 		const xhr = new XMLHttpRequest();
-		xhr.open("POST", "/reinforce", true);
-		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
@@ -1965,7 +1964,10 @@ class Level extends Phaser.Scene {
 			card: { crd_id: card.crd_id }
 		};
 
+		xhr.open("POST", "/reinforce", true);
+		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xhr.send(JSON.stringify(body));
+
 	}
 
 
@@ -2042,6 +2044,7 @@ class Level extends Phaser.Scene {
 
 				selectedZone = undefined;
 				defendingZone = undefined;
+				this.CheckVictoryStatus();
 			} else {
 				console.error("Attack failed:", xhr.statusText);
 			}
@@ -2057,7 +2060,6 @@ class Level extends Phaser.Scene {
 			att_troop_count: parseInt(this.selectedTroopCount, 10)
 		};
 
-		this.CheckVictoryStatus();
 
 		xhr.open("POST", "/logAttack", true);
 		xhr.setRequestHeader("Content-Type", "application/json");
@@ -2173,7 +2175,7 @@ class Level extends Phaser.Scene {
 					slot.setTexture(textureKey);
 					slot.setVisible(true);
 				} else {
-					console.warn("No texture for card eff_val:", cardData.eff_val);
+					console.warn("No texture for card:", cardData.eff_val);
 					slot.setVisible(false);
 				}
 			}
@@ -2183,7 +2185,7 @@ class Level extends Phaser.Scene {
 
 	CheckHasCard() {
 		const xhr = new XMLHttpRequest();
-		xhr.open("GET", "/hasCard", true);
+		
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
@@ -2192,42 +2194,10 @@ class Level extends Phaser.Scene {
 				}
 			};
 
+			xhr.open("GET", "/hasCard", true);
 			xhr.send();
+
 		}
-	}
-
-
-	StartReinforce() {
-		if (!isMyTurn) {
-			alert("❌ You can't use a card during the opponent's turn.");
-			return;
-		}
-
-		const xhr = new XMLHttpRequest();
-
-
-		xhr.onreadystatechange = () => {
-			if (xhr.readyState === 4) {
-				const response = JSON.parse(xhr.responseText);
-				if (response.success) {
-					reinforceMode = true;
-					alert("Card used! Select a territory to reinforce.");
-
-					document.getElementById("reinforceButton").style.display = "none";
-
-					const cardDisplay = document.getElementById("cardReward");
-					if (cardDisplay) {
-						cardDisplay.innerHTML = "";
-					}
-				} else {
-					alert("No card available or already used.");
-				}
-			}
-		};
-
-		xhr.open("POST", "/useCard", true);
-		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send();
 	}
 
 
@@ -2274,20 +2244,19 @@ class Level extends Phaser.Scene {
 
 	CheckVictoryStatus() {
 		const xhr = new XMLHttpRequest();
-		xhr.open("GET", "/checkVictory", true);
 
-
-		xhr.onreadystatechange = () => {
+		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
 					const response = JSON.parse(xhr.responseText);
-					console.log(response)
+					console.log(response);
+
 					if (response.gameOver) {
-						if (response.isWinner) {
-							console.log("Redirecting to winner.html");
+						if (response.isDraw) {
+							window.location.href = "/draw.html";
+						} else if (response.isWinner) {
 							window.location.href = "/winner.html";
 						} else {
-							console.log("Redirecting to loser.html");
 							window.location.href = "/loser.html";
 						}
 					}
@@ -2295,9 +2264,8 @@ class Level extends Phaser.Scene {
 			}
 		};
 
-		
+		xhr.open("GET", "/checkVictory", true);
 		xhr.send();
-
 	}
 
 	

@@ -170,6 +170,11 @@
                 "key": "Number_Piece_Angel (1)"
             },
             {
+                "url": "assets/Number_Piece_Angel (2).png",
+                "type": "image",
+                "key": "Number_Piece_Angel (2)"
+            },
+            {
                 "url": "assets/Number_Piece_Demon.png",
                 "type": "image",
                 "key": "Number_Piece_Demon"
@@ -178,6 +183,11 @@
                 "url": "assets/Number_Piece_Neutral.png",
                 "type": "image",
                 "key": "Number_Piece_Neutral"
+            },
+            {
+                "url": "assets/Number_Piece_Neutral (1).png",
+                "type": "image",
+                "key": "Number_Piece_Neutral (1)"
             },
             {
                 "url": "assets/Pass Turn.png",
