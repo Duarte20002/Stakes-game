@@ -3,9 +3,39 @@
 <head><title>You Win!</title></head>
 <body style="text-align: center; font-family: sans-serif;">
     <h1 style="color: green;">🎉 Congratulations!</h1>
+   <style>
+    .vertical {
+        position: absolute;
+        width: 175px;
+        height: 175px;
+        z-index: 10;
+    }
+    .horizontal {
+        position: absolute;
+        width: 175px;
+        height: auto;
+        z-index: 10;
+    }
+    .top-left {
+        top: 0;
+        left: 0;
+    }
+    .top-right {
+        top: 0;
+        right: 0;
+    }
+    .bottom-left {
+        bottom: 0;
+        left: 0;
+    }
+    .bottom-right {
+        bottom: 0;
+        right: 0;
+    }
+</style>
     <h2>You won the game!</h2>
 
-    <a href="/lobby.html" style="display: inline-block; margin-top: 20px; font-size: 18px;">⬅️ Back to Main Menu</a>
+    <a href="/login.html" style="display: inline-block; margin-top: 20px; font-size: 18px;">⬅️ Back to Main Menu</a>
 
     <script>
         fetch("/setIdle", {
@@ -13,6 +43,14 @@
             headers: { "Content-Type": "application/json" }
         }).then(r => r.json()).then(console.log).catch(console.error);
     </script>
+
+    <div>
+    <img src="./img/insignia.png" class="corner vertical top-left">
+    <img src="./img/demon_crest.png" class="corner horizontal top-right">
+    <img src="./img/demon_crest.png" class="corner horizontal bottom-left">
+    <img src="./img/insignia.png" class="corner vertical bottom-right">
+    </div>
+
 </body>
 </html>
 

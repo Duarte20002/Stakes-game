@@ -44,7 +44,7 @@ function Logout() {
         .then(response => {
             if (response.redirected) {
                 sessionStorage.clear();
-                window.location.href = response.url; // Redirects to index.html
+                window.location.href = response.url; 
             } else {
                 console.error("Logout failed.");
             }
@@ -68,7 +68,7 @@ function GetMatchState() {
                     document.getElementById("find-match").style.display = "none";
                     document.getElementById("quit-match").style.display = "block";
                 } else if (data.state === "IN_GAME") {
-                    window.location.href = "/game2/";
+                    window.location.href = "/game2";
                 }
 
                 document.getElementById("username_login").innerText = data.username;
