@@ -1,4 +1,3 @@
-
 body {
     font-family: Arial, sans-serif;
     background-color: #1b1b1b;
@@ -8,62 +7,72 @@ body {
     padding: 0;
 }
 
-
-.container {
+.container, .lobby-container {
     max-width: 400px;
     margin: 100px auto;
-    padding: 20px;
+    padding: 20px 30px;
     background: #2a2a2a;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    text-align: center;
 }
 
-
+/* Headings */
 h1, h2 {
     color: #ff4500;
+    margin-bottom: 20px;
 }
 
-
-input {
-    display: block;  
-    width: 90%;
+/* Inputs */
+input[type="text"], 
+input[type="password"], 
+input[type="submit"], 
+input[type="button"] {
+    display: block;
+    width: 60%;
     padding: 10px;
     margin: 10px auto;
     border-radius: 5px;
     border: none;
     background-color: #3a3a3a;
     color: white;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 input::placeholder {
     color: #b3b3b3;
 }
 
-button, .btn {
-    display: inline-block;
-    width: 100%;
+/* Submit and button styles */
+button, input[type="submit"], .btn {
+    width: 60%;
     padding: 10px 15px;
-    margin-top: 10px;
+    margin: 10px auto 0;
     background-color: #ff4500;
     color: white;
     font-size: 16px;
     font-weight: bold;
-    text-decoration: none;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.3s;
+    display: block; /* to center with margin auto */
 }
 
-button:hover, .btn:hover {
+button:hover, 
+input[type="submit"]:hover, 
+.btn:hover {
     background-color: #ff6347;
 }
 
+/* Message or status */
 #message {
     margin-top: 10px;
     font-weight: bold;
 }
 
+/* Links */
 a {
     color: #ff4500;
     text-decoration: none;
@@ -73,14 +82,31 @@ a:hover {
     text-decoration: underline;
 }
 
-
-.index-container {
-    max-width: 600px;
-    margin: 150px auto;
+/* Fieldset */
+fieldset {
+    border: 2px solid #ff4500;
+    border-radius: 10px;
+    padding: 20px 25px;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto 20px;
+    background-color: #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
 }
 
-.index-container p {
+/* Legend */
+legend {
+    color: #ff4500;
+    font-weight: bold;
+    padding: 0 10px;
     font-size: 18px;
-    margin-bottom: 20px;
 }
 
+/* Paragraphs inside container */
+.container p, .lobby-container p {
+    font-size: 18px;
+    margin: 15px 0;
+}

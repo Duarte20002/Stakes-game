@@ -84,7 +84,7 @@ app.get("/matchState", (req, res) => {
                 message: "Match status obtained",
                 state: state === "idle" ? "NOT_IN_QUEUE" :
                        state === "queueing" ? "IN_QUEUE" :
-                       state === "matched" ? "IN_GAME" : "UNKNOWN"
+                       state === "matched" ? "IN_GAME" : "UNKNOWN",
             });
         }
     );
@@ -236,7 +236,7 @@ app.get("/logout", (req, res) => {
             return res.status(500).send("Could not log out.");
         }
 
-        res.redirect("/index.html");
+        res.redirect("/login.html");
     });
 });
 
