@@ -3,6 +3,38 @@
 <head><title>It's a Draw</title></head>
 <body style="text-align: center; font-family: sans-serif;">
     <h1 style="color: gray;">🤝 It's a Draw</h1>
+
+    <style>
+        .vertical {
+            position: absolute;
+            width: 175px;
+            height: 175px;
+            z-index: 10;
+        }
+        .horizontal {
+            position: absolute;
+            width: 175px;
+            height: auto;
+            z-index: 10;
+        }
+        .top-left {
+            top: 0;
+            left: 0;
+        }
+        .top-right {
+            top: 0;
+            right: 0;
+        }
+        .bottom-left {
+            bottom: 0;
+            left: 0;
+        }
+        .bottom-right {
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+
     <h2>Neither side claimed full victory.</h2>
 
     <a href="/lobby.html" style="display: inline-block; margin-top: 20px; font-size: 18px;">⬅️ Back to Main Menu</a>
@@ -13,6 +45,14 @@
             headers: { "Content-Type": "application/json" }
         }).then(r => r.json()).then(console.log).catch(console.error);
     </script>
+
+    <div>
+    <img src="./img/insignia.png" class="corner vertical top-left">
+    <img src="./img/demon_crest.png" class="corner horizontal top-right">
+    <img src="./img/demon_crest.png" class="corner horizontal bottom-left">
+    <img src="./img/insignia.png" class="corner vertical bottom-right">
+    </div>
+
 </body>
 </html>
 
