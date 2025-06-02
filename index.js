@@ -668,8 +668,67 @@ app.post("/endTurn", (req, res) => {
     }
 
     function EndTurn() {
+        function GiveStartOfTurnBonus(playerId, gameID, callback) {
+            const territoryBonusTable = [
+                { min: 1, max: 4, bonus: 1 },
+                { min: 5, max: 7, bonus: 2 },
+                { min: 8, max: 10, bonus: 3 },
+                { min: 11, max: 13, bonus: 4 },
+                { min: 14, max: 16, bonus: 5 },
+                { min: 17, max: 19, bonus: 6 },
+                { min: 20, max: 22, bonus: 7 },
+                { min: 23, max: 25, bonus: 8 },
+                { min: 26, max: 28, bonus: 9 },
+                { min: 29, max: 31, bonus: 10 },
+            ];
+
+            const sql = `
+                SELECT gt.ter_id, t.ter_reg_id
+                FROM Stakes_digtentape.game_territory gt
+                JOIN Stakes_digtentape.territory t ON gt.ter_id = t.ter_id
+                WHERE gt.plr_own_id = ? AND gt.game_id = ?
+            `;
+
+            connection.query(sql, [playerId, gameID], (err, rows) => {
+                if (err || !rows) return callback(0);
+
+                const terrCount = rows.length;
+                const match = territoryBonusTable.find(rule => terrCount >= rule.min && terrCount <= rule.max);
+                const territoryBonus = match ? match.bonus : 0;
+
+                const regionCounts = {};
+                rows.forEach(r => {
+                    regionCounts[r.ter_reg_id] = (regionCounts[r.ter_reg_id] || 0) + 1;
+                });
+
+                connection.query("SELECT reg_id, troop_bonus FROM Stakes_digtentape.region", (err2, regions) => {
+                    if (err2) return callback(territoryBonus);
+
+                    let regionBonus = 0;
+                    let checks = 0;
+
+                    regions.forEach(region => {
+                        connection.query(
+                            "SELECT COUNT(*) AS total FROM Stakes_digtentape.territory WHERE ter_reg_id = ?",
+                            [region.reg_id],
+                            (err3, countRows) => {
+                                checks++;
+                                if (!err3 && countRows[0].total === regionCounts[region.reg_id]) {
+                                    regionBonus += region.troop_bonus;
+                                }
+
+                                if (checks === regions.length) {
+                                    callback(territoryBonus + regionBonus);
+                                }
+                            }
+                        );
+                    });
+                });
+            });
+        }
+
         connection.query(
-            "select plr1_id, plr2_id, cur_turn_plr_id, rnd_num from Stakes_digtentape.game where game_id = ?",
+            "SELECT plr1_id, plr2_id, cur_turn_plr_id, rnd_num FROM Stakes_digtentape.game WHERE game_id = ?",
             [req.session.gameID],
             (err, results) => {
                 if (err || results.length === 0) {
@@ -681,12 +740,10 @@ app.post("/endTurn", (req, res) => {
                 const isNewRound = cur_turn_plr_id === plr2_id && nextTurn === plr1_id;
                 const newRound = isNewRound ? rnd_num + 1 : rnd_num;
 
-                // Step 1: Update turn and round
                 const sql = "UPDATE Stakes_digtentape.game SET cur_turn_plr_id = ?, rnd_num = ? WHERE game_id = ?";
                 connection.query(sql, [nextTurn, newRound, req.session.gameID], (updateErr) => {
                     if (updateErr) return res.status(500).json({ message: "Failed to end turn." });
 
-                    // Step 2: Check if only one player remains (elimination)
                     connection.query(
                         `SELECT DISTINCT plr_own_id FROM Stakes_digtentape.game_territory 
                          WHERE game_id = ? AND plr_own_id IS NOT NULL`,
@@ -703,7 +760,6 @@ app.post("/endTurn", (req, res) => {
                                 );
                             }
 
-                            // Step 3: If round 20+, check region majority
                             if (newRound >= 20) {
                                 connection.query(
                                     `SELECT r.reg_id, t.ter_id, t.ter_reg_id, gt.plr_own_id
@@ -754,7 +810,7 @@ app.post("/endTurn", (req, res) => {
                                         const winCon = (p1Regions === p2Regions) ? "draw" : "region_majority";
 
                                         connection.query(
-                                            "update Stakes_digtentape.game set win_plr_id = ?, win_con = ? where game_id = ?",
+                                            "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = ? WHERE game_id = ?",
                                             [winner, winCon, req.session.gameID],
                                             () => {
                                                 return res.json({
@@ -767,7 +823,6 @@ app.post("/endTurn", (req, res) => {
                                     }
                                 );
                             } else {
-                                // Step 4: Give bonus troops to the next player and continue
                                 GiveStartOfTurnBonus(nextTurn, req.session.gameID, (bonus) => {
                                     const key = `bonus_${nextTurn}`;
                                     app.set(key, bonus);
@@ -782,7 +837,6 @@ app.post("/endTurn", (req, res) => {
         );
     }
 
-    // Get game ID if missing from session
     if (!req.session.gameID) {
         connection.query(
             "SELECT game_id FROM Stakes_digtentape.game WHERE plr1_id = ? OR plr2_id = ?",
@@ -799,65 +853,6 @@ app.post("/endTurn", (req, res) => {
     }
 });
 
-
-function GiveStartOfTurnBonus(playerId, gameID, callback) {
-    const territoryBonusTable = [
-        { min: 1, max: 4, bonus: 1 },
-        { min: 5, max: 7, bonus: 2 },
-        { min: 8, max: 10, bonus: 3 },
-        { min: 11, max: 13, bonus: 4 },
-        { min: 14, max: 16, bonus: 5 },
-        { min: 17, max: 19, bonus: 6 },
-        { min: 20, max: 22, bonus: 7 },
-        { min: 23, max: 25, bonus: 8 },
-        { min: 26, max: 28, bonus: 9 },
-        { min: 29, max: 31, bonus: 10 },
-    ];
-
-    const sql = `
-        select gt.ter_id, t.ter_reg_id
-        from Stakes_digtentape.game_territory gt
-        join Stakes_digtentape.territory t on gt.ter_id = t.ter_id
-        where gt.plr_own_id = ? and gt.game_id = ?
-    `;
-
-    connection.query(sql, [playerId, gameID], (err, rows) => {
-        if (err || !rows) return callback(0);
-
-        const terrCount = rows.length;
-        const match = territoryBonusTable.find(rule => terrCount >= rule.min && terrCount <= rule.max);
-        const territoryBonus = match ? match.bonus : 0;
-
-        const regionCounts = {};
-        rows.forEach(r => {
-            regionCounts[r.ter_reg_id] = (regionCounts[r.ter_reg_id] || 0) + 1;
-        });
-
-        connection.query("select reg_id, troop_bonus from Stakes_digtentape.region", (err2, regions) => {
-            if (err2) return callback(territoryBonus);
-
-            let regionBonus = 0;
-            let checks = 0;
-
-            regions.forEach(region => {
-                connection.query(
-                    "select COUNT(*) AS total from Stakes_digtentape.territory where ter_reg_id = ?",
-                    [region.reg_id],
-                    (err3, countRows) => {
-                        checks++;
-                        if (!err3 && countRows[0].total === regionCounts[region.reg_id]) {
-                            regionBonus += region.troop_bonus;
-                        }
-
-                        if (checks === regions.length) {
-                            callback(territoryBonus + regionBonus);
-                        }
-                    }
-                );
-            });
-        });
-    });
-}
 
 app.get("/getBonusTroops", (req, res) => {
     const key = `bonus_${req.session.player_id}`;
