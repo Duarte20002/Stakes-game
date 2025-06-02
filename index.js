@@ -84,7 +84,7 @@ app.get("/matchState", (req, res) => {
                 message: "Match status obtained",
                 state: state === "idle" ? "NOT_IN_QUEUE" :
                        state === "queueing" ? "IN_QUEUE" :
-                       state === "matched" ? "IN_GAME" : "UNKNOWN"
+                       state === "matched" ? "IN_GAME" : "UNKNOWN",
             });
         }
     );
