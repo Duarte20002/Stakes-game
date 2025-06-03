@@ -1,5 +1,12 @@
 function FindMatch() {
 
+    const audio = document.getElementById("welcome-audio");
+    if (audio) {
+        audio.volume = 0.5;
+        audio.loop = true;
+        audio.play().catch((err) => console.warn("Failed to play audio:", err));
+    }
+
     sessionStorage.clear();
 
     var request = new XMLHttpRequest();
@@ -21,6 +28,12 @@ function FindMatch() {
 
 function QuitMatch() {
     var request = new XMLHttpRequest();
+
+    const audio = document.getElementById("welcome-audio");
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
 
     request.onreadystatechange = function () {
         if (this.readyState == 4) {
