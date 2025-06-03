@@ -2,6 +2,7 @@ let selectedZone;
 let defendingZone;
 let selectedTroopCount;
 var tropsInSelected=1;
+var bonusTroops = 0;
 let reinforceMode = false;
 let alreadyReinforced = false;
 let selectedCard = null;
@@ -592,6 +593,12 @@ class Level extends Phaser.Scene {
 		defender_2.scaleY = 0.7;
 		dice.add(defender_2);
 
+		// bonus_troop
+		const bonus_troop = this.add.text(534, 49, "", {});
+		bonus_troop.scaleX = 0.4;
+		bonus_troop.scaleY = 0.4;
+		bonus_troop.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
+
 		// lists
 		const stars = [];
 
@@ -712,6 +719,7 @@ class Level extends Phaser.Scene {
 		this.defender_1 = defender_1;
 		this.defender_2 = defender_2;
 		this.dice = dice;
+		this.bonus_troop = bonus_troop;
 		this.enterKey = enterKey;
 		this.stars = stars;
 
@@ -952,6 +960,8 @@ class Level extends Phaser.Scene {
 	defender_2;
 	/** @type {Phaser.GameObjects.Container} */
 	dice;
+	/** @type {Phaser.GameObjects.Text} */
+	bonus_troop;
 	/** @type {Phaser.Input.Keyboard.Key} */
 	enterKey;
 	/** @type {Array<any>} */
@@ -1562,6 +1572,7 @@ class Level extends Phaser.Scene {
 
 		this.pass_Turn.setInteractive()
 			.on('pointerdown', () => {
+				this.pass_Turn.visible = false;
 				console.log("Pased the turn");
 				this.EndTurn()
 			})
@@ -1628,6 +1639,7 @@ class Level extends Phaser.Scene {
 		this.card04.setVisible(false);
 
 		this.GameLoop();
+		this.sound.play('Background_music_sfx', {loop: true, volume: 0.5})
 			setInterval(() => {
 				this.GameLoop()
 				this.CheckVictoryStatus();
@@ -1644,13 +1656,13 @@ class Level extends Phaser.Scene {
 			}, 3000);
 	}
 
+
+
 	GameLoop(){
 
 		var request = new XMLHttpRequest();
 		const scene = this;
 
-		this.sound.play('Background_music_sfx', {loop: true, volume: 0.075})
-		
 		request.open("GET", "/game", true);
 		request.onreadystatechange = () => {
 
@@ -1662,7 +1674,7 @@ class Level extends Phaser.Scene {
 				scene.territories = data.territories;
 				playerCards = data.cards; // <- this line is critical
 				// console.log("Loaded cards:", playerCards);
-				
+
 
 				var player1ID = undefined
 				var player2ID = undefined
@@ -1886,12 +1898,6 @@ class Level extends Phaser.Scene {
 		}
 
 		const troopsToAdd = prompt("How many troops do you want to add?", "1");
-
-		if (troopsToAdd === null) {
-			reinforceMode = false;
-			return;
-		}
-
 		const number = parseInt(troopsToAdd);
 
 		if (isNaN(number) || number <= 0) {
@@ -1899,14 +1905,28 @@ class Level extends Phaser.Scene {
 			return;
 		}
 
+		// Checking if the player is trying to add more troops than they actually have.
+		if (number > bonusTroops) {
+			alert("You cannot add more troops than you have available.");
+			return;
+		}
+
+		// Cesar Note: do we really need this check since we are 'forced' to add the remaining troops?
+		// if (troopsToAdd === null) {
+		// 	reinforceMode = false;
+		// 	return;
+		// }
+
 		// Send reinforcement to the server
 		const request = new XMLHttpRequest();
-		request.open("POST", "/reinforce", true);
+		request.open("POST", "/applyBonusTroops", true);
 		request.setRequestHeader("Content-Type", "application/json");
 
 		request.onreadystatechange = () => {
 			if (this.readyState === 4) {
 				const response = JSON.parse(this.responseText);
+				console.log("RESPONSE FROM /applyBonusTroops");
+				console.log(response);
 				alert(response.message);
 
 				if (response.success) {
@@ -1921,6 +1941,12 @@ class Level extends Phaser.Scene {
 			troops: number
 		};
 
+		bonusTroops -= number;
+		if (bonusTroops <= 0) {
+			reinforceMode = false;
+			this.bonus_troop.text = "";
+			this.pass_Turn.setVisible(true);
+		}
 		request.send(JSON.stringify(dataToSend));
 	}
 
@@ -1986,8 +2012,8 @@ class Level extends Phaser.Scene {
 			return;
 		}
 
-		this.sound.play('combat_sfx', {loop: false, volume: 0.3})
-		
+		this.sound.play('combat_sfx', {loop: false, volume: 0.2})
+
 		const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
 
 		const xhr = new XMLHttpRequest();
@@ -2016,7 +2042,7 @@ class Level extends Phaser.Scene {
 					if (attackerRolls[i]) {
 						image.setTexture(`Attacker ${attackerRolls[i]}`);
 						image.setVisible(true);
-						this.sound.play('Dice_sfx', {loop: false, volume: 0.5})
+						this.sound.play('Dice_sfx', {loop: false, volume: 0.2})
 					} else {
 						image.setVisible(false); // hide unused dice
 					}
@@ -2027,7 +2053,7 @@ class Level extends Phaser.Scene {
 					if (defenderRolls[i]) {
 						image.setTexture(`Defender ${defenderRolls[i]}`);
 						image.setVisible(true);
-						this.sound.play('Dice_sfx', {loop: false, volume: 0.5})
+						this.sound.play('Dice_sfx', {loop: false, volume: 0.2})
 					} else {
 						image.setVisible(false); // hide unused dice
 					}
@@ -2130,7 +2156,7 @@ class Level extends Phaser.Scene {
 	GiveCardToPlayer(player_id, game_id) {
 		const xhrCard = new XMLHttpRequest();
 
-		this.sound.play('Card_sfx', {loop: false, volume: 0.5})
+		this.sound.play('Card_sfx', {loop: false, volume: 0.8})
 
 		xhrCard.onreadystatechange = () => {
 			if (xhrCard.readyState === 4) {
@@ -2163,26 +2189,38 @@ class Level extends Phaser.Scene {
 
 
 	AddCardToHand(cards) {
-
 		const textureMap = {
 			2: "Card +2",
 			4: "Card +4",
 			6: "Card +6"
 		};
-
+	
+		const soundMap = {
+			2: "Card_+2_sfx",
+			4: "Card_+4_sfx",
+			6: "Card_+6_sfx"
+		};
+	
 		const cardSlots = [this.card01, this.card02, this.card03, this.card04];
-
+	
 		for (let i = 0; i < cardSlots.length; i++) {
 			const cardData = cards[i];  // card object from server or undefined if no card here
 			const slot = cardSlots[i];
-
+	
 			if (!cardData) {
 				slot.setVisible(false);  // Hide slot if no card
 			} else {
 				const textureKey = textureMap[cardData.eff_val];
+				const soundKey = soundMap[cardData.eff_val];
+	
 				if (textureKey) {
 					slot.setTexture(textureKey);
 					slot.setVisible(true);
+	
+					// 🔊 Play a specific sound when adding this card
+					if (soundKey) {
+						this.sound.play(soundKey, { volume: 1 });
+					}
 				} else {
 					console.warn("No texture for card:", cardData.eff_val);
 					slot.setVisible(false);
@@ -2190,7 +2228,7 @@ class Level extends Phaser.Scene {
 			}
 		}
 	}
-
+	
 
 	CheckHasCard() {
 		const xhr = new XMLHttpRequest();
@@ -2235,54 +2273,57 @@ class Level extends Phaser.Scene {
 	CheckTurnOwnership() {
 		const xhr = new XMLHttpRequest();
 		const scene = this;
-	
+
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
 				const data = JSON.parse(xhr.responseText);
 				console.log(data);
-	
+
 				scene.isMyTurn = data.isMyTurn;
 				isMyTurn = data.isMyTurn;
-				scene.pass_Turn.visible = data.isMyTurn;
-	
+				scene.pass_Turn.visible = (data.isMyTurn && bonusTroops == 0);
+
 				if (data.isMyTurn) {
 					scene.getBonusTroops(); 
 				}
+
+				if (data.message === "Not logged in."){
+					window.location.href = "/login.html";
+				}
 			}
 		};
-	
+
 		xhr.open("GET", "/isMyTurn", true);
 		xhr.send();
 	}
-	
+
 
 	getBonusTroops() {
 		const scene = this;
-	
+
 		const xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
 				const { bonus } = JSON.parse(xhr.responseText);
-	
+
 				if (bonus > 0) {
 					console.log(`You have ${bonus} bonus troops!`);
 					reinforceMode = true;
-	
-					// Optional: Update bonus message if you're using HTML
-					const bonusDiv = document.getElementById("bonusAlert");
-					if (bonusDiv) {
-						bonusDiv.innerText = `You have ${bonus} bonus troops! Click a territory to reinforce.`;
-						bonusDiv.style.display = "block";
-					}
+
+					scene.bonus_troop.text = `You have ${bonus} bonus troops! Click a territory to reinforce.`;
+					scene.pass_Turn.setVisible(false);
+					bonusTroops = bonus;
+
 				} else {
-					const bonusDiv = document.getElementById("bonusAlert");
-					if (bonusDiv) {
-						bonusDiv.style.display = "none";
-					}
+					// Cesar Note: Why would you have a bonusDiv that is hidden in phaser?
+					// const bonusDiv = document.getElementById("bonusAlert");
+					// if (bonusDiv) {
+					// 	bonusDiv.style.display = "none";
+					// }
 				}
 			}
 		};
-	
+
 		xhr.open("GET", "/getBonusTroops", true);
 		xhr.send();
 	}

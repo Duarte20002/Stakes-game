@@ -1400,6 +1400,19 @@
                     "scaleY": 0.7
                 }
             ]
+        },
+        {
+            "type": "Text",
+            "id": "43ca0a05-54d0-4876-b091-84cf589dc924",
+            "label": "bonus_troop",
+            "scope": "PUBLIC",
+            "x": 534,
+            "y": 49,
+            "scaleX": 0.4,
+            "scaleY": 0.4,
+            "fontSize": "80px",
+            "fontStyle": "bold",
+            "color": "#000000ff"
         }
     ],
     "plainObjects": [

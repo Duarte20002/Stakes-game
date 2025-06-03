@@ -95,6 +95,13 @@
                 "key": "Close Window"
             },
             {
+                "url": [
+                    "assets/Sword Fight Sound Effect.mp3"
+                ],
+                "type": "audio",
+                "key": "combat_sfx"
+            },
+            {
                 "url": "assets/Defender 1.png",
                 "type": "image",
                 "key": "Defender 1"
@@ -240,13 +247,6 @@
                 "key": "Reinforce_Button"
             },
             {
-                "url": [
-                    "assets/Shroudbroken (Original Game Soundtrack).mp3"
-                ],
-                "type": "audio",
-                "key": "Background_music_sfx"
-            },
-            {
                 "url": "src/animations/Star.json",
                 "type": "animation",
                 "key": "Star"
@@ -271,17 +271,17 @@
             },
             {
                 "url": [
-                    "assets/Sword Fight Sound Effect.mp3"
-                ],
-                "type": "audio",
-                "key": "combat_sfx"
-            },
-            {
-                "url": [
                     "assets/troops_sfx.mp3"
                 ],
                 "type": "audio",
                 "key": "troops_sfx"
+            },
+            {
+                "url": [
+                    "assets/Undertale OST 005 - Ruins.mp3"
+                ],
+                "type": "audio",
+                "key": "Background_music_sfx"
             },
             {
                 "url": "assets/Window.png",

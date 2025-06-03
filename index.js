@@ -887,6 +887,8 @@ app.post("/applyBonusTroops", (req, res) => {
         return res.status(400).json({ success: false, message: "Invalid parameters." });
     }
 
+    console.log('Applying bonus troops')
+
     const key = `bonus_${req.session.player_id}`;
     let currentBonus = app.get(key) || 0;
 
