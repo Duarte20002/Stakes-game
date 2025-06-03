@@ -40,16 +40,21 @@ function QuitMatch() {
 }
 
 function Logout() {
-    fetch("/logout")
-        .then(response => {
-            if (response.redirected) {
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            if (this.status === 200 || this.status === 302) {
                 sessionStorage.clear();
-                window.location.href = response.url; 
+                window.location.href = this.responseURL || "/login.html";
             } else {
                 console.error("Logout failed.");
             }
-        })
-        .catch(error => console.error("Logout error:", error));
+        }
+    };
+
+    request.open("GET", "/logout", true);
+    request.send();
 }
 
 function GetMatchState() {
@@ -71,7 +76,6 @@ function GetMatchState() {
                     window.location.href = "/game2";
                 }
 
-                document.getElementById("username_login").innerText = data.username;
 
             } else if (this.status == 401) {
                 window.location.href = "login.html";
@@ -84,30 +88,6 @@ function GetMatchState() {
     request.open("GET", "/matchState", true);
     request.send();
 }
-
-app.post('/startgame', async (req, res) => {
-    const { plr1_id, plr2_id } = req.body;
-
-    try {
-        // 1. Create game entry
-        const [gameResult] = await db.promise().execute(
-            "insert into game (plr1_id, plr2_id, cur_turn_plr_id) values (?, ?, ?)",
-            [plr1_id, plr2_id, plr1_id]
-        );
-        const game_id = gameResult.insertId;
-
-        // 2. Assign territories
-        await db.promise().execute(
-            "insert into game_territory (game_id, territory_id, owner_id, troop_count) values (?, 9, ?, 5), (?, 32, ?, 5)",
-            [game_id, plr1_id, game_id, plr2_id]
-        );
-
-        res.json({ success: true, game_id });
-    } catch (err) {
-        console.error("Error initializing game:", err);
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
 
 
 GetMatchState();
