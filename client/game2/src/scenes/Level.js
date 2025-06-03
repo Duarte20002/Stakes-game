@@ -1719,7 +1719,7 @@ class Level extends Phaser.Scene {
 		}
 
 		if (reinforceMode) {
-			ReinforceTerritory(area_number);
+			this.ReinforceTerritory(area_number);
 			return;
 		}
 
@@ -2225,22 +2225,58 @@ class Level extends Phaser.Scene {
 
 	CheckTurnOwnership() {
 		const xhr = new XMLHttpRequest();
-		const scene = this
-
+		const scene = this;
+	
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
-				const data = JSON.parse(xhr.responseText)
-				console.log(data)	
+				const data = JSON.parse(xhr.responseText);
+				console.log(data);
+	
 				scene.isMyTurn = data.isMyTurn;
 				isMyTurn = data.isMyTurn;
 				scene.pass_Turn.visible = data.isMyTurn;
+	
+				if (data.isMyTurn) {
+					scene.getBonusTroops(); 
+				}
 			}
 		};
-
+	
 		xhr.open("GET", "/isMyTurn", true);
 		xhr.send();
 	}
+	
 
+	getBonusTroops() {
+		const scene = this;
+	
+		const xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				const { bonus } = JSON.parse(xhr.responseText);
+	
+				if (bonus > 0) {
+					console.log(`You have ${bonus} bonus troops!`);
+					reinforceMode = true;
+	
+					// Optional: Update bonus message if you're using HTML
+					const bonusDiv = document.getElementById("bonusAlert");
+					if (bonusDiv) {
+						bonusDiv.innerText = `You have ${bonus} bonus troops! Click a territory to reinforce.`;
+						bonusDiv.style.display = "block";
+					}
+				} else {
+					const bonusDiv = document.getElementById("bonusAlert");
+					if (bonusDiv) {
+						bonusDiv.style.display = "none";
+					}
+				}
+			}
+		};
+	
+		xhr.open("GET", "/getBonusTroops", true);
+		xhr.send();
+	}
 
 	CheckVictoryStatus() {
 		const xhr = new XMLHttpRequest();

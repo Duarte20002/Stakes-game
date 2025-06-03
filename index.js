@@ -111,8 +111,8 @@ app.post("/findMatch", (req, res) => {
                 const allTerritoryIds = Array.from({ length: 32 }, (_, i) => i + 1);
 
                 const territoryinserts = allTerritoryIds.map(ter_id => {
-                    if (ter_id === 9) return [req.session.gameID, ter_id, plr1_id, 4];
-                    if (ter_id === 32) return [req.session.gameID, ter_id, plr2_id, 4];
+                    if (ter_id === 9) return [req.session.gameID, ter_id, plr1_id, 5];
+                    if (ter_id === 32) return [req.session.gameID, ter_id, plr2_id, 5];
 
                     // Make some territories neutral and assign 3 troops to points of greater interest (Ports)
                     let neutralTroops = 2;
