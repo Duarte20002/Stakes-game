@@ -1980,6 +1980,17 @@ class Level extends Phaser.Scene {
 					console.log("Reinforcement successful!", res);
 					alreadyReinforced = true;
 					selectedCard = null;
+
+					const reinforceSFX = {
+						2: "bonus_+2_sfx",
+						4: "bonus_+4_sfx",
+						6: "bonus_+6_sfx"
+					};
+
+					const cardValue = card?.eff_val;
+					if (cardValue && reinforceSFX[cardValue]) {
+						this.sound.play(reinforceSFX[cardValue], { volume: 0.5 });
+					}
 				} else {
 					console.error("Reinforcement failed:", res.message);
 				}
