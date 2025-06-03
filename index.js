@@ -1035,6 +1035,7 @@ app.get("/checkVictory", (req, res) => {
     );
 });
 
+
 app.post("/setIdle", (req, res) => {
     if (!req.session?.player_id) return res.status(401).json({ message: "Not logged in." });
 
@@ -1047,6 +1048,7 @@ app.post("/setIdle", (req, res) => {
         }
     );
 });
+
 
 app.listen(4000, () => {
     console.log("Server running on http://localhost:4000/login.html");

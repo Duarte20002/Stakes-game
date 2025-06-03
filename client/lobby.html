@@ -22,9 +22,29 @@
     </form>
   </div>
 
+  <div class="audio-message" style="margin-top: 20px;">
+    <audio id="welcome-audio">
+      <source src="elevator_music.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
   <script>
     GetMatchState();
     setInterval(GetMatchState, 3000);
+    
+    function playAudioOnce() {
+    const audio = document.getElementById('welcome-audio');
+    if (audio) {
+      audio.volume = 0.3;
+      audio.play().catch((err) => {
+        console.warn("Audio playback failed:", err);
+      });
+    }
+    document.removeEventListener('click', playAudioOnce);
+  }
+
+  document.addEventListener('click', playAudioOnce);
   </script>
 </body>
 </html>
