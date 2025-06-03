@@ -841,9 +841,27 @@ app.post("/endTurn", (req, res) => {
                             } else {
                                 GiveStartOfTurnBonus(nextTurn, req.session.gameID, (bonus) => {
                                     const key = `bonus_${nextTurn}`;
-                                    app.set(key, bonus);
-                                    console.log(`✅ Gave ${bonus} bonus troops to player ${nextTurn}`);
-                                    return res.json({ message: "Turn ended successfully.", round: newRound });
+
+                                    function saveBonusLocallyToDB(playerId, gameId, bonusAmount, callback) {
+                                        const sql = `
+                                            INSERT INTO Stakes_digtentape.troop_bonus (game_id, plr_id, troop_bonus)
+                                            VALUES (?, ?, ?)
+                                            ON DUPLICATE KEY UPDATE troop_bonus = VALUES(troop_bonus)
+                                        `;
+                                        connection.query(sql, [gameId, playerId, bonusAmount], (err) => {
+                                            callback(err);
+                                        });
+                                    }
+                                    
+                                    saveBonusLocallyToDB(nextTurn, req.session.gameID, bonus, (err) => {
+                                        if (err) {
+                                            console.error("Failed to store bonus in DB:", err);
+                                            return res.status(500).json({ message: "Failed to store bonus troops." });
+                                        }
+                                        console.log(`✅ Gave ${bonus} bonus troops to player ${nextTurn}`);
+                                        return res.json({ message: "Turn ended successfully.", round: newRound });
+                                    });
+                                    
                                 });
                             }
                         }
@@ -871,10 +889,22 @@ app.post("/endTurn", (req, res) => {
 
 
 app.get("/getBonusTroops", (req, res) => {
-    const key = `bonus_${req.session.player_id}`;
-    const bonus = app.get(key) || 0;
-    res.json({ bonus });
+    if (!req.session.player_id || !req.session.gameID) {
+        return res.status(401).json({ message: "Not logged in or no game." });
+    }
+
+    const sql = `
+        SELECT troop_bonus FROM Stakes_digtentape.troop_bonus
+        WHERE game_id = ? AND plr_id = ?
+    `;
+    connection.query(sql, [req.session.gameID, req.session.player_id], (err, rows) => {
+        if (err) return res.status(500).json({ message: "DB error", err });
+
+        const bonus = rows.length > 0 ? rows[0].troop_bonus : 0;
+        res.json({ bonus });
+    });
 });
+
 
 app.post("/applyBonusTroops", (req, res) => {
     const { territory_id, troops } = req.body;
@@ -887,40 +917,63 @@ app.post("/applyBonusTroops", (req, res) => {
         return res.status(400).json({ success: false, message: "Invalid parameters." });
     }
 
-    console.log('Applying bonus troops')
-
-    const key = `bonus_${req.session.player_id}`;
-    let currentBonus = app.get(key) || 0;
-
-    if (currentBonus < troops) {
-        return res.status(400).json({ success: false, message: `Not enough bonus troops. You have ${currentBonus}.` });
-    }
-
     connection.query(
-        "select * from Stakes_digtentape.game_territory where game_id = ? and ter_id = ? and plr_own_id = ?",
-        [req.session.gameID, territory_id, req.session.player_id],
-        (err, results) => {
-            if (err) return res.status(500).json({ success: false, message: "Database error." });
-            if (results.length === 0) return res.status(403).json({ success: false, message: "You do not own this territory." });
+        "SELECT troop_bonus FROM Stakes_digtentape.troop_bonus WHERE game_id = ? AND plr_id = ?",
+        [req.session.gameID, req.session.player_id],
+        (err, rows) => {
+            if (err) return res.status(500).json({ success: false, message: "DB read error." });
 
+            const currentBonus = rows.length > 0 ? rows[0].troop_bonus : 0;
+            if (currentBonus < troops) {
+                return res.status(400).json({ success: false, message: `Not enough bonus troops. You have ${currentBonus}.` });
+            }
+
+            // Check territory ownership
             connection.query(
-                "update Stakes_digtentape.game_territory set troop_count = troop_count + ? where game_id = ? and ter_id = ?",
-                [troops, req.session.gameID, territory_id],
-                (updateErr) => {
-                    if (updateErr) return res.status(500).json({ success: false, message: "Failed to apply troops." });
+                "SELECT * FROM Stakes_digtentape.game_territory WHERE game_id = ? AND ter_id = ? AND plr_own_id = ?",
+                [req.session.gameID, territory_id, req.session.player_id],
+                (err2, results) => {
+                    if (err2) return res.status(500).json({ success: false, message: "Territory check failed." });
+                    if (results.length === 0) return res.status(403).json({ success: false, message: "You do not own this territory." });
 
-                    app.set(key, currentBonus - troops);
+                    // Apply the troops
+                    connection.query(
+                        "UPDATE Stakes_digtentape.game_territory SET troop_count = troop_count + ? WHERE game_id = ? AND ter_id = ?",
+                        [troops, req.session.gameID, territory_id],
+                        (updateErr) => {
+                            if (updateErr) return res.status(500).json({ success: false, message: "Failed to apply troops." });
 
-                    res.json({
-                        success: true,
-                        message: ` Successfully reinforced ${troops} troops to territory ${territory_id}.`,
-                        remainingBonus: currentBonus - troops
-                    });
+                            // Subtract troops from bonus
+                            connection.query(
+                                "UPDATE Stakes_digtentape.troop_bonus SET troop_bonus = troop_bonus - ? WHERE game_id = ? AND plr_id = ?",
+                                [troops, req.session.gameID, req.session.player_id],
+                                (subErr) => {
+                                    if (subErr) return res.status(500).json({ success: false, message: "Failed to update troop_bonus." });
+
+                                    // Clean up if zero
+                                    connection.query(
+                                        "DELETE FROM Stakes_digtentape.troop_bonus WHERE game_id = ? AND plr_id = ? AND troop_bonus <= 0",
+                                        [req.session.gameID, req.session.player_id],
+                                        (delErr) => {
+                                            if (delErr) return res.status(500).json({ success: false, message: "Failed to clean bonus row." });
+
+                                            res.json({
+                                                success: true,
+                                                message: `Successfully reinforced ${troops} troops to territory ${territory_id}.`,
+                                                remainingBonus: currentBonus - troops
+                                            });
+                                        }
+                                    );
+                                }
+                            );
+                        }
+                    );
                 }
             );
         }
     );
 });
+
 
 
 app.get("/isMyTurn", (req, res) => {

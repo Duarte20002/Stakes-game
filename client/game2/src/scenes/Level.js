@@ -2012,7 +2012,7 @@ class Level extends Phaser.Scene {
 			return;
 		}
 
-		this.sound.play('combat_sfx', {loop: false, volume: 0.2})
+		this.sound.play('combat_sfx', {loop: false, volume: 0.3})
 
 		const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
 
@@ -2042,7 +2042,7 @@ class Level extends Phaser.Scene {
 					if (attackerRolls[i]) {
 						image.setTexture(`Attacker ${attackerRolls[i]}`);
 						image.setVisible(true);
-						this.sound.play('Dice_sfx', {loop: false, volume: 0.2})
+						this.sound.play('Dice_sfx', {loop: false, volume: 0.3})
 					} else {
 						image.setVisible(false); // hide unused dice
 					}
@@ -2053,7 +2053,7 @@ class Level extends Phaser.Scene {
 					if (defenderRolls[i]) {
 						image.setTexture(`Defender ${defenderRolls[i]}`);
 						image.setVisible(true);
-						this.sound.play('Dice_sfx', {loop: false, volume: 0.2})
+						this.sound.play('Dice_sfx', {loop: false, volume: 0.3})
 					} else {
 						image.setVisible(false); // hide unused dice
 					}
@@ -2156,7 +2156,7 @@ class Level extends Phaser.Scene {
 	GiveCardToPlayer(player_id, game_id) {
 		const xhrCard = new XMLHttpRequest();
 
-		this.sound.play('Card_sfx', {loop: false, volume: 0.8})
+		this.sound.play('Card_sfx', {loop: false, volume: 0.5})
 
 		xhrCard.onreadystatechange = () => {
 			if (xhrCard.readyState === 4) {
@@ -2189,38 +2189,26 @@ class Level extends Phaser.Scene {
 
 
 	AddCardToHand(cards) {
+
 		const textureMap = {
 			2: "Card +2",
 			4: "Card +4",
 			6: "Card +6"
 		};
-	
-		const soundMap = {
-			2: "Card_+2_sfx",
-			4: "Card_+4_sfx",
-			6: "Card_+6_sfx"
-		};
-	
+
 		const cardSlots = [this.card01, this.card02, this.card03, this.card04];
-	
+
 		for (let i = 0; i < cardSlots.length; i++) {
 			const cardData = cards[i];  // card object from server or undefined if no card here
 			const slot = cardSlots[i];
-	
+
 			if (!cardData) {
 				slot.setVisible(false);  // Hide slot if no card
 			} else {
 				const textureKey = textureMap[cardData.eff_val];
-				const soundKey = soundMap[cardData.eff_val];
-	
 				if (textureKey) {
 					slot.setTexture(textureKey);
 					slot.setVisible(true);
-	
-					// 🔊 Play a specific sound when adding this card
-					if (soundKey) {
-						this.sound.play(soundKey, { volume: 1 });
-					}
 				} else {
 					console.warn("No texture for card:", cardData.eff_val);
 					slot.setVisible(false);
@@ -2228,7 +2216,7 @@ class Level extends Phaser.Scene {
 			}
 		}
 	}
-	
+
 
 	CheckHasCard() {
 		const xhr = new XMLHttpRequest();
@@ -2284,6 +2272,7 @@ class Level extends Phaser.Scene {
 				scene.pass_Turn.visible = (data.isMyTurn && bonusTroops == 0);
 
 				if (data.isMyTurn) {
+					console.log("Is my turn. Get bonus troops")
 					scene.getBonusTroops(); 
 				}
 
@@ -2300,11 +2289,15 @@ class Level extends Phaser.Scene {
 
 	getBonusTroops() {
 		const scene = this;
-
+		console.log("Called.")
 		const xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4 && xhr.status === 200) {
-				const { bonus } = JSON.parse(xhr.responseText);
+				console.log("Callback D:")
+				const data = JSON.parse(xhr.responseText);
+				console.log(data)
+
+				const bonus = parseInt(data.bonus)
 
 				if (bonus > 0) {
 					console.log(`You have ${bonus} bonus troops!`);
