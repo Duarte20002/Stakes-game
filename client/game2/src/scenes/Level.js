@@ -1639,7 +1639,7 @@ class Level extends Phaser.Scene {
 		this.card04.setVisible(false);
 
 		this.GameLoop();
-		this.sound.play('Background_music_sfx', {loop: true, volume: 0.5})
+		this.sound.play('Background_music_sfx', {loop: true, volume: 0.3})
 			setInterval(() => {
 				this.GameLoop()
 				this.CheckVictoryStatus();
