@@ -248,6 +248,8 @@ app.get("/game", (req, res) => {
         return
     }
 
+    var player1ID, player2ID;
+
     function GrabTerritoryData(){
 
         connection.query("select * from Stakes_digtentape.game_territory where game_id = ?", //where Game ID = ? and playerid 
@@ -270,6 +272,16 @@ app.get("/game", (req, res) => {
             function (err, cards, fields) {
                 if (err) return res.status(500).json({error: err})
 
+                // cycle all territories and add the color of the player that owns it
+                territories.forEach(territory => {
+                    if (territory.plr_own_id === player1ID)
+                        territory.color = "blue"
+                    else if (territory.plr_own_id === player2ID)
+                        territory.color = "red"
+                    else 
+                        territory.color = "neutral";
+                });
+
                 res.json({
                     "territories": territories,
                     "cards": cards
@@ -281,22 +293,26 @@ app.get("/game", (req, res) => {
 
     function GetGameID(){
             connection.query(
-                "select game_id from Stakes_digtentape.game where win_plr_id is null and (plr1_id = ? or plr2_id = ?)",             //Query to get the game_id where both the players are in
+                "select game_id, plr1_id, plr2_id from Stakes_digtentape.game where win_plr_id is null and (plr1_id = ? or plr2_id = ?)",             //Query to get the game_id where both the players are in
                 [req.session.player_id, req.session.player_id],
                 (err, rows) => {
                     if (err) return res.status(500).json({ message: "Database error", error: err });                       //Error scenario
                     if (rows.length === 0) return res.status(404).json({ message: "No game found for this player: " + req.session.player_id });      //If there is no game in which the players are in
     
                     req.session.gameID = rows[0].game_id;                                    //Make sure the game_id is alligned with the first game_id that shows up                                            // Make sure game_id is set before calling initialize
+                    player1ID = rows[0].plr1_id;
+                    player2ID = rows[0].plr2_id;
                     GrabTerritoryData();
                 }
             );
     }
 
-    if (!req.session.gameID)
-        GetGameID()
-    else
-        GrabTerritoryData()
+    GetGameID()
+
+    // if (!req.session.gameID)
+    //     GetGameID()
+    // else
+    //     GrabTerritoryData()
 
 }) 
 
@@ -988,14 +1004,16 @@ app.get("/hasCard", (req, res) => {
 
 
 app.get("/checkVictory", (req, res) => {
-    if (!req.session.player_id || !req.session.gameID) {
-        return res.status(401).json({ message: "Not logged in or no game." });
+    if (!req.session.player_id) {
+        return res.status(401).json({ message: "Not logged in" });
     }
 
     connection.query("select win_plr_id, win_con from Stakes_digtentape.game where game_id = ?", [req.session.gameID],
         function (err, rows) {
             if (err) return res.status(500).json({ error: err });
-            if (rows.length === 0) return res.status(404).json({ message: "Game not found." });
+            if (rows.length === 0){
+                return res.json({ message: "game not found"})
+            }
 
             const winnerId = rows[0].win_plr_id;
             const winCon = rows[0].win_con;

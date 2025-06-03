@@ -1630,6 +1630,7 @@ class Level extends Phaser.Scene {
 		this.GameLoop();
 			setInterval(() => {
 				this.GameLoop()
+				this.CheckVictoryStatus();
 			}, 3000);
 
 		this.CheckTurnOwnership();
@@ -1644,19 +1645,24 @@ class Level extends Phaser.Scene {
 	}
 
 	GameLoop(){
+
 		var request = new XMLHttpRequest();
 		const scene = this;
 
+		this.sound.play('Background_music_sfx', {loop: true, volume: 0.075})
+		
 		request.open("GET", "/game", true);
 		request.onreadystatechange = () => {
 
 			if (request.readyState == 4) {
 
 				var data = JSON.parse(request.responseText);
+				console.log("NEW DATA:")
+				console.log(data);
 				scene.territories = data.territories;
 				playerCards = data.cards; // <- this line is critical
 				// console.log("Loaded cards:", playerCards);
-
+				
 
 				var player1ID = undefined
 				var player2ID = undefined
@@ -1678,14 +1684,10 @@ class Level extends Phaser.Scene {
 					if (territory.plr_own_id){
 						zoneText.setColor("#ffffff")
 
-						if (!player1ID){
-							player1ID = territory.plr_own_id
+						if (territory.color === "blue") {
 							zoneIcon.setTexture("Angel Piece")
 							zoneBase.setTexture("Number_Piece_Angel (2)")
-						}else if (player1ID == territory.plr_own_id){
-							zoneIcon.setTexture("Angel Piece")
-							zoneBase.setTexture("Number_Piece_Angel (2)")
-						}else {
+						} else if (territory.color === "red") {
 							zoneIcon.setTexture("Demon Piece_1")
 							zoneBase.setTexture("Number_Piece_Demon")
 						}
@@ -1984,6 +1986,8 @@ class Level extends Phaser.Scene {
 			return;
 		}
 
+		this.sound.play('combat_sfx', {loop: false, volume: 0.3})
+		
 		const currentPlayerId = parseInt(sessionStorage.getItem("player_id"), 10);
 
 		const xhr = new XMLHttpRequest();
@@ -2012,6 +2016,7 @@ class Level extends Phaser.Scene {
 					if (attackerRolls[i]) {
 						image.setTexture(`Attacker ${attackerRolls[i]}`);
 						image.setVisible(true);
+						this.sound.play('Dice_sfx', {loop: false, volume: 0.5})
 					} else {
 						image.setVisible(false); // hide unused dice
 					}
@@ -2022,6 +2027,7 @@ class Level extends Phaser.Scene {
 					if (defenderRolls[i]) {
 						image.setTexture(`Defender ${defenderRolls[i]}`);
 						image.setVisible(true);
+						this.sound.play('Dice_sfx', {loop: false, volume: 0.5})
 					} else {
 						image.setVisible(false); // hide unused dice
 					}
@@ -2079,6 +2085,8 @@ class Level extends Phaser.Scene {
 			return;
 		}
 
+		this.sound.play('troops_sfx', {loop: false, volume: 0.5})
+
 		const xhr = new XMLHttpRequest();
 
 		xhr.onload = () => {
@@ -2122,6 +2130,7 @@ class Level extends Phaser.Scene {
 	GiveCardToPlayer(player_id, game_id) {
 		const xhrCard = new XMLHttpRequest();
 
+		this.sound.play('Card_sfx', {loop: false, volume: 0.5})
 
 		xhrCard.onreadystatechange = () => {
 			if (xhrCard.readyState === 4) {
@@ -2279,12 +2288,14 @@ class Level extends Phaser.Scene {
 	}
 
 	CheckVictoryStatus() {
+		console.log("Checking victory");
 		const xhr = new XMLHttpRequest();
-
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4) {
+				console.log(xhr.status)
 				if (xhr.status === 200) {
 					const response = JSON.parse(xhr.responseText);
+					console.log("VICTORY RESPONSE:");
 					console.log(response);
 
 					if (response.gameOver) {

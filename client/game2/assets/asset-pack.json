@@ -47,6 +47,27 @@
                 "key": "Attacker 6"
             },
             {
+                "url": [
+                    "assets/bonus_+2_sfx.mp3"
+                ],
+                "type": "audio",
+                "key": "bonus_+2_sfx"
+            },
+            {
+                "url": [
+                    "assets/bonus_+4_sfx.mp3"
+                ],
+                "type": "audio",
+                "key": "bonus_+4_sfx"
+            },
+            {
+                "url": [
+                    "assets/bonus_+6_sfx.mp3"
+                ],
+                "type": "audio",
+                "key": "bonus_+6_sfx"
+            },
+            {
                 "url": "assets/Card +2.png",
                 "type": "image",
                 "key": "Card +2"
@@ -60,6 +81,13 @@
                 "url": "assets/Card +6.png",
                 "type": "image",
                 "key": "Card +6"
+            },
+            {
+                "url": [
+                    "assets/Card_sfx.mp3"
+                ],
+                "type": "audio",
+                "key": "Card_sfx"
             },
             {
                 "url": "assets/Close Window.png",
@@ -105,6 +133,13 @@
                 "url": "src/Prefabs/Demon_Piece.js",
                 "type": "script",
                 "key": "Demon_Piece"
+            },
+            {
+                "url": [
+                    "assets/Dice_sfx.mp3"
+                ],
+                "type": "audio",
+                "key": "Dice_sfx"
             },
             {
                 "url": "assets/dino.png",
@@ -205,6 +240,13 @@
                 "key": "Reinforce_Button"
             },
             {
+                "url": [
+                    "assets/Shroudbroken (Original Game Soundtrack).mp3"
+                ],
+                "type": "audio",
+                "key": "Background_music_sfx"
+            },
+            {
                 "url": "src/animations/Star.json",
                 "type": "animation",
                 "key": "Star"
@@ -226,6 +268,20 @@
                 },
                 "type": "spritesheet",
                 "key": "starts-spritesheet"
+            },
+            {
+                "url": [
+                    "assets/Sword Fight Sound Effect.mp3"
+                ],
+                "type": "audio",
+                "key": "combat_sfx"
+            },
+            {
+                "url": [
+                    "assets/troops_sfx.mp3"
+                ],
+                "type": "audio",
+                "key": "troops_sfx"
             },
             {
                 "url": "assets/Window.png",
