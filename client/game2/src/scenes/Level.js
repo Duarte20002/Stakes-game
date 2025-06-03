@@ -1925,7 +1925,7 @@ class Level extends Phaser.Scene {
 	}
 
 	SelectCard(cardIndex) {
-		
+
 		if (alreadyReinforced || !isMyTurn) return;
 
 		const card = playerCards[cardIndex];
@@ -1944,7 +1944,7 @@ class Level extends Phaser.Scene {
 		console.log("Sending reinforce request to zone", territory_id, "with card", card);
 
 		const xhr = new XMLHttpRequest();
-		
+
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
@@ -2194,7 +2194,7 @@ class Level extends Phaser.Scene {
 
 	CheckHasCard() {
 		const xhr = new XMLHttpRequest();
-		
+
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
@@ -2315,7 +2315,7 @@ class Level extends Phaser.Scene {
 		xhr.send();
 	}
 
-	
+
 	/* END-USER-CODE */
 }
 
