@@ -599,6 +599,12 @@ class Level extends Phaser.Scene {
 		bonus_troop.scaleY = 0.4;
 		bonus_troop.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
 
+		// your_side
+		const your_side = this.add.text(534, 49, "", {});
+		your_side.scaleX = 0.4;
+		your_side.scaleY = 0.4;
+		your_side.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
+
 		// lists
 		const stars = [];
 
@@ -720,6 +726,7 @@ class Level extends Phaser.Scene {
 		this.defender_2 = defender_2;
 		this.dice = dice;
 		this.bonus_troop = bonus_troop;
+		this.your_side = your_side;
 		this.enterKey = enterKey;
 		this.stars = stars;
 
@@ -962,6 +969,8 @@ class Level extends Phaser.Scene {
 	dice;
 	/** @type {Phaser.GameObjects.Text} */
 	bonus_troop;
+	/** @type {Phaser.GameObjects.Text} */
+	your_side;
 	/** @type {Phaser.Input.Keyboard.Key} */
 	enterKey;
 	/** @type {Array<any>} */
@@ -1639,7 +1648,7 @@ class Level extends Phaser.Scene {
 		this.card04.setVisible(false);
 
 		this.GameLoop();
-		this.sound.play('Background_music_sfx', {loop: true, volume: 0.3})
+		this.sound.play('Background_music_sfx', {loop: true, volume: 0.2})
 			setInterval(() => {
 				this.GameLoop()
 				this.CheckVictoryStatus();
