@@ -761,12 +761,14 @@ app.post("/endTurn", (req, res) => {
                     if (updateErr) return res.status(500).json({ message: "Failed to end turn." });
 
                     connection.query(
-                        `SELECT DISTINCT plr_own_id FROM Stakes_digtentape.game_territory 
-                         WHERE game_id = ? AND plr_own_id IS NOT NULL`,
+                        `SELECT COUNT(*) as NumTerritories, plr_own_id
+                         FROM Stakes_digtentape.game_territory
+                         WHERE game_id = ?
+                         GROUP BY plr_own_id`,
                         [req.session.gameID],
                         (err, rows) => {
                             if (err) return res.status(500).json({ message: "Elimination check failed." });
-
+                      
                             if (rows.length === 1) {
                                 const winnerId = rows[0].plr_own_id;
                                 return connection.query(
@@ -774,6 +776,7 @@ app.post("/endTurn", (req, res) => {
                                     [winnerId, req.session.gameID],
                                     () => res.json({ message: "Game ended: only one player remains." })
                                 );
+                            
                             }
 
                             if (newRound >= 20) {
@@ -819,10 +822,10 @@ app.post("/endTurn", (req, res) => {
                                         const p1Regions = playerRegionCount[plr1_id] || 0;
                                         const p2Regions = playerRegionCount[plr2_id] || 0;
 
-                                        let winner = null;
+                                        let winner = -1;
                                         if (p1Regions > p2Regions) winner = plr1_id;
                                         else if (p2Regions > p1Regions) winner = plr2_id;
-
+                                       
                                         const winCon = (p1Regions === p2Regions) ? "draw" : "region_majority";
 
                                         connection.query(
@@ -1067,15 +1070,15 @@ app.get("/checkVictory", (req, res) => {
         function (err, rows) {
             if (err) return res.status(500).json({ error: err });
             if (rows.length === 0){
-                return res.json({ message: "game not found"})
+                return res.json({ message: "game not found" });
             }
 
             const winnerId = rows[0].win_plr_id;
             const winCon = rows[0].win_con;
 
-            if (!winnerId && winCon !== "draw") return res.json({ gameOver: false });
+            if (winnerId === null && winCon !== "draw") return res.json({ gameOver: false });
 
-            if (winCon === "draw") {
+            if (winnerId === -1 || winCon === "draw") {
                 return res.json({ gameOver: true, isDraw: true });
             }
 
@@ -1087,6 +1090,7 @@ app.get("/checkVictory", (req, res) => {
         }
     );
 });
+
 
 
 app.post("/setIdle", (req, res) => {
