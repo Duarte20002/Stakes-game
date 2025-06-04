@@ -613,6 +613,12 @@ class Level extends Phaser.Scene {
 		player_identification_2.scaleY = 0.3;
 		player_identification_2.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
 
+		// your_side
+		const your_side = this.add.text(534, 49, "", {});
+		your_side.scaleX = 0.4;
+		your_side.scaleY = 0.4;
+		your_side.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
+
 		// lists
 		const stars = [];
 
@@ -1663,7 +1669,7 @@ class Level extends Phaser.Scene {
 		this.card04.setVisible(false);
 
 		this.GameLoop();
-		this.sound.play('Background_music_sfx', {loop: true, volume: 0.3})
+		this.sound.play('Background_music_sfx', {loop: true, volume: 0.2})
 			setInterval(() => {
 				this.GameLoop()
 				this.CheckVictoryStatus();

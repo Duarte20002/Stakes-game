@@ -338,30 +338,62 @@ app.post("/logAttack", (req, res) => {
 
     function CheckForVictory(attackingPlayerId) {
         console.log("Checking victory");
-
-        // Only check if a player owns all 32 territories
+    
         connection.query(
-            "select COUNT(*) AS territoryCount from Stakes_digtentape.game_territory where game_id = ? and plr_own_id = ?",
-            [req.session.gameID, attackingPlayerId],
-            (err, results) => {
-                if (err) return console.error("Error checking territory conquest victory:", err);
+            `SELECT COUNT(*) as NumTerritories, plr_own_id
+             FROM Stakes_digtentape.game_territory
+             WHERE game_id = ?
+             GROUP BY plr_own_id`,
+            [req.session.gameID],
+            (err, rows) => {
+                if (err) return console.error(" Elimination check failed:", err);
 
-                const territoryCount = results[0].territoryCount;
-                if (territoryCount === 32) {
-                    console.log(`[Winner] win_plr_id=${attackingPlayerId} | win_con=conquer_all | game_id=${req.session.gameID}`);
+                if (rows.length === 0 || rows.length === 3) {
+                    console.log('1 game still going')
+                    return
+                }
 
+                // conquer_all -> conquistou os 32 territorios
+                // eliminate_opponent -> conquistou inimigo (< 32 territories)
+    
+                if (rows.length === 1) {
+                    const winnerId = rows[0].plr_own_id;
+                    const winType = rows[0].NumTerritories === 32 ? "conquer_all" : "eliminate_opponent"
+                    console.log("Player " + rows[0].plr_own_id + " won by --> " + winType)
                     connection.query(
-                        "update Stakes_digtentape.game set win_plr_id = ?, win_con = ? where game_id = ?",
-                        [attackingPlayerId, "conquer_all", req.session.gameID],
-                        (updateErr) => {
-                            if (updateErr) console.error("Failed to update winner in DB:", updateErr);
-                            else console.log("Winner recorded in database (conquer_all).");
+                        "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = ? WHERE game_id = ?",
+                        [winnerId, winType, req.session.gameID],
+                        function (err, rows, fields) {
+                            console.log(` Elimination Victory: Player ${winnerId}`)
+                        }
+                    );
+                }else {
+                    // we have length === 2 here.
+                    const player1 = rows[0].plr_own_id
+                    const player2 = rows[1].plr_own_id
+
+                    if (player1 != null && player2 != null){
+                        console.log('2 game still going')
+                        return
+                    }
+
+                    if (player1 == null) {
+                         winnerId = player2;
+                    }else{
+                         winnerId = player1;
+                    }
+                    connection.query(
+                        "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = 'eliminate_opponent' WHERE game_id = ?",
+                        [winnerId, req.session.gameID],
+                        function (err, rows, fields) {
+                            console.log(` Elimination Victory: Player ${winnerId}`)
                         }
                     );
                 }
             }
         );
     }
+    
 
     function GetTerritoryData() {
         connection.query(
