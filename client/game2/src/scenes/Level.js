@@ -4,6 +4,7 @@ let selectedTroopCount;
 var tropsInSelected=1;
 var bonusTroops = 0;
 let reinforceMode = false;
+let bonusReinforceMode = false;
 let alreadyReinforced = false;
 let selectedCard = null;
 let isMyTurn = false;
@@ -554,7 +555,7 @@ class Level extends Phaser.Scene {
 
 		// reinforce_Button
 		const reinforce_Button = this.add.image(74, 100, "Reinforce_Button");
-		reinforce_Button.setInteractive(this.input.makePixelPerfect());
+		reinforce_Button.setInteractive(new Phaser.Geom.Rectangle(0, 0, 445, 65), Phaser.Geom.Rectangle.Contains);
 		reinforce_Button.scaleX = 0.5;
 		reinforce_Button.scaleY = 0.5;
 		window.add(reinforce_Button);
@@ -594,10 +595,23 @@ class Level extends Phaser.Scene {
 		dice.add(defender_2);
 
 		// bonus_troop
-		const bonus_troop = this.add.text(534, 49, "", {});
+		const bonus_troop = this.add.text(222, 49, "", {});
 		bonus_troop.scaleX = 0.4;
 		bonus_troop.scaleY = 0.4;
-		bonus_troop.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
+		bonus_troop.setStyle({ "color": "#000000ff", "fontSize": "60px", "fontStyle": "bold" });
+
+		// player_identification_1
+		const player_identification_1 = this.add.text(448, 680, "", {});
+		player_identification_1.scaleX = 0.3;
+		player_identification_1.scaleY = 0.3;
+		player_identification_1.text = "You are:";
+		player_identification_1.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
+
+		// player_identification_2
+		const player_identification_2 = this.add.text(574, 680, "", {});
+		player_identification_2.scaleX = 0.3;
+		player_identification_2.scaleY = 0.3;
+		player_identification_2.setStyle({ "color": "#000000ff", "fontSize": "80px", "fontStyle": "bold" });
 
 		// lists
 		const stars = [];
@@ -720,6 +734,8 @@ class Level extends Phaser.Scene {
 		this.defender_2 = defender_2;
 		this.dice = dice;
 		this.bonus_troop = bonus_troop;
+		this.player_identification_1 = player_identification_1;
+		this.player_identification_2 = player_identification_2;
 		this.enterKey = enterKey;
 		this.stars = stars;
 
@@ -962,6 +978,10 @@ class Level extends Phaser.Scene {
 	dice;
 	/** @type {Phaser.GameObjects.Text} */
 	bonus_troop;
+	/** @type {Phaser.GameObjects.Text} */
+	player_identification_1;
+	/** @type {Phaser.GameObjects.Text} */
+	player_identification_2;
 	/** @type {Phaser.Input.Keyboard.Key} */
 	enterKey;
 	/** @type {Array<any>} */
@@ -1536,14 +1556,14 @@ class Level extends Phaser.Scene {
 
 		this.plus.setInteractive()
 			.on('pointerdown', () => {
-				let maxTroops = movementMode
+				let maxMoveTroops = movementMode
 				? tropsInSelected - 1               // Troops allowed to move
 				: Math.min(tropsInSelected - 1, 3); // Troops allowed to attack
 
-				if (this.selectedTroopCount < maxTroops) {
-				this.selectedTroopCount++;
-				this.troopCountValue.setText(this.selectedTroopCount);
-}
+				if (this.selectedTroopCount < maxMoveTroops) {
+					this.selectedTroopCount++;
+					this.troopCountValue.setText(this.selectedTroopCount);
+				}
 
 				console.log("Added troops");
 			})
@@ -1574,7 +1594,7 @@ class Level extends Phaser.Scene {
 			.on('pointerdown', () => {
 				this.pass_Turn.visible = false;
 				console.log("Pased the turn");
-				this.EndTurn()
+				this.EndTurn();
 			})
 			.on('pointerover', () => {
         		this.pass_Turn.setScale(0.33);
@@ -1631,8 +1651,12 @@ class Level extends Phaser.Scene {
     		});
 
 		this.move_Button.visible = movementMode;
+		this.move_Button.visible = !bonusReinforceMode;
 		this.attack_Button.visible = !movementMode;
-		this.reinforce_Button.setVisible(false);
+		this.attack_Button.visible = !bonusReinforceMode;
+		this.reinforce_Button.visible = !movementMode;
+		this.reinforce_Button.visible = bonusReinforceMode;
+
 		this.card01.setVisible(false);
 		this.card02.setVisible(false);
 		this.card03.setVisible(false);
@@ -1652,7 +1676,7 @@ class Level extends Phaser.Scene {
 
 		this.CheckHasCard();
 			setInterval(() => {
-				this.CheckTurnOwnership()
+				this.CheckHasCard()
 			}, 3000);
 	}
 
@@ -1671,13 +1695,14 @@ class Level extends Phaser.Scene {
 				var data = JSON.parse(request.responseText);
 				console.log("NEW DATA:")
 				console.log(data);
+
+
+				this.player_identification_2.text = data.playerColor
+				this.player_identification_2.setColor(data.playerColor)
+
 				scene.territories = data.territories;
 				playerCards = data.cards; // <- this line is critical
 				// console.log("Loaded cards:", playerCards);
-
-
-				var player1ID = undefined
-				var player2ID = undefined
 
 				data.territories.forEach(territory => {
 					var zone = scene.zones.list[(territory.ter_id - 1)].list[1]
@@ -1704,6 +1729,7 @@ class Level extends Phaser.Scene {
 							zoneBase.setTexture("Number_Piece_Demon")
 						}
 					}
+
 				});
 
 				scene.AddCardToHand(data.cards);
@@ -1732,7 +1758,7 @@ class Level extends Phaser.Scene {
 			return;
 		}
 
-		if (reinforceMode) {
+		if (bonusReinforceMode || reinforceMode) {
 			this.ReinforceTerritory(area_number);
 			return;
 		}
@@ -1801,6 +1827,9 @@ class Level extends Phaser.Scene {
 				scene.selectedTroopCount = 1;
 				scene.troopCountValue.setText(scene.selectedTroopCount);
 				scene.window.visible = true;
+				scene.attack_Button.visible = false;
+				scene.move_Button.visible = true;
+				scene.reinforce_Button.visible = false;
 
 				console.log("Moving troops from ", selectedZone, " to ", defendingZone, " max: ", tropsInSelected - 1);
 				return;
@@ -1812,6 +1841,7 @@ class Level extends Phaser.Scene {
 			// Set button visibility
 			scene.move_Button.visible = false;
 			scene.attack_Button.visible = true;
+			scene.reinforce_Button.visible = false;
 
 			scene.selectedTroopCount = 1;
 			scene.troopCountValue.setText(scene.selectedTroopCount);
@@ -1892,63 +1922,66 @@ class Level extends Phaser.Scene {
 
 
 	ReinforceTerritory(area_number) {
+		const scene = this;
+
 		if (!isMyTurn) {
 			alert("It's not your turn!");
 			return;
 		}
 
-		const troopsToAdd = prompt("How many troops do you want to add?", "1");
-		const number = parseInt(troopsToAdd);
+		// Save selected zone for reinforcement
+		selectedZone = area_number;
 
-		if (isNaN(number) || number <= 0) {
-			alert("Invalid number of troops.");
-			return;
-		}
+		// Open troop count window
+		scene.selectedTroopCount = 1;
+		scene.troopCountValue.setText(scene.selectedTroopCount);
+		scene.window.visible = true;
 
-		// Checking if the player is trying to add more troops than they actually have.
-		if (number > bonusTroops) {
-			alert("You cannot add more troops than you have available.");
-			return;
-		}
+		// Show only the reinforce button
+		scene.move_Button.visible = false;
+		scene.attack_Button.visible = false;
+		scene.reinforce_Button.visible = true;
 
-		// Cesar Note: do we really need this check since we are 'forced' to add the remaining troops?
-		// if (troopsToAdd === null) {
-		// 	reinforceMode = false;
-		// 	return;
-		// }
+		// Store what happens when "Reinforce" button is clicked
+		scene.reinforce_Button.once('pointerdown', () => {
+			const troopsToAssign = scene.selectedTroopCount;
 
-		// Send reinforcement to the server
-		const request = new XMLHttpRequest();
-		request.open("POST", "/applyBonusTroops", true);
-		request.setRequestHeader("Content-Type", "application/json");
-
-		request.onreadystatechange = () => {
-			if (this.readyState === 4) {
-				const response = JSON.parse(this.responseText);
-				console.log("RESPONSE FROM /applyBonusTroops");
-				console.log(response);
-				alert(response.message);
-
-				if (response.success) {
-					alreadyReinforced = true;
-					reinforceMode = false;
-				}
+			if (troopsToAssign > bonusTroops) {
+				alert("Not enough bonus troops!");
+				return;
 			}
-		};
 
-		const dataToSend = {
-			territory_id: area_number,
-			troops: number
-		};
+			const dataToSend = {
+				territory_id: area_number,
+				troops: troopsToAssign
+			};
 
-		bonusTroops -= number;
-		if (bonusTroops <= 0) {
-			reinforceMode = false;
-			this.bonus_troop.text = "";
-			this.pass_Turn.setVisible(true);
-		}
-		request.send(JSON.stringify(dataToSend));
+			const request = new XMLHttpRequest();
+			request.open("POST", "/applyBonusTroops", true);
+			request.setRequestHeader("Content-Type", "application/json");
+
+			request.onreadystatechange = () => {
+				if (request.readyState === 4 && request.status === 200) {
+					const data = JSON.parse(request.responseText)
+					console.log(data)
+					alreadyReinforced = true;
+				}
+			};
+
+			scene.window.visible = false;
+			bonusTroops -= troopsToAssign;
+
+			if (bonusTroops <= 0) {
+				scene.bonus_troop.setText("");
+				scene.pass_Turn.visible = true;
+				bonusReinforceMode = false;
+				reinforceMode = false;
+			}
+
+			request.send(JSON.stringify(dataToSend));
+		});
 	}
+
 
 	SelectCard(cardIndex) {
 
@@ -2010,16 +2043,15 @@ class Level extends Phaser.Scene {
 	}
 
 
-
-
 	AttackZone() {
+
 		if (!isMyTurn) {
 			alert("It's not your turn!");
 			return;
 		}
 
 		if (!selectedZone || !defendingZone) {
-			console.warn("Attack failed – zones not selected");
+			console.warn("Attack failed , zones not selected");
 			return;
 		}
 
@@ -2280,15 +2312,26 @@ class Level extends Phaser.Scene {
 
 				scene.isMyTurn = data.isMyTurn;
 				isMyTurn = data.isMyTurn;
-				scene.pass_Turn.visible = (data.isMyTurn && bonusTroops == 0);
 
-				if (data.isMyTurn) {
-					console.log("Is my turn. Get bonus troops")
-					scene.getBonusTroops(); 
-				}
+				// Only show pass turn if no bonus troops remain
+				scene.pass_Turn.visible = (data.isMyTurn && bonusTroops === 0);
 
-				if (data.message === "Not logged in."){
+				if (data.message === "Not logged in.") {
 					window.location.href = "/login.html";
+				}else if (data.isMyTurn) {
+					console.log("Is my turn. Get bonus troops");
+
+					// Step 1: Get bonus troops
+					scene.getBonusTroops();
+
+					// Step 2: Setup reinforcement if needed
+					if (!alreadyReinforced && bonusTroops > 0) {
+						bonusReinforceMode = true;
+						// scene.window.visible = false; // start with window hidden
+						scene.reinforce_Button.visible = true;
+						// scene.bonus_troop.setText("Bonus troops: " + bonusTroops);
+						scene.pass_Turn.visible = false; // prevent skipping ahead
+					}
 				}
 			}
 		};
@@ -2310,12 +2353,15 @@ class Level extends Phaser.Scene {
 
 				const bonus = parseInt(data.bonus)
 
+				bonusReinforceMode = (bonus > 0)
+				scene.pass_Turn.visible = (bonus <= 0)
+
+
 				if (bonus > 0) {
 					console.log(`You have ${bonus} bonus troops!`);
 					reinforceMode = true;
 
 					scene.bonus_troop.text = `You have ${bonus} bonus troops! Click a territory to reinforce.`;
-					scene.pass_Turn.setVisible(false);
 					bonusTroops = bonus;
 
 				} else {
