@@ -1685,8 +1685,6 @@ class Level extends Phaser.Scene {
 				// console.log("Loaded cards:", playerCards);
 
 
-				var player1ID = undefined
-				var player2ID = undefined
 
 				data.territories.forEach(territory => {
 					var zone = scene.zones.list[(territory.ter_id - 1)].list[1]

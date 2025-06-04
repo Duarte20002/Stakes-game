@@ -354,7 +354,7 @@ app.post("/logAttack", (req, res) => {
                 if (err) return console.error(" Elimination check failed:", err);
 
                 if (rows.length === 0 || rows.length === 3) {
-                    console.log('game still going')
+                    console.log('1 game still going')
                     return
                 }
 
@@ -377,8 +377,8 @@ app.post("/logAttack", (req, res) => {
                     const player1 = rows[0].plr_own_id
                     const player2 = rows[1].plr_own_id
 
-                    if (player1 != null || player2 != null){
-                        console.log('game still going')
+                    if (player1 != null && player2 != null){
+                        console.log('2 game still going')
                         return
                     }
 
@@ -387,6 +387,13 @@ app.post("/logAttack", (req, res) => {
                     }else{
                          winnerId = player1;
                     }
+                    connection.query(
+                        "UPDATE Stakes_digtentape.game SET win_plr_id = ?, win_con = 'eliminate_opponent' WHERE game_id = ?",
+                        [winnerId, req.session.gameID],
+                        function (err, rows, fields) {
+                            console.log(` Elimination Victory: Player ${winnerId}`)
+                        }
+                    );
                 }
             }
         );
